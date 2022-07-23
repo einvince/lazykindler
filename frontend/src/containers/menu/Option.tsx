@@ -14,18 +14,16 @@ import { MenuControl } from '../../lib/hooks/useMenu';
 import { BookFlow, BookFontFamily, BookStyle } from '../../types/book';
 import { BookOption } from '../../types/book';
 
-const Option = (
-    {
-        control,
-        bookStyle,
-        bookOption,
-        bookFlow,
-        onToggle,
-        emitEvent,
-        onBookStyleChange,
-        onBookOptionChange,
-    }: Props
-) => {
+const Option = ({
+    control,
+    bookStyle,
+    bookOption,
+    bookFlow,
+    onToggle,
+    emitEvent,
+    onBookStyleChange,
+    onBookOptionChange,
+}: Props) => {
     const [fontFamily, setFontFamily] = useState<BookFontFamily>(bookStyle.fontFamily);
     const [fontSize, setFontSize] = useState<number>(bookStyle.fontSize);
     const [lineHeight, setLineHeight] = useState<number>(bookStyle.lineHeight);
@@ -137,6 +135,7 @@ const Option = (
                                 title="设置"
                                 onClose={onToggle}
                                 // ref={ref}
+                                style={{ width: 400 }}
                                 sx={{
                                     display: {
                                         boxSizing: 'border-box',
