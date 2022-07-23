@@ -1,5 +1,10 @@
 import { BookMetaDataType, CollectionDataType } from '@/pages/data';
-import { getBooksMeta, getMultipleCollections, updateCollection } from '@/services';
+import {
+    addBookToCollection,
+    getBooksMeta,
+    getCollBooks,
+    getMultipleCollections,
+} from '@/services';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -74,12 +79,21 @@ export default function AddBooks(props: AddBooksProps) {
     const [collInfo, setCollInfo] = useState<any>({});
 
     const fetchAllBooks = () => {
-        getBooksMeta(book_type).then((data) => {
-            let d = _.map(data, (item: BookMetaDataType) => {
-                return Object.assign({}, item, { key: item.uuid });
+        if (book_type == 'coll') {
+            getCollBooks(collection_uuid).then((data) => {
+                let d = _.map(data, (item: BookMetaDataType) => {
+                    return Object.assign({}, item, { key: item.uuid });
+                });
+                setAllBooksMeta(d);
             });
-            setAllBooksMeta(d);
-        });
+        } else {
+            getBooksMeta(book_type).then((data) => {
+                let d = _.map(data, (item: BookMetaDataType) => {
+                    return Object.assign({}, item, { key: item.uuid });
+                });
+                setAllBooksMeta(d);
+            });
+        }
     };
 
     useEffect(() => {
@@ -93,13 +107,23 @@ export default function AddBooks(props: AddBooksProps) {
                 setSelectedRowKeys(item_uuids.split(';'));
             }
         });
-        getBooksMeta(book_type).then((data) => {
-            let d = _.map(data, (item: BookMetaDataType) => {
-                return Object.assign({}, item, { key: item.uuid });
+        if (book_type == 'coll') {
+            getCollBooks(collection_uuid).then((data) => {
+                let d = _.map(data, (item: BookMetaDataType) => {
+                    return Object.assign({}, item, { key: item.uuid });
+                });
+                setAllBooksMeta(d);
+                setData(d);
             });
-            setAllBooksMeta(d);
-            setData(d);
-        });
+        } else {
+            getBooksMeta(book_type).then((data) => {
+                let d = _.map(data, (item: BookMetaDataType) => {
+                    return Object.assign({}, item, { key: item.uuid });
+                });
+                setAllBooksMeta(d);
+                setData(d);
+            });
+        }
     }, []);
 
     const rowSelection = {
@@ -129,7 +153,7 @@ export default function AddBooks(props: AddBooksProps) {
 
     const handleOnOk = () => {
         handleClose();
-        updateCollection(collection_uuid, 'item_uuids', selectedRowKeys.join(';')).then(() => {
+        addBookToCollection(collection_uuid, selectedRowKeys.join(';')).then(() => {
             fetchAllBooks();
         });
     };
@@ -138,7 +162,10 @@ export default function AddBooks(props: AddBooksProps) {
         const keyword = e.target.value;
         setData(
             _.filter(allBooksMeta, (item: BookMetaDataType) => {
-                return (item.name != null && item.name.includes(keyword)) || (item.author != null && item.author.includes(keyword));
+                return (
+                    (item.name != null && item.name.includes(keyword)) ||
+                    (item.author != null && item.author.includes(keyword))
+                );
             }),
         );
     };

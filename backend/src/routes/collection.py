@@ -62,6 +62,13 @@ def delete_coll_with_items():
     return collection.delete_colls_with_items(uuid)
 
 
+def add_book_to_collection():
+    content = request.json
+    coll_uuid = content['coll_uuid']
+    book_uuids = content['book_uuids']
+    return collection.add_book_to_collection(coll_uuid, book_uuids)
+
+
 def update_coll():
     content = request.json
     uuid = content['uuid']
@@ -81,3 +88,8 @@ def update_coll_cover():
     coll_uuid = content['coll_uuid']
     cover_str = content['cover']
     return cover.update_coll_cover(coll_uuid, cover_str)
+
+
+def get_coll_books():
+    coll_uuid = request.args.get('coll_uuid')
+    return collection.get_coll_books(coll_uuid)

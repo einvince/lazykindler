@@ -146,8 +146,21 @@ export default function BookCardList(props: BookCardListProps) {
                             hoverable
                             cover={<Cover uuid={item.uuid} />}
                             actions={[
-                                <Menu mode="vertical" selectable={false}>
+                                <Menu mode="vertical" key={'1'} selectable={false}>
                                     <SubMenu key="sub4" icon={<SettingOutlined />} title="操作">
+                                        <Menu.Item
+                                            key="1"
+                                            onClick={() => {
+                                                setUUID2(uuidv4());
+                                                setAddBooksInfo({
+                                                    open: true,
+                                                    collection_uuid: item.uuid,
+                                                    book_type: 'coll',
+                                                });
+                                            }}
+                                        >
+                                            管理书籍
+                                        </Menu.Item>
                                         <Menu.Item
                                             key="2"
                                             onClick={() => {

@@ -54,6 +54,8 @@ app.add_url_rule('/api/book/read/uuid/<uuid>/file.epub',
 
 app.add_url_rule('/api/collection/create',
                  view_func=collection.create_collection, methods=['POST'])
+app.add_url_rule('/api/collection/get/books',
+                 view_func=collection.get_coll_books, methods=['GET'])
 app.add_url_rule('/api/collection/get/all',
                  view_func=collection.get_all_collections, methods=['GET'])
 app.add_url_rule('/api/collection/get/multiple',
@@ -66,6 +68,8 @@ app.add_url_rule('/api/collection/delete/bykeyword',
                  view_func=collection.delete_coll_by_keyword, methods=['DELETE'])
 app.add_url_rule('/api/collection/update',
                  view_func=collection.update_coll, methods=['POST'])
+app.add_url_rule('/api/collection/add/book',
+                 view_func=collection.add_book_to_collection, methods=['POST'])
 app.add_url_rule('/api/collection/update/cover',
                  view_func=collection.update_coll_cover, methods=['POST'])
 

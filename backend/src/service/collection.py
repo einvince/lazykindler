@@ -133,6 +133,38 @@ def delete_colls_with_items(coll_uuid):
     return "success"
 
 
+def add_book_to_collection(coll_uuid, book_uuids):
+    book_uuids = book_uuids.strip()
+    book_uuids = book_uuids.removesuffix(';').split(";")
+
+    coll_info = db.query(
+        "select coll_type, item_uuids from coll where uuid='{}';".format(coll_uuid))[0]
+
+    item_uuids = []
+    if coll_info["item_uuids"] is not None:
+        item_uuids = coll_info["item_uuids"].split(";")
+    for book_uuid in book_uuids:
+        if book_uuid.strip() == "":
+            continue
+        if book_uuid not in item_uuids:
+            item_uuids.append(book_uuid)
+
+    item_uuids_str = ";".join(item_uuids).removesuffix(';').removeprefix(';')
+    db.run_sql_with_params(
+        "update coll set item_uuids=? where uuid=?", (item_uuids_str, coll_uuid))
+    for book_uuid in book_uuids:
+        book_info = db.query(
+            "select coll_uuids from book_meta where uuid='{}';".format(book_uuid))[0]
+        coll_item_uuids = []
+        if book_info["coll_uuids"] is not None:
+            coll_item_uuids = book_info["coll_uuids"].split(";")
+        if coll_uuid not in coll_item_uuids:
+            coll_item_uuids.append(coll_uuid)
+            db.run_sql("update book_meta set coll_uuids='{}' where uuid='{}'".format(
+                ";".join(coll_item_uuids), book_uuid))
+    return "success"
+
+
 def update_collection(uuid, key, value):
     value = value.strip()
     value = value.replace(' ', '')
@@ -246,3 +278,19 @@ def delete_colls_by_keyword(keyword, value):
         delete_colls_with_items(uuid)
 
     return "success"
+
+
+def get_coll_books(coll_uuid):
+    coll_info = db.query(
+        "select item_uuids from coll where uuid='{}';".format(coll_uuid))[0]
+    book_uuids = coll_info["item_uuids"].split(";")
+
+    data = []
+    for book_uuid in book_uuids:
+        if book_uuid.strip() == "":
+            continue
+        book_meta = db.query(
+            "select * from book_meta where uuid='{}';".format(book_uuid))[0]
+        data.append(book_meta)
+    data.sort(key=lambda x: x['size'], reverse=True)
+    return jsonify(data)
