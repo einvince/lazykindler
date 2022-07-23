@@ -41,8 +41,6 @@ def store_book_from_path(book_path, data_path):
         subjects = ""
         # 集合
         coll_uuids = ""
-        # asin
-        asin = ""
 
         book_size = os.path.getsize(book_path)
 
@@ -76,9 +74,6 @@ def store_book_from_path(book_path, data_path):
                 publisher = ';'.join(value)
             if key == "author":
                 author = ";".join(value)
-            if key == "asin":
-                if len(value) > 0:
-                    asin = value[0]
 
         if title is not None:
             title = title.strip()
@@ -88,8 +83,6 @@ def store_book_from_path(book_path, data_path):
             author = author.strip()
         if subjects is not None:
             subjects = subjects.strip()
-        if asin is not None:
-            asin = asin.strip()
 
         if title == "":
             base = os.path.basename(book_path)
@@ -105,9 +98,7 @@ def store_book_from_path(book_path, data_path):
             subjects = None
         if coll_uuids == "":
             coll_uuids = None
-        if asin == "":
-            asin = None
-        db.insert_book(uuid, title, asin, None, author, subjects,
+        db.insert_book(uuid, title, None, author, subjects,
                        book_size, publisher, coll_uuids, md5, book_path)
 
         shutil.copy2(book_path, data_path)
