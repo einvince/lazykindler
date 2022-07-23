@@ -31,7 +31,9 @@ def update_coll(item_uuids, coll_uuid):
 
 
 def get_all_collections(coll_type):
-    data = db.query("select * from coll where coll_type='{}';".format(coll_type))
+    data = db.query(
+        "select * from coll where coll_type='{}';".format(coll_type))
+    data.sort(key=lambda x: x['stars'], reverse=True)
     return jsonify(data)
 
 
@@ -62,7 +64,7 @@ def delete_book(uuid):
                 "update coll set item_uuids=? where uuid=?", (None, coll['uuid']))
         else:
             update_coll(';'.join(item_uuids),
-                                   coll['uuid'])
+                        coll['uuid'])
     return "success"
 
 
@@ -79,7 +81,7 @@ def delete_clipping(uuid):
                 "update coll set item_uuids=? where uuid=?", (None, coll['uuid']))
         else:
             update_coll(';'.join(item_uuids),
-                                   coll['uuid'])
+                        coll['uuid'])
     return "success"
 
 
@@ -98,7 +100,7 @@ def delete_colls_without_items(coll_uuid):
         else:
             update_book_meta(book_meta['uuid'],
                              'coll_uuids', ';'.join(coll_uuids))
-    
+
     # 如果是coll是clipping类型
     clippings = db.query(
         "select uuid, coll_uuids from clipping where coll_uuids like '%{}%'".format(coll_uuid))
@@ -110,7 +112,7 @@ def delete_colls_without_items(coll_uuid):
                 "update clipping set coll_uuids=? where uuid=?", (None, clipping["uuid"]))
         else:
             update_clipping(clipping['uuid'],
-                             'coll_uuids', ';'.join(coll_uuids))
+                            'coll_uuids', ';'.join(coll_uuids))
 
     db.run_sql("delete from coll where uuid='{}';".format(coll_uuid))
     return "success"
@@ -140,81 +142,81 @@ def update_collection(uuid, key, value):
         "select coll_type, item_uuids from coll where uuid='{}';".format(uuid))[0]
 
     if key == "item_uuids":
-            old_item_uuids = []
-            if coll_info["item_uuids"] is not None:
-                old_item_uuids = coll_info["item_uuids"].split(";")
+        old_item_uuids = []
+        if coll_info["item_uuids"] is not None:
+            old_item_uuids = coll_info["item_uuids"].split(";")
 
-            new_item_uuids = []
-            if value is not None:
-                new_item_uuids = value.split(";")
-                if "" in new_item_uuids:
-                    new_item_uuids.remove("")
-                for book_uuid in new_item_uuids:
-                    db.run_sql(
-                        "delete from tmp_book where uuid='{}'".format(book_uuid))
+        new_item_uuids = []
+        if value is not None:
+            new_item_uuids = value.split(";")
+            if "" in new_item_uuids:
+                new_item_uuids.remove("")
+            for book_uuid in new_item_uuids:
+                db.run_sql(
+                    "delete from tmp_book where uuid='{}'".format(book_uuid))
 
-            if coll_info['coll_type'] == 'book':
-                # 从书籍的关联集合中删掉移除的集合
-                for book_uuid in difference(old_item_uuids, new_item_uuids):
-                    book_info = db.query(
-                        "select coll_uuids from book_meta where uuid='{}';".format(book_uuid))[0]
-                    coll_item_uuids = []
-                    if book_info["coll_uuids"] is not None:
-                        l = book_info["coll_uuids"].split(";")
-                        l.remove(uuid)
-                        if l is not None and len(l) > 0:
-                            coll_item_uuids = l
-                    if len(coll_item_uuids) == 0:
-                        db.run_sql_with_params(
-                            "update book_meta set coll_uuids=? where uuid=?", (None, book_uuid))
-                    else:
-                        db.run_sql("update book_meta set coll_uuids='{}' where uuid='{}'".format(
-                            ";".join(coll_item_uuids), book_uuid))
-
-                # 往书籍的关联集合中添加新的集合
-                for book_uuid in difference(new_item_uuids, old_item_uuids):
-                    book_info = db.query(
-                        "select coll_uuids from book_meta where uuid='{}';".format(book_uuid))[0]
-                    coll_item_uuids = []
-                    if book_info["coll_uuids"] is not None:
-                        l = book_info["coll_uuids"].split(";")
-                        coll_item_uuids = l.append(uuid)
+        if coll_info['coll_type'] == 'book':
+            # 从书籍的关联集合中删掉移除的集合
+            for book_uuid in difference(old_item_uuids, new_item_uuids):
+                book_info = db.query(
+                    "select coll_uuids from book_meta where uuid='{}';".format(book_uuid))[0]
+                coll_item_uuids = []
+                if book_info["coll_uuids"] is not None:
+                    l = book_info["coll_uuids"].split(";")
+                    l.remove(uuid)
+                    if l is not None and len(l) > 0:
                         coll_item_uuids = l
-                    else:
-                        coll_item_uuids.append(uuid)
+                if len(coll_item_uuids) == 0:
+                    db.run_sql_with_params(
+                        "update book_meta set coll_uuids=? where uuid=?", (None, book_uuid))
+                else:
                     db.run_sql("update book_meta set coll_uuids='{}' where uuid='{}'".format(
                         ";".join(coll_item_uuids), book_uuid))
-            else:
-                # 从clipping的关联集合中删掉移除的集合
-                for clipping_uuid in difference(old_item_uuids, new_item_uuids):
-                    clipping_info = db.query(
-                        "select coll_uuids from clipping where uuid='{}';".format(clipping_uuid))[0]
-                    coll_item_uuids = []
-                    if clipping_info["coll_uuids"] is not None:
-                        l = clipping_info["coll_uuids"].split(";")
-                        l.remove(uuid)
-                        if l is not None and len(l) > 0:
-                            coll_item_uuids = l
-                    if len(coll_item_uuids) == 0:
-                        db.run_sql_with_params(
-                            "update clipping set coll_uuids=? where uuid=?", (None, clipping_uuid))
-                    else:
-                        db.run_sql("update clipping set coll_uuids='{}' where uuid='{}'".format(
-                            ";".join(coll_item_uuids), clipping_uuid))
 
-                # 往clipping的关联集合中添加新的集合
-                for clipping_uuid in difference(new_item_uuids, old_item_uuids):
-                    clipping_info = db.query(
-                        "select coll_uuids from clipping where uuid='{}';".format(clipping_uuid))[0]
-                    coll_item_uuids = []
-                    if clipping_info["coll_uuids"] is not None:
-                        l = clipping_info["coll_uuids"].split(";")
-                        coll_item_uuids = l.append(uuid)
+            # 往书籍的关联集合中添加新的集合
+            for book_uuid in difference(new_item_uuids, old_item_uuids):
+                book_info = db.query(
+                    "select coll_uuids from book_meta where uuid='{}';".format(book_uuid))[0]
+                coll_item_uuids = []
+                if book_info["coll_uuids"] is not None:
+                    l = book_info["coll_uuids"].split(";")
+                    coll_item_uuids = l.append(uuid)
+                    coll_item_uuids = l
+                else:
+                    coll_item_uuids.append(uuid)
+                db.run_sql("update book_meta set coll_uuids='{}' where uuid='{}'".format(
+                    ";".join(coll_item_uuids), book_uuid))
+        else:
+            # 从clipping的关联集合中删掉移除的集合
+            for clipping_uuid in difference(old_item_uuids, new_item_uuids):
+                clipping_info = db.query(
+                    "select coll_uuids from clipping where uuid='{}';".format(clipping_uuid))[0]
+                coll_item_uuids = []
+                if clipping_info["coll_uuids"] is not None:
+                    l = clipping_info["coll_uuids"].split(";")
+                    l.remove(uuid)
+                    if l is not None and len(l) > 0:
                         coll_item_uuids = l
-                    else:
-                        coll_item_uuids.append(uuid)
+                if len(coll_item_uuids) == 0:
+                    db.run_sql_with_params(
+                        "update clipping set coll_uuids=? where uuid=?", (None, clipping_uuid))
+                else:
                     db.run_sql("update clipping set coll_uuids='{}' where uuid='{}'".format(
                         ";".join(coll_item_uuids), clipping_uuid))
+
+            # 往clipping的关联集合中添加新的集合
+            for clipping_uuid in difference(new_item_uuids, old_item_uuids):
+                clipping_info = db.query(
+                    "select coll_uuids from clipping where uuid='{}';".format(clipping_uuid))[0]
+                coll_item_uuids = []
+                if clipping_info["coll_uuids"] is not None:
+                    l = clipping_info["coll_uuids"].split(";")
+                    coll_item_uuids = l.append(uuid)
+                    coll_item_uuids = l
+                else:
+                    coll_item_uuids.append(uuid)
+                db.run_sql("update clipping set coll_uuids='{}' where uuid='{}'".format(
+                    ";".join(coll_item_uuids), clipping_uuid))
 
     if key == "item_uuids" and (value is None or value == ""):
         db.run_sql_with_params(
