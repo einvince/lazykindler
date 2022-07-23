@@ -89,3 +89,15 @@ export const handleClippingContent = (content: string) => {
     console.log(newArr);
     return newArr.join('\n');
 };
+
+export const getArrayValueFromLocalStorage = (key: string) => {
+    const value = localStorage.getItem(key);
+    if (value == null) {
+        return [];
+    }
+    return JSON.parse(value);
+};
+
+export const setArrayValueToLocalStorage = (key: string, value: string[]) => {
+    localStorage.setItem(key, JSON.stringify(value));
+};

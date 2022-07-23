@@ -1,5 +1,5 @@
 import { ReactNode, useRef, useState } from 'react';
-import { ReactEpubViewer } from 'react-epub-viewer';
+import { ReactEpubViewer } from '../components/react-epub-viewer/model';
 import { useDispatch, useSelector } from 'react-redux';
 import { Provider } from 'react-redux';
 
