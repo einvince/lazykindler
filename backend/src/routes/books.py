@@ -2,6 +2,8 @@ from flask import request
 import os
 import pathlib
 from pathlib import Path
+
+from numpy import sort
 from ..util.util import if_ext_supported, ls_books
 from ..service import books
 
@@ -56,7 +58,8 @@ def store_books():
 
 def get_books_meta():
     store_type = request.args.get('storeType')
-    data = books.get_books_meta(store_type)
+    sort_type_value = request.args.get('sortTypeValue')
+    data = books.get_books_meta(store_type, sort_type_value)
     return data
 
 

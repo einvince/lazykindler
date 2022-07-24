@@ -7,8 +7,17 @@ import {
     TagsOutlined,
     UserOutlined,
 } from '@ant-design/icons';
+import ArchiveIcon from '@mui/icons-material/Archive';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Grid, List, ListItem, ListItemButton, ListItemText, ListSubheader } from '@mui/material';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Menu, { MenuProps } from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { alpha, styled } from '@mui/material/styles';
@@ -40,6 +49,46 @@ const RedditTextField = styled((props: TextFieldProps) => (
     },
 }));
 
+const StyledMenu = styled((props: MenuProps) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+        }}
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}
+        {...props}
+    />
+))(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: 6,
+        marginTop: theme.spacing(1),
+        minWidth: 180,
+        color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+        boxShadow:
+            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+        '& .MuiMenu-list': {
+            padding: '4px 0',
+        },
+        '& .MuiMenuItem-root': {
+            '& .MuiSvgIcon-root': {
+                fontSize: 18,
+                color: theme.palette.text.secondary,
+                marginRight: theme.spacing(1.5),
+            },
+            '&:active': {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity,
+                ),
+            },
+        },
+    },
+}));
+
 enum FilterType {
     All = '未分类',
     Stars = '评分',
@@ -62,6 +111,7 @@ type BooksProps = {
 const Books: FC<BooksProps> = (props: BooksProps) => {
     const { storeType } = props;
 
+    const [sortTypeValue, setSortTypeValue] = useState<number>(2);
     const [allBooksMeta, setAllBooksMeta] = useState<BookMetaDataType[]>([]);
     const [data, setData] = useState<BookMetaDataType[]>([]);
 
@@ -80,8 +130,134 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         Publisher: {},
     });
 
-    const fetchBooks = () => {
-        getBooksMeta(storeType).then((data) => {
+    const CustomizedMenus = () => {
+        const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+        const open = Boolean(anchorEl);
+        const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+            setAnchorEl(event.currentTarget);
+        };
+        const handleClose = () => {
+            setAnchorEl(null);
+        };
+
+        return (
+            <div>
+                <Button
+                    id="demo-customized-button"
+                    aria-controls={open ? 'demo-customized-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    variant="contained"
+                    disableElevation
+                    onClick={handleClick}
+                    endIcon={<KeyboardArrowDownIcon />}
+                >
+                    书籍排序方式
+                </Button>
+                <StyledMenu
+                    id="demo-customized-menu"
+                    MenuListProps={{
+                        'aria-labelledby': 'demo-customized-button',
+                    }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <MenuItem
+                        selected={sortTypeValue == 1}
+                        onClick={() => {
+                            handleClose();
+                            fetchBooks(1);
+                            setSortTypeValue(1);
+                        }}
+                        disableRipple
+                    >
+                        {'大小 (小->大)'}
+                    </MenuItem>
+                    <MenuItem
+                        selected={sortTypeValue == 2}
+                        onClick={() => {
+                            handleClose();
+                            fetchBooks(2);
+                            setSortTypeValue(2);
+                        }}
+                        disableRipple
+                    >
+                        {'大小 (大->小)'}
+                    </MenuItem>
+                    <MenuItem
+                        selected={sortTypeValue == 3}
+                        onClick={() => {
+                            handleClose();
+                            fetchBooks(3);
+                            setSortTypeValue(3);
+                        }}
+                        disableRipple
+                    >
+                        {'导入时间 (新->旧)'}
+                    </MenuItem>
+                    <MenuItem
+                        selected={sortTypeValue == 4}
+                        onClick={() => {
+                            handleClose();
+                            fetchBooks(4);
+                            setSortTypeValue(4);
+                        }}
+                        disableRipple
+                    >
+                        {'导入时间 (旧->新)'}
+                    </MenuItem>
+                    <MenuItem
+                        selected={sortTypeValue == 5}
+                        onClick={() => {
+                            handleClose();
+                            fetchBooks(5);
+                            setSortTypeValue(5);
+                        }}
+                        disableRipple
+                    >
+                        {'评分 (高->低)'}
+                    </MenuItem>
+                    <MenuItem
+                        selected={sortTypeValue == 6}
+                        onClick={() => {
+                            handleClose();
+                            fetchBooks(6);
+                            setSortTypeValue(6);
+                        }}
+                        disableRipple
+                    >
+                        {'评分 (低->高)'}
+                    </MenuItem>
+                    <MenuItem
+                        selected={sortTypeValue == 7}
+                        onClick={() => {
+                            handleClose();
+                            fetchBooks(7);
+                            setSortTypeValue(7);
+                        }}
+                        disableRipple
+                    >
+                        {'作者'}
+                    </MenuItem>
+                    <MenuItem
+                        selected={sortTypeValue == 8}
+                        onClick={() => {
+                            handleClose();
+                            fetchBooks(8);
+                            setSortTypeValue(8);
+                        }}
+                        disableRipple
+                    >
+                        {'出版社'}
+                    </MenuItem>
+                </StyledMenu>
+            </div>
+        );
+    };
+
+    const fetchBooks = (sortTypeValue: number) => {
+        getBooksMeta(storeType, sortTypeValue).then((data) => {
             if (data == null) {
                 data = [];
             }
@@ -201,7 +377,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
     };
 
     useEffect(() => {
-        fetchBooks();
+        fetchBooks(2);
     }, []);
 
     const filterData = (data: any, selectedKeyword: any, allBooksMetaList: BookMetaDataType[]) => {
@@ -473,6 +649,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
                         }}
                         subheader={<li />}
                     >
+                        {CustomizedMenus()}
                         {<MenuHeader />}
 
                         {secondLevelMenuList.map((item, index) => (

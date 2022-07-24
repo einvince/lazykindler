@@ -110,7 +110,7 @@ def store_book_from_path(book_path, data_path):
     return if_new_item
 
 
-def get_books_meta(storeType):
+def get_books_meta(storeType, sortTypeValue):
     data = []
     if storeType == 'no_tmp':
         # 查找正式存储的数据
@@ -121,8 +121,37 @@ def get_books_meta(storeType):
         data = db.query(
             "select a.* from book_meta a where exists (select null from tmp_book b where a.uuid = b.uuid); ")
 
-    data.sort(key=lambda x: x['size'], reverse=True)
+    sortTypeValue = int(sortTypeValue)
+
+    if sortTypeValue == 1:
+        data.sort(key=lambda x: x['size'], reverse=False)
+    if sortTypeValue == 2:
+        data.sort(key=lambda x: x['size'], reverse=True)
+    if sortTypeValue == 3:
+        data.sort(key=lambda x: x['create_time'], reverse=True)
+    if sortTypeValue == 4:
+        data.sort(key=lambda x: x['create_time'], reverse=False)
+    if sortTypeValue == 5:
+        data.sort(key=lambda x: x['stars'], reverse=True)
+    if sortTypeValue == 6:
+        data.sort(key=lambda x: x['stars'], reverse=False)
+    if sortTypeValue == 7:
+        data.sort(key=get_author, reverse=False)
+    if sortTypeValue == 8:
+        data.sort(key=get_publisher, reverse=False)
     return jsonify(data)
+
+
+def get_author(book_meta):
+    if book_meta["author"] == None or book_meta["author"].strip() == "":
+        return "无作者"
+    return book_meta["author"]
+
+
+def get_publisher(book_meta):
+    if book_meta["publisher"] == None or book_meta["publisher"].strip() == "":
+        return "无作者"
+    return book_meta["publisher"]
 
 
 def get_book_cover(uuid):

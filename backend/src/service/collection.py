@@ -153,6 +153,9 @@ def add_book_to_collection(coll_uuid, book_uuids):
     db.run_sql_with_params(
         "update coll set item_uuids=? where uuid=?", (item_uuids_str, coll_uuid))
     for book_uuid in book_uuids:
+        db.run_sql(
+            "delete from tmp_book where uuid='{}'".format(book_uuid))
+
         book_info = db.query(
             "select coll_uuids from book_meta where uuid='{}';".format(book_uuid))[0]
         coll_item_uuids = []

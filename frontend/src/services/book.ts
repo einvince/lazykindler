@@ -1,10 +1,12 @@
 import { axiosInstance } from './axios';
 
 // 获取全部书籍信息列表
-export const getBooksMeta = (storeType: string) => {
-    return axiosInstance.get(`/api/book/all_meta?storeType=${storeType}`).then((data: any) => {
-        return data.data;
-    });
+export const getBooksMeta = (storeType: string, sortTypeValue: number) => {
+    return axiosInstance
+        .get(`/api/book/all_meta?storeType=${storeType}&sortTypeValue=${sortTypeValue}`)
+        .then((data: any) => {
+            return data.data;
+        });
 };
 
 // 获取指定uuids的书籍列表
