@@ -152,7 +152,6 @@ export default function AddBooks(props: AddBooksProps) {
     };
 
     const handleOnOk = () => {
-        handleClose();
         addBookToCollection(collection_uuid, selectedRowKeys.join(';')).then(() => {
             fetchAllBooks();
         });
@@ -207,8 +206,16 @@ export default function AddBooks(props: AddBooksProps) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleOnClose}>取消</Button>
-                    <Button onClick={handleOnOk} autoFocus>
-                        确定
+                    <Button
+                        onClick={() => {
+                            handleOnOk();
+                        }}
+                        autoFocus
+                    >
+                        应用
+                    </Button>
+                    <Button onClick={handleOnClose} autoFocus>
+                        关闭
                     </Button>
                 </DialogActions>
             </Dialog>
