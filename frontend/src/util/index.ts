@@ -86,7 +86,6 @@ export const handleClippingContent = (content: string) => {
     let newArr: string[] = _.map(arr, (item: string) => {
         return '        ' + item;
     });
-    console.log(newArr);
     return newArr.join('\n');
 };
 

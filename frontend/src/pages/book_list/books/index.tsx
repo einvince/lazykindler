@@ -7,15 +7,10 @@ import {
     TagsOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import ArchiveIcon from '@mui/icons-material/Archive';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Grid, List, ListItem, ListItemButton, ListItemText, ListSubheader } from '@mui/material';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { OutlinedInputProps } from '@mui/material/OutlinedInput';
@@ -679,7 +674,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
                                                 firstLevelType,
                                                 selectedSecondLevel,
                                             ).then(() => {
-                                                fetchBooks();
+                                                fetchBooks(sortTypeValue);
                                             });
                                         },
                                         prefixIcon: <DeleteIcon />,

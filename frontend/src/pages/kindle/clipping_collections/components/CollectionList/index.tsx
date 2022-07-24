@@ -26,7 +26,6 @@ import {
 } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { List as AntList, Card, Menu } from 'antd';
-import _ from 'lodash';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { v4 as uuidv4 } from 'uuid';
@@ -138,7 +137,7 @@ export default function CollectionList(props: ClippingListProps) {
                             hoverable
                             cover={<Cover uuid={item.uuid} />}
                             actions={[
-                                <Menu mode="vertical" selectable={false}>
+                                <Menu mode="vertical" key={1} selectable={false}>
                                     <SubMenu key="sub4" icon={<SettingOutlined />} title="操作">
                                         <Menu.Item
                                             key="1"

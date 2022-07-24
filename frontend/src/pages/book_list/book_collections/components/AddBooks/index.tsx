@@ -87,7 +87,7 @@ export default function AddBooks(props: AddBooksProps) {
                 setAllBooksMeta(d);
             });
         } else {
-            getBooksMeta(book_type).then((data) => {
+            getBooksMeta(book_type, 3).then((data) => {
                 let d = _.map(data, (item: BookMetaDataType) => {
                     return Object.assign({}, item, { key: item.uuid });
                 });

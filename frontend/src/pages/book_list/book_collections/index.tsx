@@ -25,7 +25,7 @@ import {
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
 import ContextMenu from '../components/ContextMenu';
@@ -73,7 +73,7 @@ export default function BookCollections() {
     };
 
     const fetchBookCollections = () => {
-        getAllCollections("book").then((data: CollectionDataType[]) => {
+        getAllCollections('book').then((data: CollectionDataType[]) => {
             if (data == null) {
                 data = [];
             }
@@ -159,11 +159,16 @@ export default function BookCollections() {
         stars = Number(stars.trim());
         cover = cover.trim();
 
-        createBookCollection(name, "book", description, preHandleSubjects(subjects), stars, cover).then(
-            () => {
-                fetchBookCollections();
-            },
-        );
+        createBookCollection(
+            name,
+            'book',
+            description,
+            preHandleSubjects(subjects),
+            stars,
+            cover,
+        ).then(() => {
+            fetchBookCollections();
+        });
         return true;
     };
 
@@ -367,7 +372,7 @@ export default function BookCollections() {
                                 gutterBottom
                                 component="div"
                             >
-                                名称<span color='red'>*</span>:
+                                名称<span color="red">*</span>:
                             </Typography>
                             <div style={{ position: 'absolute', paddingLeft: 45 }}>
                                 <Input
@@ -417,7 +422,7 @@ export default function BookCollections() {
                                 gutterBottom
                                 component="div"
                             >
-                                标签<span color='red'>*</span>:
+                                标签<span color="red">*</span>:
                             </Typography>
                             <div style={{ position: 'absolute', paddingLeft: 45 }}>
                                 <Input
@@ -442,7 +447,7 @@ export default function BookCollections() {
                                 gutterBottom
                                 component="div"
                             >
-                                评分<span color='red'>*</span>:
+                                评分<span color="red">*</span>:
                             </Typography>
                             <div style={{ position: 'absolute', paddingLeft: 45 }}>
                                 <Input
@@ -467,7 +472,7 @@ export default function BookCollections() {
                                 gutterBottom
                                 component="div"
                             >
-                                封面<span color='red'>*</span>:
+                                封面<span color="red">*</span>:
                             </Typography>
                             <div style={{ position: 'absolute', paddingLeft: 45 }}>
                                 <Dropzone
