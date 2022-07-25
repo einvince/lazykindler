@@ -144,6 +144,19 @@ export default function BookCardList(props: BookCardListProps) {
                                 actions={[
                                     // eslint-disable-next-line react/jsx-key
                                     <Menu mode="vertical" selectable={false}>
+                                        <Button
+                                            variant="text"
+                                            fullWidth
+                                            onClick={() => {
+                                                setUUID(uuidv4());
+                                                setChangeBookCollInfo({
+                                                    item_uuid: item.uuid,
+                                                    open: true,
+                                                });
+                                            }}
+                                        >
+                                            修改集合
+                                        </Button>
                                         <SubMenu
                                             key="sub4"
                                             icon={<SettingOutlined />}

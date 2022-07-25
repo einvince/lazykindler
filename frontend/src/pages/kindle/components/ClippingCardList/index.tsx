@@ -109,6 +109,19 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                                         hoverable
                                         actions={[
                                             <Menu mode="vertical" selectable={false}>
+                                                <Button
+                                                    variant="text"
+                                                    fullWidth
+                                                    onClick={() => {
+                                                        setUUID(uuidv4());
+                                                        setChangeClippingCollInfo({
+                                                            item_uuid: item.uuid,
+                                                            open: true,
+                                                        });
+                                                    }}
+                                                >
+                                                    修改集合
+                                                </Button>
                                                 <SubMenu
                                                     key="sub4"
                                                     icon={<SettingOutlined />}
