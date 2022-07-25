@@ -1,31 +1,16 @@
 import { BookMetaDataType } from '@/pages/data';
 import { getAllCollections, getBooksMetaByUUIDs, updateBookMeta } from '@/services';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import ListItemText from '@mui/material/ListItemText';
-import MenuItem from '@mui/material/MenuItem';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Select from '@mui/material/Select';
+import { Checkbox, Col, Row } from 'antd';
+import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { useEffect, useState } from 'react';
+
 import { CollectionDataType } from '../../book_collections/data';
-
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
 
 type ChangeBookCollProps = {
     item_uuid: string;
@@ -38,13 +23,10 @@ export default function ChangeBookColl(props: ChangeBookCollProps) {
     const { item_uuid, open, handleClose } = props;
 
     const [allColls, setAllColls] = useState<CollectionDataType[]>([]);
-    const [selectedBookUUIDs, setSelectedBookUUIDs] = useState<any>([]);
+    const [selectedCollUUIDs, setSelectedCollUUIDs] = useState<any>([]);
 
-    const handleChange = (event: any) => {
-        const {
-            target: { value },
-        } = event;
-        setSelectedBookUUIDs(value);
+    const onChange = (checkedValues: CheckboxValueType[]) => {
+        setSelectedCollUUIDs(checkedValues);
     };
 
     useEffect(() => {
@@ -54,10 +36,10 @@ export default function ChangeBookColl(props: ChangeBookCollProps) {
         getBooksMetaByUUIDs(item_uuid).then((l: BookMetaDataType[]) => {
             const coll_uuids = l[0].coll_uuids;
             if (coll_uuids != null) {
-                setSelectedBookUUIDs(coll_uuids.split(';'));
+                setSelectedCollUUIDs(coll_uuids.split(';'));
             }
         });
-        getAllCollections("book").then((data: CollectionDataType[]) => {
+        getAllCollections('book').then((data: CollectionDataType[]) => {
             setAllColls(data);
         });
     }, []);
@@ -75,26 +57,24 @@ export default function ChangeBookColl(props: ChangeBookCollProps) {
                 <DialogTitle id="alert-dialog-title">修改集合</DialogTitle>
                 <DialogContent>
                     <FormControl sx={{ m: 6, width: 620 }}>
-                        <InputLabel id="demo-multiple-checkbox-label">选择</InputLabel>
-                        <Select
-                            labelId="demo-multiple-checkbox-label"
-                            id="demo-multiple-checkbox"
-                            multiple
-                            value={selectedBookUUIDs}
-                            onChange={handleChange}
-                            input={<OutlinedInput label="Tag" />}
-                            renderValue={(selected) => selected.join(', ')}
-                            MenuProps={MenuProps}
+                        <Checkbox.Group
+                            style={{ width: '100%' }}
+                            value={selectedCollUUIDs}
+                            onChange={onChange}
                         >
-                            {allColls.map((coll_info: CollectionDataType, index: number) => (
-                                <MenuItem key={index} value={coll_info.uuid}>
-                                    <Checkbox
-                                        checked={selectedBookUUIDs.indexOf(coll_info.uuid) > -1}
-                                    />
-                                    <ListItemText primary={coll_info.name} />
-                                </MenuItem>
-                            ))}
-                        </Select>
+                            <Row>
+                                {allColls.map((coll_info: CollectionDataType, index: number) => (
+                                    <Col key={index} span={8}>
+                                        <Checkbox
+                                            checked={selectedCollUUIDs.includes(coll_info.uuid)}
+                                            value={coll_info.uuid}
+                                        >
+                                            {coll_info.name}
+                                        </Checkbox>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </Checkbox.Group>
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
@@ -105,7 +85,7 @@ export default function ChangeBookColl(props: ChangeBookCollProps) {
                             updateBookMeta(
                                 item_uuid,
                                 'coll_uuids',
-                                selectedBookUUIDs.join(';'),
+                                selectedCollUUIDs.join(';'),
                             ).then(() => {
                                 // fetchBooks();
                             });

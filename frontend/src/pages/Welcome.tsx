@@ -114,10 +114,6 @@ const Welcome: React.FC = () => {
                     上传文件
                 </Button>
 
-                <Button variant="outlined" style={{ marginLeft: 20 }} onClick={onDeleteAllTmpBooks}>
-                    删除所有临时书籍
-                </Button>
-
                 <Button variant="outlined" style={{ marginLeft: 20 }} onClick={onDownloadAllBooks}>
                     下载所有书籍
                 </Button>
@@ -180,12 +176,20 @@ const Welcome: React.FC = () => {
                                 setDeleteType(2);
                             }}
                         >
-                            删除摘抄
+                            删除所有临时书籍
                         </MenuItem>
                         <MenuItem
                             onClick={() => {
                                 setDeleteDialog(true);
                                 setDeleteType(3);
+                            }}
+                        >
+                            删除摘抄
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                setDeleteDialog(true);
+                                setDeleteType(4);
                             }}
                         >
                             删除所有数据
@@ -225,6 +229,8 @@ const Welcome: React.FC = () => {
                                     if (deleteType === 1) {
                                         deleteAllBooks();
                                     } else if (deleteType === 2) {
+                                        onDeleteAllTmpBooks();
+                                    } else if (deleteType === 3) {
                                         deleteAllClipping();
                                     } else {
                                         deleteAllBooks();

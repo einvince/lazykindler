@@ -276,7 +276,16 @@ export default function CollectionList(props: ClippingListProps) {
                                     </div>
                                 }
                                 description={
-                                    <div style={{ maxHeight: 150, overflow: 'auto' }}>
+                                    <div
+                                        style={{ maxHeight: 150, overflow: 'auto' }}
+                                        onClick={() => {
+                                            setUUID1(uuidv4());
+                                            setCheckCollctionClippings({
+                                                open: true,
+                                                collection_uuid: item.uuid,
+                                            });
+                                        }}
+                                    >
                                         <Divider style={{ marginBottom: 10 }} />
                                         <Box
                                             display="flex"

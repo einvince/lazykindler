@@ -105,7 +105,11 @@ export default function CollectionClippings(props: CollectionClippingsProps) {
         const keyword = e.target.value;
         setData(
             _.filter(allClippings, (item: ClippingDataType) => {
-                return item.book_name.includes(keyword) || item.author.includes(keyword)  || item.content.includes(keyword);
+                return (
+                    item.book_name.includes(keyword) ||
+                    item.author.includes(keyword) ||
+                    item.content.includes(keyword)
+                );
             }),
         );
     };
@@ -134,7 +138,12 @@ export default function CollectionClippings(props: CollectionClippingsProps) {
                         }}
                         onChange={onSearchChange}
                     />
-                    <ClippingCardList data={data} fetchClippings={fetchClipping} height={60} columns={3} />
+                    <ClippingCardList
+                        data={data}
+                        fetchClippings={fetchClipping}
+                        height={60}
+                        columns={2}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>关闭</Button>
