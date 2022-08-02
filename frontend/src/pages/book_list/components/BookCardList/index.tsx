@@ -11,6 +11,7 @@ import StraightenIcon from '@mui/icons-material/Straighten';
 import {
     Box,
     Button,
+    ButtonGroup,
     Chip,
     Dialog,
     DialogActions,
@@ -144,19 +145,38 @@ export default function BookCardList(props: BookCardListProps) {
                                 actions={[
                                     // eslint-disable-next-line react/jsx-key
                                     <Menu mode="vertical" selectable={false}>
-                                        <Button
-                                            variant="text"
+                                        <ButtonGroup
                                             fullWidth
-                                            onClick={() => {
-                                                setUUID(uuidv4());
-                                                setChangeBookCollInfo({
-                                                    item_uuid: item.uuid,
-                                                    open: true,
-                                                });
-                                            }}
+                                            variant="text"
+                                            aria-label="text button group"
                                         >
-                                            修改集合
-                                        </Button>
+                                            <Button
+                                                variant="text"
+                                                // fullWidth
+                                                onClick={() => {
+                                                    setUUID(uuidv4());
+                                                    setChangeBookCollInfo({
+                                                        item_uuid: item.uuid,
+                                                        open: true,
+                                                    });
+                                                }}
+                                            >
+                                                修改集合
+                                            </Button>
+                                            <Button
+                                                variant="text"
+                                                // fullWidth
+                                                onClick={() => {
+                                                    setOpenReadBook({
+                                                        open: true,
+                                                        book_uuid: item.uuid,
+                                                        book_title: item.name,
+                                                    });
+                                                }}
+                                            >
+                                                阅读书籍
+                                            </Button>
+                                        </ButtonGroup>
                                         <SubMenu
                                             key="sub4"
                                             icon={<SettingOutlined />}
