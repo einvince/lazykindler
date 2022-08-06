@@ -19,7 +19,8 @@ export default function ReaderDialog(props: ReaderProps) {
             <Dialog open={open} onClose={onClose} maxWidth={'lg'} fullWidth>
                 <DialogContent>
                     <div
-                        style={{ position: 'relative', height: '85vh', backgroundColor: '#ead8bc' }}
+                        // style={{ position: 'relative', height: '85vh', backgroundColor: '#ead8bc' }}
+                        style={{ position: 'relative', height: '85vh' }}
                     >
                         <Reader
                             url={`${backend_server_addr}/api/book/read/uuid/${book_uuid}/file.epub`}

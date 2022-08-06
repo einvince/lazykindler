@@ -418,8 +418,12 @@ def upsert_book_cover(uuid, cover_str):
 
 # 从data目录删除书籍文件
 def delete_book_data_by_uuid(uuid):
-    book_info = db.query(
-        "select md5 from book_meta where uuid='{}'".format(uuid))[0]
+    book_infos = db.query(
+        "select md5 from book_meta where uuid='{}'".format(uuid))
+    if len(book_infos) == 0:
+        return "success"
+
+    book_info = book_infos[0]
     target_md5 = book_info['md5']
 
     path = Path(os.path.dirname(os.path.abspath(__file__))
