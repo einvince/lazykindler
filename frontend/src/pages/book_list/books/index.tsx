@@ -252,6 +252,9 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
     };
 
     const fetchBooks = (sortTypeValue: number) => {
+        if (sortTypeValue == null) {
+            sortTypeValue = 3;
+        }
         getBooksMeta(storeType, sortTypeValue).then((data) => {
             if (data == null) {
                 data = [];
