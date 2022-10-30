@@ -32,14 +32,21 @@ def store_books():
     if not os.path.isdir(desktop_dir):
         desktop_dir = str(Path.home() / "桌面")
 
+    lazykindler_dir = str(os.path.join(download_dir, "lazykindler"))
+
     book_paths = [download_dir, desktop_dir]
 
     count = 0
     index = 0
     for book_path in book_paths:
+
         if os.path.isdir(book_path):
             filepaths = ls_books(book_path)
             for filepath in filepaths:
+                # 已经下载的文件不需要重复上传
+                if filepath.startswith(lazykindler_dir):
+                    continue
+
                 index += 1
                 print(
                     "扫描书籍-----------index = {}, filepath = {}".format(index, filepath))

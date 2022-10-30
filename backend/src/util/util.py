@@ -1,11 +1,10 @@
-from flask import jsonify
-import hashlib
 import uuid
 import os
 import pathlib
 import hashlib
-from pathlib import Path
 import epub_meta
+
+from flask import jsonify
 
 
 def get_book_meta_info(book_path):
@@ -106,6 +105,11 @@ def add_md5_to_filename(filepath):
 def remove_md5_from_filename(filepath):
     filename, file_extension = os.path.splitext(filepath)
     return filename.split("______", 1)[0] + file_extension
+
+
+def get_md5_from_filename(filepath):
+    filename, _ = os.path.splitext(filepath)
+    return filename.split("______", 1)[1]
 
 
 # 转换文件格式时，文件名中可能会包含各种特殊字符，

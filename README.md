@@ -42,7 +42,7 @@ mobi 和 azw3。其他类型的电子书在导入时会自动被忽略。\
 
 ### 下载
 
-平台里的书籍都可以在操作里点击`下载`，下载后书籍会被存放到用户主目录的 `下载` 或者 `Download`。
+平台里的书籍都可以在操作里点击`下载`，下载后书籍会被存放到用户主目录的 `下载` 或者 `Download`。`下载所有书籍`会把书籍下载用户主目录的`下载` 或者 `Download`下的 `lazykindler`目录。**注意，上传文件时，会忽略`lazykindler`下载所有文件**。
 
 ### 阅读
 
@@ -130,12 +130,8 @@ yarn start
 
 ![Xnip2022-08-03_00-30-22](https://user-images.githubusercontent.com/16133390/182427487-07c4175d-59ad-4061-b844-fd4bfa451a18.jpg)
 
-
-
 <img width="1438" alt="Snipaste_2022-03-04_18-45-43" src="https://user-images.githubusercontent.com/16133390/167545628-82ce810d-0c77-448e-8b5c-152c859148aa.jpg">
 <img width="1438" alt="Snipaste_2022-03-04_18-45-42" src="https://user-images.githubusercontent.com/16133390/167545619-34eb7788-fa19-4262-9417-4ed490e464ac.jpg">
-
-
 
 ![Xnip2022-07-23_15-30-48](https://user-images.githubusercontent.com/16133390/180595365-f3fe4929-c1fa-4146-b592-8770af283ee7.jpg)
 ![Xnip2022-07-23_15-30-15](https://user-images.githubusercontent.com/16133390/180595367-0c79bd4f-422e-4c00-941d-96c1d9c3f1da.jpg)

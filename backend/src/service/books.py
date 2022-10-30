@@ -13,7 +13,7 @@ from ..service.collection import update_coll
 from ..core.kindle.meta.metadata import get_metadata
 
 from ..database.database import db
-from ..util.util import add_md5_to_filename, escape_string, generate_uuid, get_md5, get_now, is_all_chinese, difference, remove_md5_from_filename, get_book_meta_info
+from ..util.util import add_md5_to_filename, escape_string, generate_uuid, get_md5, get_md5_from_filename, get_now, is_all_chinese, difference, remove_md5_from_filename, get_book_meta_info
 import json
 
 
@@ -485,6 +485,10 @@ def download_all_files():
     if not isExist:
         os.makedirs(target_dir)
 
+    md5_list_file_path = os.path.join(target_dir, "md5_list.txt")
+    fle = Path(md5_list_file_path)
+    fle.touch(exist_ok=True)
+
     path = Path(os.path.dirname(os.path.abspath(__file__))
                 ).parent.parent.absolute()
     data_path = os.path.join(path, "data")
@@ -492,16 +496,36 @@ def download_all_files():
     if not is_exist:
         return "success"
 
+    md5_m = {}
+    md5_list = []
+    with open(md5_list_file_path) as file:
+        md5_list = [line.rstrip() for line in file]
+        for md5 in md5_list:
+            md5_m[md5] = {}
+
     filepaths = ls_books(data_path)
     for filepath in filepaths:
+        md5_filename = os.path.basename(filepath)
+        md5 = get_md5_from_filename(md5_filename)
+        if md5 in md5_m:
+            continue
+
         shutil.copy2(filepath, target_dir)
 
-        md5_filename = os.path.basename(filepath)
+        md5_list.append(md5)
         original_filename = remove_md5_from_filename(md5_filename)
 
         p1 = os.path.join(target_dir, md5_filename)
         p2 = os.path.join(target_dir, original_filename)
         os.rename(p1, p2)
+
+    # 清空文件内容
+    open(md5_list_file_path, 'w').close()
+
+    with open(md5_list_file_path, 'w') as f:
+        for line in md5_list:
+            f.write(f"{line}\n")
+
     return "success"
 
 
