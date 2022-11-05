@@ -476,9 +476,9 @@ def download_file(uuid):
 
 
 def download_all_files():
-    download_dir = str(Path.home() / "Downloads")
+    download_dir = str(Path.home() / "Documents")
     if not os.path.isdir(download_dir):
-        download_dir = str(Path.home() / "下载")
+        download_dir = str(Path.home() / "文稿")
 
     target_dir = os.path.join(download_dir, "lazykindler")
     isExist = os.path.exists(target_dir)
