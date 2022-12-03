@@ -93,7 +93,6 @@ def utf8len(s):
 
 def add_md5_to_filename(filepath):
     filename, file_extension = os.path.splitext(filepath)
-    print(file_extension)
     md5 = get_md5(filepath)
 
     con_str = "______"
