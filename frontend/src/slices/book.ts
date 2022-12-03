@@ -34,22 +34,12 @@ const initialCurrentLocation: Page = {
     base: '',
 };
 
-/** 초기 색상표 상태 */
-const initialColorList: Color[] = [
-    { name: 'Red', code: palette.red4 },
-    { name: 'Orange', code: palette.orange4 },
-    { name: 'Yellow', code: palette.yellow4 },
-    { name: 'Green', code: palette.green4 },
-    { name: 'Blue', code: palette.blue4 },
-    { name: 'Purple', code: palette.purple4 },
-];
 
 const initialState: BookState = {
     book: initialBook,
     currentLocation: initialCurrentLocation,
     toc: [],
     highlights: [],
-    colorList: initialColorList,
 };
 
 /* 
@@ -104,7 +94,6 @@ export interface BookState {
     currentLocation: Page;
     toc: Toc[];
     highlights: Highlight[];
-    colorList: Color[];
 }
 
 export const {

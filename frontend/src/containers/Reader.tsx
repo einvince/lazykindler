@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Provider } from 'react-redux';
 
 import LoadingView from '../LoadingView';
-// components
-import useHighlight from '../lib/hooks/useHighlight';
 // hooks
 import useMenu from '../lib/hooks/useMenu';
 // styles
@@ -23,9 +21,7 @@ import Toc from '../types/toc';
 import Footer from './Footer';
 // containers
 import Header from './Header';
-import ContextMenu from './commons/ContextMenu';
 import Nav from './menu/Nav';
-import Learning from './menu/Note';
 import Option from './menu/Option';
 
 const Reader = ({ url, book_title, loadingView }: Props) => {
@@ -35,9 +31,6 @@ const Reader = ({ url, book_title, loadingView }: Props) => {
     const viewerRef = useRef<ViewerRef | any>(null);
     const navRef = useRef<HTMLDivElement | null>(null);
     const optionRef = useRef<HTMLDivElement | null>(null);
-    const learningRef = useRef<HTMLDivElement | null>(null);
-
-    const [isContextMenu, setIsContextMenu] = useState<boolean>(false);
 
     const [bookStyle, setBookStyle] = useState<BookStyle>({
         fontFamily: 'Origin',
@@ -55,15 +48,6 @@ const Reader = ({ url, book_title, loadingView }: Props) => {
 
     const [navControl, onNavToggle] = useMenu(navRef, 300);
     const [optionControl, onOptionToggle, emitEvent] = useMenu(optionRef, 300);
-    const [learningControl, onLearningToggle] = useMenu(learningRef, 300);
-    const {
-        selection,
-        onSelection,
-        onClickHighlight,
-        onAddHighlight,
-        onRemoveHighlight,
-        onUpdateHighlight,
-    } = useHighlight(viewerRef, setIsContextMenu, bookStyle, bookOption.flow);
 
     /**
      * Change Epub book information
@@ -116,17 +100,6 @@ const Reader = ({ url, book_title, loadingView }: Props) => {
      */
     const onPageChange = (page: Page) => dispatch(updateCurrentPage(page));
 
-    /**
-     * ContextMenu on
-     * @param cfiRange CfiRange
-     */
-    const onContextMenu = (cfiRange: string) => {
-        const result = onSelection(cfiRange);
-        setIsContextMenu(result);
-    };
-
-    /** ContextMenu off */
-    const onContextmMenuRemove = () => setIsContextMenu(false);
 
     return (
         <div>
@@ -134,7 +107,6 @@ const Reader = ({ url, book_title, loadingView }: Props) => {
                 <Header
                     onNavToggle={onNavToggle}
                     onOptionToggle={onOptionToggle}
-                    onLearningToggle={onLearningToggle}
                     book_title={book_title}
                 />
 
@@ -147,7 +119,6 @@ const Reader = ({ url, book_title, loadingView }: Props) => {
                         onBookInfoChange={onBookInfoChange}
                         onPageChange={onPageChange}
                         onTocChange={onTocChange}
-                        onSelection={onContextMenu}
                         loadingView={loadingView || <LoadingView />}
                         ref={viewerRef}
                     />
@@ -178,25 +149,6 @@ const Reader = ({ url, book_title, loadingView }: Props) => {
                 onBookStyleChange={onBookStyleChange}
                 onBookOptionChange={onBookOptionChange}
                 ref={optionRef}
-            />
-
-            {/* <Learning
-                control={learningControl}
-                onToggle={onLearningToggle}
-                onClickHighlight={onClickHighlight}
-                emitEvent={emitEvent}
-                viewerRef={viewerRef}
-                ref={learningRef}
-            /> */}
-
-            <ContextMenu
-                active={isContextMenu}
-                viewerRef={viewerRef}
-                selection={selection}
-                onAddHighlight={onAddHighlight}
-                onRemoveHighlight={onRemoveHighlight}
-                onUpdateHighlight={onUpdateHighlight}
-                onContextmMenuRemove={onContextmMenuRemove}
             />
         </div>
     );

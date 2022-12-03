@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 import ControlIconBtn from '../../components/option/ControlIconBtn';
 import ControlIconBtnWrapper from '../../components/option/ControlIconBtnWrapper';
-import OptionDropdown from '../../components/option/Dropdown';
 import OptionSlider from '../../components/option/Slider';
 // components
 import { MenuControl } from '../../lib/hooks/useMenu';
@@ -175,12 +174,6 @@ const Option = ({
                                         onClick={() => onClickViewType(false)}
                                     />
                                 </ControlIconBtnWrapper>
-                                <OptionDropdown
-                                    title="字体"
-                                    defaultValue={fontFamily}
-                                    valueList={['Origin', 'Roboto']}
-                                    onSelect={onSelectFontFamily}
-                                />
                                 <OptionSlider
                                     active={true}
                                     title="字体大小"

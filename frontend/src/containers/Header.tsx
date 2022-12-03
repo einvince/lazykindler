@@ -7,7 +7,7 @@ import Layout, { AutoLayout } from '../components/header/Layout';
 import Logo from '../components/header/Logo';
 import Wrapper from '../components/header/Wrapper';
 
-const Header = ({ onNavToggle, onOptionToggle, onLearningToggle, book_title }: Props) => {
+const Header = ({ onNavToggle, onOptionToggle, book_title }: Props) => {
     return (
         <Wrapper>
             <Layout>
@@ -19,9 +19,6 @@ const Header = ({ onNavToggle, onOptionToggle, onLearningToggle, book_title }: P
                     <Stack spacing={2} direction="row">
                         <Button variant="text" onClick={onNavToggle}>
                             目录
-                        </Button>
-                        <Button variant="text" onClick={onLearningToggle}>
-                            高亮
                         </Button>
                         <Button variant="text" onClick={onOptionToggle}>
                             设置
@@ -36,7 +33,6 @@ const Header = ({ onNavToggle, onOptionToggle, onLearningToggle, book_title }: P
 interface Props {
     onNavToggle: () => void;
     onOptionToggle: () => void;
-    onLearningToggle: () => void;
     book_title: string;
 }
 
