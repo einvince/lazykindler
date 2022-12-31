@@ -45,6 +45,15 @@ def handle_moon_reader_clipping_file(filepath):
     base, ext = os.path.splitext(filepath)
     book_name = os.path.basename(base)
 
+    # 从文件名里提取的名称一般很长，书名后可能加了很多乱七八糟的说明，为了
+    # 尽可能获取短的有效的名称，按照下面的方式提取有效字符串
+    extracted_book_name_v1, _, _ = book_name.partition('(')
+    extracted_book_name_v2, _, _ = book_name.partition('（')
+    if len(extracted_book_name_v1) < len(extracted_book_name_v2):
+        book_name = extracted_book_name_v1
+    else:
+        book_name = extracted_book_name_v2
+
     with open(filepath, 'r') as file:
         blocks = []
         current_block = []
