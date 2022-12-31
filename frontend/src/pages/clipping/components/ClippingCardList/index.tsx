@@ -30,7 +30,7 @@ const { SubMenu } = Menu;
 type ClippingCardListProps = {
     data: any;
     fetchClippings: any;
-    height: Number;
+    // height: Number;
     columns: number;
 };
 
@@ -57,7 +57,7 @@ const initialClippingDialogInfo = {
 };
 
 const ClippingCardList = (props: ClippingCardListProps) => {
-    const { data, fetchClippings, height, columns } = props;
+    const { data, fetchClippings, columns } = props;
 
     const [dialogInfo, setDialogInfo] = useState<any>(initialDialogInfo);
     const [changeClippingCollInfo, setChangeClippingCollInfo] = useState<any>({
@@ -97,21 +97,82 @@ const ClippingCardList = (props: ClippingCardListProps) => {
     return (
         <div>
             <GridContent>
-                <Box sx={{ overflowY: 'scroll' }} style={{ height: `${height}vh` }}>
-                    <ImageList variant="masonry" cols={columns} gap={15}>
-                        {data
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((item: ClippingDataType) => (
-                                <ImageListItem key={item.uuid}>
-                                    <Card
-                                        // className={styles.card}
-                                        className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']}`}
-                                        hoverable
-                                        actions={[
-                                            <Menu mode="vertical" selectable={false}>
-                                                <Button
-                                                    variant="text"
-                                                    fullWidth
+                <ImageList variant="masonry" cols={columns} gap={15}>
+                    {data
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((item: ClippingDataType) => (
+                            <ImageListItem key={item.uuid}>
+                                <Card
+                                    // className={styles.card}
+                                    className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']}`}
+                                    hoverable
+                                    actions={[
+                                        <Menu mode="vertical" selectable={false}>
+                                            <Button
+                                                variant="text"
+                                                fullWidth
+                                                onClick={() => {
+                                                    setUUID(uuidv4());
+                                                    setChangeClippingCollInfo({
+                                                        item_uuid: item.uuid,
+                                                        open: true,
+                                                    });
+                                                }}
+                                            >
+                                                修改集合
+                                            </Button>
+                                            <SubMenu
+                                                key="sub4"
+                                                icon={<SettingOutlined />}
+                                                title="操作"
+                                                style={{ zIndex: 10 }}
+                                            >
+                                                <Menu.Item
+                                                    key="1"
+                                                    onClick={() => {
+                                                        setDialogInfo({
+                                                            title: '修改评分',
+                                                            oldValue: item.stars,
+                                                            allowEmptyStr: false,
+                                                            handleOK: (newValue: any) => {
+                                                                updateClipping(
+                                                                    item.uuid,
+                                                                    'stars',
+                                                                    newValue,
+                                                                ).then(() => {
+                                                                    fetchClippings();
+                                                                });
+                                                            },
+                                                            open: true,
+                                                        });
+                                                    }}
+                                                >
+                                                    修改评分
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    key="2"
+                                                    onClick={() => {
+                                                        setDialogInfo({
+                                                            title: '修改标签',
+                                                            oldValue: item.subjects,
+                                                            allowEmptyStr: true,
+                                                            handleOK: (newValue: any) => {
+                                                                updateClipping(
+                                                                    item.uuid,
+                                                                    'subjects',
+                                                                    newValue,
+                                                                ).then(() => {
+                                                                    fetchClippings();
+                                                                });
+                                                            },
+                                                            open: true,
+                                                        });
+                                                    }}
+                                                >
+                                                    修改标签
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    key="3"
                                                     onClick={() => {
                                                         setUUID(uuidv4());
                                                         setChangeClippingCollInfo({
@@ -121,185 +182,116 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                                                     }}
                                                 >
                                                     修改集合
-                                                </Button>
-                                                <SubMenu
-                                                    key="sub4"
-                                                    icon={<SettingOutlined />}
-                                                    title="操作"
-                                                    style={{ zIndex: 10 }}
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    key="4"
+                                                    onClick={() => {
+                                                        setDialogInfo({
+                                                            title: '修改作者',
+                                                            oldValue: item.author,
+                                                            allowEmptyStr: true,
+                                                            handleOK: (newValue: any) => {
+                                                                updateClipping(
+                                                                    item.uuid,
+                                                                    'author',
+                                                                    newValue,
+                                                                ).then(() => {
+                                                                    fetchClippings();
+                                                                });
+                                                            },
+                                                            open: true,
+                                                        });
+                                                    }}
                                                 >
-                                                    <Menu.Item
-                                                        key="1"
-                                                        onClick={() => {
-                                                            setDialogInfo({
-                                                                title: '修改评分',
-                                                                oldValue: item.stars,
-                                                                allowEmptyStr: false,
-                                                                handleOK: (newValue: any) => {
-                                                                    updateClipping(
-                                                                        item.uuid,
-                                                                        'stars',
-                                                                        newValue,
-                                                                    ).then(() => {
-                                                                        fetchClippings();
-                                                                    });
-                                                                },
-                                                                open: true,
-                                                            });
-                                                        }}
-                                                    >
-                                                        修改评分
-                                                    </Menu.Item>
-                                                    <Menu.Item
-                                                        key="2"
-                                                        onClick={() => {
-                                                            setDialogInfo({
-                                                                title: '修改标签',
-                                                                oldValue: item.subjects,
-                                                                allowEmptyStr: true,
-                                                                handleOK: (newValue: any) => {
-                                                                    updateClipping(
-                                                                        item.uuid,
-                                                                        'subjects',
-                                                                        newValue,
-                                                                    ).then(() => {
-                                                                        fetchClippings();
-                                                                    });
-                                                                },
-                                                                open: true,
-                                                            });
-                                                        }}
-                                                    >
-                                                        修改标签
-                                                    </Menu.Item>
-                                                    <Menu.Item
-                                                        key="3"
-                                                        onClick={() => {
-                                                            setUUID(uuidv4());
-                                                            setChangeClippingCollInfo({
-                                                                item_uuid: item.uuid,
-                                                                open: true,
-                                                            });
-                                                        }}
-                                                    >
-                                                        修改集合
-                                                    </Menu.Item>
-                                                    <Menu.Item
-                                                        key="4"
-                                                        onClick={() => {
-                                                            setDialogInfo({
-                                                                title: '修改作者',
-                                                                oldValue: item.author,
-                                                                allowEmptyStr: true,
-                                                                handleOK: (newValue: any) => {
-                                                                    updateClipping(
-                                                                        item.uuid,
-                                                                        'author',
-                                                                        newValue,
-                                                                    ).then(() => {
-                                                                        fetchClippings();
-                                                                    });
-                                                                },
-                                                                open: true,
-                                                            });
-                                                        }}
-                                                    >
-                                                        修改作者
-                                                    </Menu.Item>
-                                                    <Menu.Item
-                                                        key="6"
-                                                        onClick={() => {
-                                                            handleClickOpen(item.uuid);
-                                                        }}
-                                                    >
-                                                        <span style={{ color: 'red' }}>删除</span>
-                                                    </Menu.Item>
-                                                </SubMenu>
-                                            </Menu>,
-                                        ]}
-                                    >
-                                        <Card.Meta
-                                            title={<a>{item.book_name}</a>}
-                                            description={
-                                                <div>
-                                                    作者:{' '}
-                                                    <span style={{ paddingLeft: 30 }}>
-                                                        {item.author}
-                                                    </span>
-                                                    <br />
-                                                    添加日期:{' '}
-                                                    <span style={{ paddingLeft: 1 }}>
-                                                        {moment
-                                                            .unix(~~item.addDate)
-                                                            .format('yyyy-MM-DD HH:mm:ss')}
-                                                    </span>
-                                                    <br />
-                                                    标签:{' '}
-                                                    <span style={{ paddingLeft: 30 }}>
-                                                        {item.subjects}
-                                                    </span>
-                                                </div>
+                                                    修改作者
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    key="6"
+                                                    onClick={() => {
+                                                        handleClickOpen(item.uuid);
+                                                    }}
+                                                >
+                                                    <span style={{ color: 'red' }}>删除</span>
+                                                </Menu.Item>
+                                            </SubMenu>
+                                        </Menu>,
+                                    ]}
+                                >
+                                    <Card.Meta
+                                        title={<a>{item.book_name}</a>}
+                                        description={
+                                            <div>
+                                                作者:{' '}
+                                                <span style={{ paddingLeft: 30 }}>
+                                                    {item.author}
+                                                </span>
+                                                <br />
+                                                添加日期:{' '}
+                                                <span style={{ paddingLeft: 1 }}>
+                                                    {moment
+                                                        .unix(~~item.addDate)
+                                                        .format('yyyy-MM-DD HH:mm:ss')}
+                                                </span>
+                                                <br />
+                                                标签:{' '}
+                                                <span style={{ paddingLeft: 30 }}>
+                                                    {item.subjects}
+                                                </span>
+                                            </div>
+                                        }
+                                    />
+                                    <article
+                                        className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']} ${hetiStyles['heti-hang']} ${hetiStyles['heti-meta heti-small']} `}
+                                        style={{
+                                            height: '100%',
+                                            paddingTop: 10,
+                                            fontSize: 15,
+                                            whiteSpace: 'pre-wrap',
+                                        }}
+                                        onClick={() => {
+                                            let selectedText = window.getSelection()!.toString();
+                                            if (selectedText.length > 0) {
+                                                return;
                                             }
-                                        />
-                                        <article
-                                            className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']} ${hetiStyles['heti-hang']} ${hetiStyles['heti-meta heti-small']} `}
-                                            style={{
-                                                height: '100%',
-                                                paddingTop: 10,
-                                                fontSize: 15,
-                                                whiteSpace: 'pre-wrap',
-                                            }}
-                                            onClick={() => {
-                                                let selectedText = window
-                                                    .getSelection()!
-                                                    .toString();
-                                                if (selectedText.length > 0) {
-                                                    return;
-                                                }
-                                                setClippingDialogInfo({
-                                                    uuid: item.uuid,
+                                            setClippingDialogInfo({
+                                                uuid: item.uuid,
+                                                open: true,
+                                                handleClose: () => {
+                                                    setChangeClippingCollInfo(
+                                                        initialClippingDialogInfo,
+                                                    );
+                                                },
+                                                clippingContent: item.content,
+                                                highlights: item.highlights,
+                                                book_name: item.book_name,
+                                            });
+                                        }}
+                                        onMouseUp={() => {
+                                            let uuid = item.uuid;
+                                            let selectedText = window.getSelection()!.toString();
+                                            if (selectedText != '') {
+                                                let info = {
                                                     open: true,
-                                                    handleClose: () => {
-                                                        setChangeClippingCollInfo(
-                                                            initialClippingDialogInfo,
-                                                        );
-                                                    },
-                                                    clippingContent: item.content,
-                                                    highlights: item.highlights,
-                                                    book_name: item.book_name,
-                                                });
-                                            }}
-                                            onMouseUp={() => {
-                                                let uuid = item.uuid;
-                                                let selectedText = window
-                                                    .getSelection()!
-                                                    .toString();
-                                                if (selectedText != '') {
-                                                    let info = {
-                                                        open: true,
-                                                        selectedText: selectedText,
-                                                        uuid: uuid,
-                                                    };
-                                                    setHighlightInfo(info);
-                                                }
-                                            }}
-                                        >
-                                            <Highlighter
-                                                // style={{ fontSize: 17 }}
-                                                highlightStyle={{ color: 'red' }}
-                                                searchWords={item.highlights || []}
-                                                autoEscape={true}
-                                                // textToHighlight={item.content}
-                                                textToHighlight={handleClippingContent(
-                                                    item.content,
-                                                )}
-                                            />
-                                        </article>
-                                    </Card>
-                                </ImageListItem>
-                            ))}
-                    </ImageList>
-                </Box>
+                                                    selectedText: selectedText,
+                                                    uuid: uuid,
+                                                };
+                                                setHighlightInfo(info);
+                                            }
+                                        }}
+                                    >
+                                        <Highlighter
+                                            // style={{ fontSize: 17 }}
+                                            highlightStyle={{ color: 'red' }}
+                                            searchWords={item.highlights || []}
+                                            autoEscape={true}
+                                            // textToHighlight={item.content}
+                                            textToHighlight={handleClippingContent(item.content)}
+                                        />
+                                    </article>
+                                </Card>
+                            </ImageListItem>
+                        ))}
+                </ImageList>
             </GridContent>
             <TablePagination
                 rowsPerPageOptions={[15, 25, 50, 100, 200, 300, 500]}

@@ -498,8 +498,8 @@ const Clippings: FC = () => {
                     <ClippingCardList
                         data={data}
                         fetchClippings={fetchClippings}
-                        height={83}
-                        columns={3}
+                        // height={83}
+                        columns={2}
                     />
                 </Grid>
             </Grid>
