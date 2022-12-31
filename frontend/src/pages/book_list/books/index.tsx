@@ -630,7 +630,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
                         marginTop: -15,
                         marginLeft: -13.5,
                     }}
-                    onChange={onSearchChange}
+                    // onChange={onSearchChange}
+                    onBlur={onSearchChange}
                 />
             </div>
 
