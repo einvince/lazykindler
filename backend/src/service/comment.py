@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from ..util.util import generate_uuid, get_now, utf8len
+from ..util.util import generate_uuid
 from ..database.database import db
 
 

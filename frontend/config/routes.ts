@@ -26,21 +26,21 @@
         ],
     },
     {
-        path: '/kindle',
-        name: 'kindle',
+        path: '/clipping',
+        name: '高亮笔记',
         icon: 'FireOutlined',
         routes: [
             {
-                path: '/kindle/colls',
+                path: '/clipping/colls',
                 name: '集合',
                 icon: 'smile',
-                component: './kindle/clipping_collections',
+                component: './clipping/clipping_collections',
             },
             {
-                path: '/kindle/clippings',
+                path: '/clipping/clippings',
                 name: '摘抄',
                 icon: 'smile',
-                component: './kindle/clippings',
+                component: './clipping/clippings',
             },
             { component: './404' },
         ],

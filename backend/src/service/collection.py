@@ -1,11 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env pytho3
 # -*- coding: utf-8 -*-
 
-from flask import jsonify
 import hashlib
+from flask import jsonify
 
 from .common import update_book_meta, update_clipping
-
 from ..database.database import db
 from ..util.util import generate_uuid, difference
 

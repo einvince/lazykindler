@@ -1,20 +1,25 @@
-#!/usr/bin/env python
+#!/usr/bin/env pytho3
 # -*- coding: utf-8 -*-
 
 import os
-from flask import jsonify, send_file
-from ..service import cover
 import shutil
 from pathlib import Path
+from flask import jsonify, send_file
+
+from ..service import cover
 from ..routes.books import ls_books
-
 from ..service.collection import update_coll
-
 from ..core.kindle.meta.metadata import get_metadata
-
 from ..database.database import db
-from ..util.util import add_md5_to_filename, escape_string, generate_uuid, get_md5, get_md5_from_filename, get_now, is_all_chinese, difference, remove_md5_from_filename, get_book_meta_info
-import json
+from ..util.util import add_md5_to_filename, \
+                        escape_string,  \
+                        generate_uuid,  \
+                        get_md5,  \
+                        get_md5_from_filename,  \
+                        get_now,  \
+                        is_all_chinese,  \
+                        difference,  \
+                        remove_md5_from_filename
 
 
 def store_book_from_path(book_path, data_path):

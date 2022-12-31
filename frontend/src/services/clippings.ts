@@ -3,6 +3,7 @@ import { axiosInstance } from './axios';
 // 获取剪切列表
 export const getAllClippings = () => {
     return axiosInstance.get(`/api/clipping/get/all`).then((data: any) => {
+        console.log("aa11---------data = ", data)
         return data.data;
     });
 };

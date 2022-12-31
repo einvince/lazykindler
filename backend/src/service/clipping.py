@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pytho3
 # -*- coding: utf-8 -*-
 
 from os import path
@@ -9,8 +9,7 @@ import hashlib
 from flask import jsonify
 
 from ..service.collection import update_coll
-
-from ..util.util import difference, generate_uuid, get_md5
+from ..util.util import difference, generate_uuid
 from ..database.database import db
 
 clipping_path = u'/Volumes/Kindle/documents/My Clippings.txt'
@@ -76,7 +75,7 @@ class ClippingHelper(object):
 
 
 def get_all_clippings():
-    data = db.query("select * from clipping where deleted != 1;")
+    data = db.query("select * from clipping where deleted is null;")
     data.sort(key=lambda x: x['addDate'], reverse=True)
     for i, e in enumerate(data):
         if e["highlights"] is not None:

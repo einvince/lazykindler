@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pytho3
 # -*- encoding: utf-8
 
 import imghdr

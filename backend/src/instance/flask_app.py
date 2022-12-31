@@ -1,29 +1,30 @@
-# instance/flask_app.py
+#!/usr/bin/env pytho3
+# -*- coding: utf-8 -*-
 
-# third-party imports
 from flask import Flask
 from flask_cors import CORS
 import os
 import time
 
 from ..service.clipping import ClippingHelper
-
+from ..service.moon_reader import import_moon_reader_clipping
 from ..routes import books, clipping, collection, comment
 
 
-# flask application initialization
 app = Flask(__name__)
 
-# cross origin resource sharing
-# CORS(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 pid = os.fork()
 if pid == 0:
     while True:
-        time.sleep(10)
+        # 导入 kindle 中的高亮文件
         clipping_helper = ClippingHelper()
         clipping_helper.import_clippings()
+
+        # 导入 "静读天下"apk中导出的电子书高亮文件
+        import_moon_reader_clipping()
+        time.sleep(10)
 
 app.add_url_rule('/api/book/upload',
                  view_func=books.store_books, methods=['POST'])

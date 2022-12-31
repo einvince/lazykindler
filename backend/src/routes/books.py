@@ -4,7 +4,7 @@ import pathlib
 from pathlib import Path
 
 from numpy import sort
-from ..util.util import if_ext_supported, ls_books
+from ..util.util import if_ext_supported_book_ext, ls_books
 from ..service import books
 
 
@@ -22,17 +22,23 @@ def store_books():
     isExist = os.path.exists(data_path)
     if not isExist:
         os.makedirs(data_path)
+    
+    book_paths = []
+    dir_path = str(Path.home() / "Downloads")
+    if os.path.isdir(dir_path):
+        book_paths.append(dir_path)
 
-    # 扫描下载、桌面等目录的书籍
-    download_dir = str(Path.home() / "Downloads")
-    if not os.path.isdir(download_dir):
-        download_dir = str(Path.home() / "下载")
+    dir_path = str(Path.home() / "下载")
+    if os.path.isdir(dir_path):
+        book_paths.append(dir_path)
 
-    desktop_dir = str(Path.home() / "Desktop")
-    if not os.path.isdir(desktop_dir):
-        desktop_dir = str(Path.home() / "桌面")
+    dir_path = str(Path.home() / "Desktop")
+    if os.path.isdir(dir_path):
+        book_paths.append(dir_path)
 
-    book_paths = [download_dir, desktop_dir]
+    dir_path = str(Path.home() / "桌面")
+    if os.path.isdir(dir_path):
+        book_paths.append(dir_path)
 
     count = 0
     index = 0
@@ -47,7 +53,7 @@ def store_books():
                     count += 1
 
         else:
-            if if_ext_supported(pathlib.Path(book_path).suffix):
+            if if_ext_supported_book_ext(pathlib.Path(book_path).suffix):
                 index += 1
                 print(
                     "扫描书籍-----------index = {}, filepath = {}".format(index, book_path))

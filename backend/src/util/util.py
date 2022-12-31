@@ -19,7 +19,7 @@ supportedBookFormat = {
 }
 
 
-def if_ext_supported(ext):
+def if_ext_supported_book_ext(ext):
     return ext.lower() in supportedBookFormat
 
 
@@ -31,12 +31,22 @@ def ls_books(dir):
             if os.path.isdir(abspath):
                 files = files + ls_books(abspath)
             else:
-                if if_ext_supported(pathlib.Path(abspath).suffix):
+                if if_ext_supported_book_ext(pathlib.Path(abspath).suffix):
                     files.append(abspath)
-                # else:
-                #     print("ls_books. 忽略文件: ", abspath)
         except FileNotFoundError as err:
             print('invalid directory\n', 'Error: ', err)
+    return files
+
+
+def ls_moon_reader_clippings(dir):
+    files = list()
+    for item in os.listdir(dir):
+        abspath = os.path.join(dir, item)
+        if os.path.isdir(abspath):
+            files = files + ls_books(abspath)
+        else:
+            if pathlib.Path(abspath).suffix == ".mrexpt":
+                files.append(abspath)
     return files
 
 
