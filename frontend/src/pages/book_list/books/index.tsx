@@ -621,7 +621,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         <div>
             <div>
                 <RedditTextField
-                    label="搜索 书名、作者、出版社、标签"
+                    label="搜索书名、作者、出版社、标签"
                     id="reddit-input"
                     variant="filled"
                     style={{

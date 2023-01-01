@@ -19,12 +19,17 @@ import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { alpha, styled } from '@mui/material/styles';
 import { Menu as AntMenu, Dropdown } from 'antd';
+import { Layout } from 'antd';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
+import ResizeHandle from '../../../components/ResizeHandle';
 import ContextMenu from '../../book_list/components/ContextMenu';
 import type { ClippingCollectionDataType, ClippingDataType } from '../../data';
 import ClippingCardList from '../components/ClippingCardList';
+
+const { Header, Footer, Sider, Content } = Layout;
 
 const RedditTextField = styled((props: TextFieldProps) => (
     <TextField InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>} {...props} />
@@ -169,10 +174,11 @@ const Clippings: FC = () => {
                     }
                     books['无书名'][item.uuid] = null;
                 } else {
-                    if (books[item.book_name] == null) {
-                        books[item.book_name] = {};
+                    let book_name = item.book_name;
+                    if (books[book_name] == null) {
+                        books[book_name] = {};
                     }
-                    books[item.book_name][item.uuid] = null;
+                    books[book_name][item.uuid] = null;
                 }
             });
 
@@ -452,51 +458,33 @@ const Clippings: FC = () => {
     };
 
     return (
-        <div>
-            <div>
-                <RedditTextField
-                    label="搜索 书名、作者、摘抄、标签"
-                    id="reddit-input"
-                    variant="filled"
-                    style={{
-                        width: '100%',
-                        marginBottom: 25,
-                        marginTop: -15,
-                        marginLeft: -13.5,
-                    }}
-                    onChange={onSearchChange}
-                />
-            </div>
-
-            <Grid container spacing={2}>
-                <Grid item xs={2} style={{ paddingLeft: 3, paddingTop: 0 }}>
+        <>
+            <Layout>
+                <Sider style={{ backgroundColor: 'initial', paddingLeft: 0 }}>
+                    <RedditTextField
+                        label="搜索书名、作者、摘抄、标签"
+                        id="reddit-input"
+                        variant="filled"
+                        style={{
+                            marginBottom: 10,
+                            marginTop: -15,
+                            marginLeft: -13.5,
+                            width: '108%',
+                        }}
+                        onChange={onSearchChange}
+                    />
                     <List
                         sx={{
-                            width: '100%',
                             bgcolor: 'background.paper',
                             position: 'relative',
-                            height: '83vh',
+                            height: '84vh',
+                            marginLeft: -1.5,
                             overflow: 'auto',
                             '& ul': { padding: 0 },
                         }}
                         subheader={<li />}
                     >
                         {<MenuHeader />}
-                        {/* {secondLevelMenuList.map((item, index) => (
-                            <ListItem
-                                style={{ padding: 0 }}
-                                onClick={() => {
-                                    filterData(null, item, allClippings);
-                                }}
-                            >
-                                <ListItemButton
-                                    style={{ paddingLeft: 10, paddingRight: 10 }}
-                                    selected={item === selectedSecondLevel}
-                                >
-                                    <ListItemText primary={`${index + 1}. ${item}`} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))} */}
                         {secondLevelMenuList.map((item, index) => (
                             <ContextMenu
                                 key={index}
@@ -535,23 +523,28 @@ const Clippings: FC = () => {
                             />
                         ))}
                     </List>
-                </Grid>
-                <Grid
-                    item
-                    xs={10}
-                    style={{
-                        paddingTop: 0,
-                        paddingLeft: 5,
-                    }}
+                </Sider>
+                <Content
+                    className="site-layout"
+                    style={{ marginTop: -13.2, maxHeight: '88vh', overflow: 'auto' }}
                 >
-                    <ClippingCardList
-                        data={data}
-                        fetchClippings={fetchClippings}
-                        // height={83}
-                        columns={2}
-                    />
-                </Grid>
-            </Grid>
+                    <Grid
+                        item
+                        xs={10}
+                        style={{
+                            paddingTop: 0,
+                            paddingLeft: 5,
+                        }}
+                    >
+                        <ClippingCardList
+                            data={data}
+                            fetchClippings={fetchClippings}
+                            height={83}
+                            columns={3}
+                        />
+                    </Grid>
+                </Content>
+            </Layout>
 
             <Dialog
                 open={openDialogForUpdateClipping}
@@ -599,7 +592,7 @@ const Clippings: FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </>
     );
 };
 
