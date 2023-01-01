@@ -524,6 +524,13 @@ const Clippings: FC = () => {
                                         },
                                         prefixIcon: <DeleteIcon />,
                                     },
+                                    {
+                                        name: '复制名称',
+                                        handler: () => {
+                                            navigator.clipboard.writeText(selectedSecondLevel);
+                                        },
+                                        prefixIcon: <DeleteIcon />,
+                                    },
                                 ]}
                             />
                         ))}
