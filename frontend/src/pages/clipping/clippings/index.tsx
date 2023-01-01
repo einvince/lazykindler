@@ -1,4 +1,4 @@
-import { getAllClippings, getMultipleCollections } from '@/services';
+import { getAllClippings, getMultipleCollections, updateClippingByKeyword } from '@/services';
 import {
     BookOutlined,
     DatabaseOutlined,
@@ -7,7 +7,14 @@ import {
     TagsOutlined,
     UserOutlined,
 } from '@ant-design/icons';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Grid, List, ListItem, ListItemButton, ListItemText, ListSubheader } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { alpha, styled } from '@mui/material/styles';
@@ -15,6 +22,7 @@ import { Menu as AntMenu, Dropdown } from 'antd';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
 
+import ContextMenu from '../../book_list/components/ContextMenu';
 import type { ClippingCollectionDataType, ClippingDataType } from '../../data';
 import ClippingCardList from '../components/ClippingCardList';
 
@@ -43,7 +51,7 @@ enum FilterType {
     Stars = '评分',
     Subjects = '标签',
     Author = '作者',
-    Book = '书籍',
+    Book = '书名',
 }
 
 type SubHeaerType = {
@@ -56,6 +64,11 @@ type SubHeaerType = {
 const Clippings: FC = () => {
     const [allClippings, setAllClippings] = useState<ClippingDataType[]>([]);
     const [data, setData] = useState<ClippingDataType[]>([]);
+
+    // 打开对话框，使用关键字更新clipping
+    const [openDialogForUpdateClipping, setOpenDialogForUpdateClipping] = useState<boolean>(false);
+    // 更新clipping时填写的新值
+    const [updateClippingValue, setUpdateClippingValue] = useState<string>('');
 
     // 评分或者作者等等大类
     const [firstLevelType, setFirstLevelType] = useState<string>(FilterType.All);
@@ -469,8 +482,7 @@ const Clippings: FC = () => {
                         subheader={<li />}
                     >
                         {<MenuHeader />}
-
-                        {secondLevelMenuList.map((item, index) => (
+                        {/* {secondLevelMenuList.map((item, index) => (
                             <ListItem
                                 style={{ padding: 0 }}
                                 onClick={() => {
@@ -484,6 +496,36 @@ const Clippings: FC = () => {
                                     <ListItemText primary={`${index + 1}. ${item}`} />
                                 </ListItemButton>
                             </ListItem>
+                        ))} */}
+                        {secondLevelMenuList.map((item, index) => (
+                            <ContextMenu
+                                key={index}
+                                Content={
+                                    <ListItem
+                                        style={{ padding: 0 }}
+                                        onClick={() => {
+                                            filterData(null, item, allClippings);
+                                        }}
+                                    >
+                                        <ListItemButton
+                                            style={{ paddingLeft: 10, paddingRight: 10 }}
+                                            selected={item === selectedSecondLevel}
+                                        >
+                                            <ListItemText primary={`${index + 1}. ${item}`} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                }
+                                MenuInfo={[
+                                    {
+                                        name: '修改值',
+                                        handler: () => {
+                                            setOpenDialogForUpdateClipping(true);
+                                            setUpdateClippingValue(selectedSecondLevel);
+                                        },
+                                        prefixIcon: <DeleteIcon />,
+                                    },
+                                ]}
+                            />
                         ))}
                     </List>
                 </Grid>
@@ -503,6 +545,53 @@ const Clippings: FC = () => {
                     />
                 </Grid>
             </Grid>
+
+            <Dialog
+                open={openDialogForUpdateClipping}
+                onClose={() => {
+                    setOpenDialogForUpdateClipping(false);
+                }}
+                fullWidth
+            >
+                <DialogTitle>更新高亮笔记</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="新值"
+                        defaultValue={selectedSecondLevel}
+                        fullWidth
+                        variant="standard"
+                        onChange={(e) => {
+                            setUpdateClippingValue(e.target.value);
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => {
+                            setOpenDialogForUpdateClipping(false);
+                        }}
+                    >
+                        取消
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            updateClippingByKeyword(
+                                firstLevelType,
+                                updateClippingValue,
+                                selectedSecondLevel,
+                            ).then(() => {
+                                setOpenDialogForUpdateClipping(false);
+                                fetchClippings();
+                            });
+                        }}
+                    >
+                        确定
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

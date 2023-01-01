@@ -178,6 +178,47 @@ def update_clipping(uuid, key, value):
     return "success"
 
 
+def update_by_keyword(keyword, new_value, old_value):
+    new_value = new_value.strip()
+    old_value = old_value.strip()
+
+    if new_value == "无标签":
+        new_value = None
+    if new_value == "无作者":
+        new_value = None
+
+    if old_value == "无标签":
+        old_value = None
+    if old_value == "无作者":
+        old_value = None
+
+    if keyword == "评分":
+        db.run_sql(
+            "update clipping set stars={} where stars={}".format(new_value, old_value))
+    elif keyword == "标签":
+        if old_value == None:
+            db.run_sql(
+                "update clipping set subjects='{}' where subjects is null;".format(new_value))
+        else:
+            db.run_sql(
+                "update clipping set subjects='{}' where subjects='{}';".format(new_value, old_value))
+    elif keyword == "作者":
+        if old_value == None:
+            db.run_sql(
+                "update clipping set author='{}' where author is null;".format(new_value))
+        else:
+            db.run_sql(
+                "update clipping set author='{}' where author='{}';".format(new_value, old_value))
+    elif keyword == "书名":
+        if old_value == None:
+            db.run_sql(
+                "update clipping set book_name='{}' where book_name is null;".format(new_value))
+        else:
+            db.run_sql(
+                "update clipping set book_name='{}' where book_name='{}';".format(new_value, old_value))
+    return "success"
+
+
 def delete_all_clipping():
     colls = db.query(
         "select uuid from coll where coll_type='clipping'")

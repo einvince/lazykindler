@@ -78,7 +78,7 @@ def handle_moon_reader_clipping_file(filepath):
             timestamp = int(line_list[-1])
 
             # TODO 高亮文件中没有作者信息
-            author = "空"
+            author = None
 
             str_md5 = hashlib.md5(clip_content.encode('utf-8')).hexdigest()
             clips = db.query(
@@ -87,8 +87,8 @@ def handle_moon_reader_clipping_file(filepath):
                 if timestamp != 0:
                     db.run_sql("update clipping set {}='{}' where uuid='{}'".format(
                                 "addDate", timestamp/1000, clips[0]["uuid"]))
-                if author != "":
-                    db.run_sql("update clipping set {}='{}' where uuid='{}'".format(
+                if author is not None:
+                    db.run_sql("update clipping set {}={} where uuid='{}'".format(
                                 "author", author, clips[0]["uuid"]))
             else:
                 clip_content = clip_content.replace('<BR><BR><BR>', '\n')

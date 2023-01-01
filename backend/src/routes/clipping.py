@@ -25,6 +25,13 @@ def update_clipping():
     return clipping.update_clipping(uuid, key, value)
 
 
+def update_by_keyword():
+    keyword = request.args.get('keyword')
+    new_value = request.args.get('new_value')
+    old_value = request.args.get('old_value')
+    return clipping.update_by_keyword(keyword, new_value, old_value)
+
+
 def delete_all_clipping():
     return clipping.delete_all_clipping()
 

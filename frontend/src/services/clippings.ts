@@ -3,7 +3,6 @@ import { axiosInstance } from './axios';
 // 获取剪切列表
 export const getAllClippings = () => {
     return axiosInstance.get(`/api/clipping/get/all`).then((data: any) => {
-        console.log("aa11---------data = ", data)
         return data.data;
     });
 };
@@ -22,6 +21,17 @@ export const deleteClipping = (uuid: string) => {
     return axiosInstance.delete(`/api/clipping/delete?uuid=${uuid}`).then((data: any) => {
         return data.data;
     });
+};
+
+// 更新摘抄
+export const updateClippingByKeyword = (keyword: string, new_value: any, old_value: any) => {
+    return axiosInstance
+        .get(
+            `/api/clipping/update/bykeyword?keyword=${keyword}&new_value=${new_value}&old_value=${old_value}`,
+        )
+        .then((data: any) => {
+            return data.data;
+        });
 };
 
 // 修改clipping信息
