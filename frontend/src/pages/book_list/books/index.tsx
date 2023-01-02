@@ -17,6 +17,7 @@ import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { alpha, styled } from '@mui/material/styles';
 import { Menu as AntMenu, Dropdown } from 'antd';
+import { Layout } from 'antd';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
 
@@ -24,8 +25,19 @@ import type { BookMetaDataType, CollectionDataType } from '../../data';
 import BookCardList from '../components/BookCardList';
 import ContextMenu from '../components/ContextMenu';
 
+const { Sider, Content } = Layout;
+
 const RedditTextField = styled((props: TextFieldProps) => (
-    <TextField InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>} {...props} />
+    <TextField
+        size={'medium'}
+        InputProps={
+            {
+                disableUnderline: true,
+            } as Partial<OutlinedInputProps>
+        }
+        InputLabelProps={{ style: { fontSize: 12.3 } }}
+        {...props}
+    />
 ))(({ theme }) => ({
     '& .MuiFilledInput-root': {
         border: '1px solid #e2e2e1',
@@ -143,6 +155,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                     variant="contained"
+                    fullWidth
                     disableElevation
                     onClick={handleClick}
                     endIcon={<KeyboardArrowDownIcon />}
@@ -618,31 +631,31 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
     };
 
     return (
-        <div>
-            <div>
-                <RedditTextField
-                    label="搜索书名、作者、出版社、标签"
-                    id="reddit-input"
-                    variant="filled"
-                    style={{
-                        width: '100%',
-                        marginBottom: 25,
-                        marginTop: -15,
-                        marginLeft: -13.5,
-                    }}
-                    // onChange={onSearchChange}
-                    onBlur={onSearchChange}
-                />
-            </div>
+        <>
+            <Layout>
+                <Sider style={{ backgroundColor: 'initial', paddingLeft: 0 }}>
+                    <RedditTextField
+                        label="搜索书名、作者、出版社、标签"
+                        id="reddit-input"
+                        variant="filled"
+                        style={{
+                            width: '101.3%',
+                            marginBottom: 10,
+                            marginTop: -15,
+                            marginLeft: -13.5,
+                            height: '7%',
+                        }}
+                        // onChange={onSearchChange}
+                        onBlur={onSearchChange}
+                    />
 
-            <Grid container spacing={2}>
-                <Grid item xs={2} style={{ paddingLeft: 3, paddingTop: 0 }}>
                     <List
                         sx={{
                             width: '100%',
                             bgcolor: 'background.paper',
                             position: 'relative',
-                            height: '83vh',
+                            height: '82vh',
+                            marginLeft: -1.5,
                             overflow: 'auto',
                             '& ul': { padding: 0 },
                         }}
@@ -687,19 +700,23 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
                             />
                         ))}
                     </List>
-                </Grid>
-                <Grid
-                    item
-                    xs={10}
-                    style={{
-                        paddingTop: 0,
-                        paddingLeft: 5,
-                    }}
-                >
-                    <BookCardList data={data} fetchBooks={fetchBooks} height={83} />
-                </Grid>
-            </Grid>
-        </div>
+                </Sider>
+                <Content>
+                    <Grid
+                        item
+                        xs={10}
+                        style={{
+                            marginTop: -13.2,
+                            marginLeft: -5,
+                            maxHeight: '88.8vh',
+                            overflow: 'auto',
+                        }}
+                    >
+                        <BookCardList data={data} fetchBooks={fetchBooks} />
+                    </Grid>
+                </Content>
+            </Layout>
+        </>
     );
 };
 

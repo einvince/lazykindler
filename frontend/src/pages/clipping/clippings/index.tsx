@@ -13,7 +13,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
@@ -22,17 +21,24 @@ import { Menu as AntMenu, Dropdown } from 'antd';
 import { Layout } from 'antd';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
-import ResizeHandle from '../../../components/ResizeHandle';
 import ContextMenu from '../../book_list/components/ContextMenu';
 import type { ClippingCollectionDataType, ClippingDataType } from '../../data';
 import ClippingCardList from '../components/ClippingCardList';
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 const RedditTextField = styled((props: TextFieldProps) => (
-    <TextField InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>} {...props} />
+    <TextField
+        size={'medium'}
+        InputProps={
+            {
+                disableUnderline: true,
+            } as Partial<OutlinedInputProps>
+        }
+        InputLabelProps={{ style: { fontSize: 14 } }}
+        {...props}
+    />
 ))(({ theme }) => ({
     '& .MuiFilledInput-root': {
         border: '1px solid #e2e2e1',
@@ -470,6 +476,7 @@ const Clippings: FC = () => {
                             marginTop: -15,
                             marginLeft: -13.5,
                             width: '108%',
+                            height: '7%',
                         }}
                         onChange={onSearchChange}
                     />
@@ -524,24 +531,19 @@ const Clippings: FC = () => {
                         ))}
                     </List>
                 </Sider>
-                <Content
-                    className="site-layout"
-                    style={{ marginTop: -13.2, maxHeight: '88vh', overflow: 'auto' }}
-                >
+                <Content>
                     <Grid
                         item
                         xs={10}
                         style={{
-                            paddingTop: 0,
-                            paddingLeft: 5,
+                            marginTop: -13.2,
+                            marginLeft: -5,
+                            maxHeight: '88.8vh',
+                            overflow: 'auto',
+                            paddingLeft: 10,
                         }}
                     >
-                        <ClippingCardList
-                            data={data}
-                            fetchClippings={fetchClippings}
-                            height={83}
-                            columns={3}
-                        />
+                        <ClippingCardList data={data} fetchClippings={fetchClippings} columns={3} />
                     </Grid>
                 </Content>
             </Layout>

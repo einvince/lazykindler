@@ -24,8 +24,10 @@ import {
     Typography,
 } from '@mui/material';
 import Divider from '@mui/material/Divider';
+import { Dropdown } from 'antd';
 import { Menu } from 'antd';
 import { List as AntList, Card } from 'antd';
+import _ from 'lodash';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,7 +36,6 @@ import { BookMetaDataType } from '../../../data';
 import ChangeInfo from '../ChangeInfoDialog';
 import Cover from '../Cover';
 import ChangeBookColl from './ChangeBookColl';
-// import Reader from './Reader';
 import ReaderDialog from './Reader';
 
 const { SubMenu } = Menu;
@@ -42,7 +43,6 @@ const { SubMenu } = Menu;
 type BookCardListProps = {
     data: any;
     fetchBooks: any;
-    height: Number;
 };
 
 const initialDialogInfo = {
@@ -59,7 +59,7 @@ const initialDialogInfoForReadBook = {
 };
 
 export default function BookCardList(props: BookCardListProps) {
-    const { data, fetchBooks, height } = props;
+    const { data, fetchBooks } = props;
 
     const [dialogInfo, setDialogInfo] = useState<any>(initialDialogInfo);
     const [changeBookCollInfo, setChangeBookCollInfo] = useState<any>({
@@ -75,6 +75,9 @@ export default function BookCardList(props: BookCardListProps) {
 
     const [uuidForEditCover, setUUIDForEditCover] = useState<any>();
     const [openForEditCover, setOpenForEditCover] = useState(false);
+
+    // 每页条目数
+    const [pageNumberSize, setPageNumberSize] = useState(40);
 
     const [snackBar, setSnackBar] = useState<any>({
         message: '',
@@ -117,350 +120,392 @@ export default function BookCardList(props: BookCardListProps) {
 
     return (
         <div style={{ paddingLeft: 5 }}>
-            <div style={{ height: '100%', overflow: 'auto' }}>
-                <AntList
-                    style={{ width: '99%', height: `${height}vh` }}
-                    rowKey="id"
-                    grid={{
-                        gutter: 16,
-                        xs: 1,
-                        sm: 1,
-                        md: 2,
-                        lg: 3,
-                        xl: 4,
-                        xxl: 5,
-                    }}
-                    pagination={{
-                        position: 'bottom',
-                        defaultPageSize: 40,
-                        hideOnSinglePage: true,
-                        style: { paddingBottom: 10 },
-                    }}
-                    dataSource={data}
-                    renderItem={(item: BookMetaDataType) => (
-                        <AntList.Item>
-                            <Card
-                                hoverable
-                                cover={<Cover uuid={item.uuid} />}
-                                actions={[
-                                    // eslint-disable-next-line react/jsx-key
-                                    <Menu mode="vertical" selectable={false}>
-                                        <ButtonGroup
-                                            fullWidth
+            <AntList
+                style={{ width: '99%' }}
+                rowKey="id"
+                grid={{
+                    gutter: 20,
+                    xs: 1,
+                    sm: 1,
+                    md: 2,
+                    lg: 3,
+                    xl: 4,
+                    xxl: 5,
+                }}
+                pagination={{
+                    style: {
+                        textAlign: 'center',
+                        position: 'fixed',
+                        bottom: '1.1vh',
+                        right: 26,
+                    },
+                    defaultPageSize: 40,
+                    hideOnSinglePage: true,
+                    selectComponentClass: (e: any) => {
+                        return (
+                            <>
+                                <Dropdown
+                                    menu={{
+                                        items: [
+                                            {
+                                                key: '1',
+                                                onClick: () => {
+                                                    e.onChange(20);
+                                                    setPageNumberSize(20);
+                                                },
+                                                label: 20,
+                                            },
+                                            {
+                                                key: '2',
+                                                onClick: () => {
+                                                    e.onChange(40);
+                                                    setPageNumberSize(40);
+                                                },
+                                                label: 40,
+                                            },
+                                            {
+                                                key: '3',
+                                                onClick: () => {
+                                                    e.onChange(60);
+                                                    setPageNumberSize(60);
+                                                },
+                                                label: 60,
+                                            },
+                                        ],
+                                    }}
+                                    placement="top"
+                                    arrow
+                                >
+                                    <Button>每页数目{pageNumberSize}</Button>
+                                </Dropdown>
+                            </>
+                        );
+                    },
+                }}
+                dataSource={data}
+                renderItem={(item: BookMetaDataType) => (
+                    <AntList.Item>
+                        <Card
+                            hoverable
+                            cover={<Cover uuid={item.uuid} />}
+                            actions={[
+                                // eslint-disable-next-line react/jsx-key
+                                <Menu mode="vertical" selectable={false}>
+                                    <ButtonGroup
+                                        fullWidth
+                                        variant="text"
+                                        aria-label="text button group"
+                                    >
+                                        <Button
                                             variant="text"
-                                            aria-label="text button group"
+                                            // fullWidth
+                                            onClick={() => {
+                                                setUUID(uuidv4());
+                                                setChangeBookCollInfo({
+                                                    item_uuid: item.uuid,
+                                                    open: true,
+                                                });
+                                            }}
                                         >
-                                            <Button
-                                                variant="text"
-                                                // fullWidth
-                                                onClick={() => {
-                                                    setUUID(uuidv4());
-                                                    setChangeBookCollInfo({
-                                                        item_uuid: item.uuid,
-                                                        open: true,
-                                                    });
-                                                }}
-                                            >
-                                                修改集合
-                                            </Button>
-                                            <Button
-                                                variant="text"
-                                                // fullWidth
-                                                onClick={() => {
-                                                    setOpenReadBook({
-                                                        open: true,
-                                                        book_uuid: item.uuid,
-                                                        book_title: item.name,
-                                                    });
-                                                }}
-                                            >
-                                                阅读书籍
-                                            </Button>
-                                        </ButtonGroup>
-                                        <SubMenu
-                                            key="sub4"
-                                            icon={<SettingOutlined />}
-                                            title="操作"
-                                            style={{ zIndex: 10 }}
+                                            修改集合
+                                        </Button>
+                                        <Button
+                                            variant="text"
+                                            // fullWidth
+                                            onClick={() => {
+                                                setOpenReadBook({
+                                                    open: true,
+                                                    book_uuid: item.uuid,
+                                                    book_title: item.name,
+                                                });
+                                            }}
                                         >
-                                            <Menu.Item
-                                                key="1"
-                                                onClick={() => {
-                                                    setDialogInfo({
-                                                        title: '修改评分',
-                                                        oldValue: item.stars,
-                                                        allowEmptyStr: false,
-                                                        handleOK: (newValue: any) => {
-                                                            updateBookMeta(
-                                                                item.uuid,
-                                                                'stars',
-                                                                newValue,
-                                                            ).then(() => {
-                                                                fetchBooks();
-                                                            });
-                                                        },
-                                                        open: true,
-                                                    });
-                                                }}
-                                            >
-                                                修改评分
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                key="2"
-                                                onClick={() => {
-                                                    setDialogInfo({
-                                                        title: '修改标签',
-                                                        oldValue: item.subjects,
-                                                        allowEmptyStr: true,
-                                                        handleOK: (newValue: any) => {
-                                                            updateBookMeta(
-                                                                item.uuid,
-                                                                'subjects',
-                                                                newValue,
-                                                            ).then(() => {
-                                                                fetchBooks();
-                                                            });
-                                                        },
-                                                        open: true,
-                                                    });
-                                                }}
-                                            >
-                                                修改标签
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                key="3"
-                                                onClick={() => {
-                                                    setUUID(uuidv4());
-                                                    setChangeBookCollInfo({
-                                                        item_uuid: item.uuid,
-                                                        open: true,
-                                                    });
-                                                }}
-                                            >
-                                                修改集合
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                key="4"
-                                                onClick={() => {
-                                                    setDialogInfo({
-                                                        title: '修改作者',
-                                                        oldValue: item.author,
-                                                        allowEmptyStr: true,
-                                                        handleOK: (newValue: any) => {
-                                                            updateBookMeta(
-                                                                item.uuid,
-                                                                'author',
-                                                                newValue,
-                                                            ).then(() => {
-                                                                fetchBooks();
-                                                            });
-                                                        },
-                                                        open: true,
-                                                    });
-                                                }}
-                                            >
-                                                修改作者
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                key="5"
-                                                onClick={() => {
-                                                    setDialogInfo({
-                                                        title: '修改出版社',
-                                                        oldValue: item.publisher,
-                                                        allowEmptyStr: true,
-                                                        handleOK: (newValue: any) => {
-                                                            updateBookMeta(
-                                                                item.uuid,
-                                                                'publisher',
-                                                                newValue,
-                                                            ).then(() => {
-                                                                fetchBooks();
-                                                            });
-                                                        },
-                                                        open: true,
-                                                    });
-                                                }}
-                                            >
-                                                修改出版社
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                key="6"
-                                                onClick={() => {
-                                                    handleOpenForEditCover();
-                                                    setUUIDForEditCover(item.uuid);
-                                                }}
-                                            >
-                                                修改封面
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                key="7"
-                                                onClick={() => {
-                                                    downloadBook(item.uuid).then(() => {
-                                                        setSnackBar({
-                                                            message: '下载成功!',
-                                                            open: true,
+                                            阅读书籍
+                                        </Button>
+                                    </ButtonGroup>
+                                    <SubMenu
+                                        key="sub4"
+                                        icon={<SettingOutlined />}
+                                        title="操作"
+                                        style={{ zIndex: 10 }}
+                                    >
+                                        <Menu.Item
+                                            key="1"
+                                            onClick={() => {
+                                                setDialogInfo({
+                                                    title: '修改评分',
+                                                    oldValue: item.stars,
+                                                    allowEmptyStr: false,
+                                                    handleOK: (newValue: any) => {
+                                                        updateBookMeta(
+                                                            item.uuid,
+                                                            'stars',
+                                                            newValue,
+                                                        ).then(() => {
+                                                            fetchBooks();
                                                         });
-                                                    });
-                                                }}
-                                            >
-                                                下载书籍
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                key="8"
-                                                onClick={() => {
-                                                    setOpenReadBook({
+                                                    },
+                                                    open: true,
+                                                });
+                                            }}
+                                        >
+                                            修改评分
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="2"
+                                            onClick={() => {
+                                                setDialogInfo({
+                                                    title: '修改标签',
+                                                    oldValue: item.subjects,
+                                                    allowEmptyStr: true,
+                                                    handleOK: (newValue: any) => {
+                                                        updateBookMeta(
+                                                            item.uuid,
+                                                            'subjects',
+                                                            newValue,
+                                                        ).then(() => {
+                                                            fetchBooks();
+                                                        });
+                                                    },
+                                                    open: true,
+                                                });
+                                            }}
+                                        >
+                                            修改标签
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="3"
+                                            onClick={() => {
+                                                setUUID(uuidv4());
+                                                setChangeBookCollInfo({
+                                                    item_uuid: item.uuid,
+                                                    open: true,
+                                                });
+                                            }}
+                                        >
+                                            修改集合
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="4"
+                                            onClick={() => {
+                                                setDialogInfo({
+                                                    title: '修改作者',
+                                                    oldValue: item.author,
+                                                    allowEmptyStr: true,
+                                                    handleOK: (newValue: any) => {
+                                                        updateBookMeta(
+                                                            item.uuid,
+                                                            'author',
+                                                            newValue,
+                                                        ).then(() => {
+                                                            fetchBooks();
+                                                        });
+                                                    },
+                                                    open: true,
+                                                });
+                                            }}
+                                        >
+                                            修改作者
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="5"
+                                            onClick={() => {
+                                                setDialogInfo({
+                                                    title: '修改出版社',
+                                                    oldValue: item.publisher,
+                                                    allowEmptyStr: true,
+                                                    handleOK: (newValue: any) => {
+                                                        updateBookMeta(
+                                                            item.uuid,
+                                                            'publisher',
+                                                            newValue,
+                                                        ).then(() => {
+                                                            fetchBooks();
+                                                        });
+                                                    },
+                                                    open: true,
+                                                });
+                                            }}
+                                        >
+                                            修改出版社
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="6"
+                                            onClick={() => {
+                                                handleOpenForEditCover();
+                                                setUUIDForEditCover(item.uuid);
+                                            }}
+                                        >
+                                            修改封面
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="7"
+                                            onClick={() => {
+                                                downloadBook(item.uuid).then(() => {
+                                                    setSnackBar({
+                                                        message: '下载成功!',
                                                         open: true,
-                                                        book_uuid: item.uuid,
-                                                        book_title: item.name,
                                                     });
-                                                }}
-                                            >
-                                                阅读书籍
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                key="9"
-                                                onClick={() => {
-                                                    handleClickOpen(item.uuid);
-                                                }}
-                                            >
-                                                <span style={{ color: 'red' }}>删除</span>
-                                            </Menu.Item>
-                                        </SubMenu>
-                                    </Menu>,
-                                ]}
-                                bodyStyle={{
-                                    paddingTop: 8,
-                                    paddingLeft: 4,
-                                    paddingRight: 4,
-                                    paddingBottom: 8,
-                                }}
-                            >
-                                <Card.Meta
-                                    title={
-                                        <div
-                                            style={{
-                                                maxHeight: '30vh',
-                                                overflow: 'auto',
-                                                marginTop: 5,
+                                                });
                                             }}
                                         >
+                                            下载书籍
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="8"
+                                            onClick={() => {
+                                                setOpenReadBook({
+                                                    open: true,
+                                                    book_uuid: item.uuid,
+                                                    book_title: item.name,
+                                                });
+                                            }}
+                                        >
+                                            阅读书籍
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="9"
+                                            onClick={() => {
+                                                handleClickOpen(item.uuid);
+                                            }}
+                                        >
+                                            <span style={{ color: 'red' }}>删除</span>
+                                        </Menu.Item>
+                                    </SubMenu>
+                                </Menu>,
+                            ]}
+                            bodyStyle={{
+                                paddingTop: 8,
+                                paddingLeft: 4,
+                                paddingRight: 4,
+                                paddingBottom: 8,
+                            }}
+                        >
+                            <Card.Meta
+                                title={
+                                    <div
+                                        style={{
+                                            maxHeight: '30vh',
+                                            overflow: 'auto',
+                                            marginTop: 5,
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="h6"
+                                            display="block"
+                                            style={{
+                                                wordBreak: 'break-all',
+                                                whiteSpace: 'break-spaces',
+                                                fontSize: 13,
+                                            }}
+                                            gutterBottom
+                                        >
+                                            {item.name}
+                                        </Typography>
+                                    </div>
+                                }
+                                description={
+                                    <div
+                                        style={{
+                                            maxHeight: '40vh',
+                                            overflow: 'auto',
+                                            marginTop: 10,
+                                        }}
+                                    >
+                                        <Divider style={{ marginBottom: 10 }} />
+                                        <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            style={{ marginBottom: 10 }}
+                                        >
+                                            <StarIcon style={{ height: 20 }} />
                                             <Typography
-                                                variant="h6"
-                                                display="block"
-                                                style={{
-                                                    wordBreak: 'break-all',
-                                                    whiteSpace: 'break-spaces',
-                                                    fontSize: 13,
-                                                }}
-                                                gutterBottom
+                                                variant="body2"
+                                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
                                             >
-                                                {item.name}
+                                                {item.stars}
                                             </Typography>
-                                        </div>
-                                    }
-                                    description={
-                                        <div
-                                            style={{
-                                                maxHeight: '40vh',
-                                                overflow: 'auto',
-                                                marginTop: 10,
-                                            }}
+                                        </Box>
+
+                                        <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            style={{ marginBottom: 10 }}
                                         >
-                                            <Divider style={{ marginBottom: 10 }} />
-                                            <Box
-                                                display="flex"
-                                                alignItems="center"
-                                                style={{ marginBottom: 10 }}
+                                            <StraightenIcon style={{ height: 20 }} />
+                                            <Typography
+                                                variant="body2"
+                                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
                                             >
-                                                <StarIcon style={{ height: 20 }} />
-                                                <Typography
-                                                    variant="body2"
-                                                    style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                                                >
-                                                    {item.stars}
-                                                </Typography>
-                                            </Box>
+                                                {humanFileSize(item.size, true)}
+                                            </Typography>
+                                        </Box>
 
-                                            <Box
-                                                display="flex"
-                                                alignItems="center"
-                                                style={{ marginBottom: 10 }}
+                                        <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            style={{ marginBottom: 10 }}
+                                        >
+                                            <ArchiveIcon style={{ height: 16 }} />
+                                            <Typography
+                                                variant="body2"
+                                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
                                             >
-                                                <StraightenIcon style={{ height: 20 }} />
-                                                <Typography
-                                                    variant="body2"
-                                                    style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                                                >
-                                                    {humanFileSize(item.size, true)}
-                                                </Typography>
-                                            </Box>
+                                                {item.coll_names == 'None' ||
+                                                item.coll_names == null
+                                                    ? ''
+                                                    : item.coll_names}
+                                            </Typography>
+                                        </Box>
 
-                                            <Box
-                                                display="flex"
-                                                alignItems="center"
-                                                style={{ marginBottom: 10 }}
+                                        <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            style={{ marginBottom: 10 }}
+                                        >
+                                            <LocalOfferIcon style={{ height: 20 }} />
+                                            <Typography
+                                                variant="body2"
+                                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
                                             >
-                                                <ArchiveIcon style={{ height: 16 }} />
-                                                <Typography
-                                                    variant="body2"
-                                                    style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                                                >
-                                                    {item.coll_names == 'None' ||
-                                                    item.coll_names == null
-                                                        ? ''
-                                                        : item.coll_names}
-                                                </Typography>
-                                            </Box>
+                                                {item.subjects == null ? '' : item.subjects}
+                                            </Typography>
+                                        </Box>
 
-                                            <Box
-                                                display="flex"
-                                                alignItems="center"
-                                                style={{ marginBottom: 10 }}
+                                        <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            style={{ marginBottom: 10 }}
+                                        >
+                                            <AccountCircleIcon style={{ height: 20 }} />
+                                            <Typography
+                                                variant="body2"
+                                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
                                             >
-                                                <LocalOfferIcon style={{ height: 20 }} />
-                                                <Typography
-                                                    variant="body2"
-                                                    style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                                                >
-                                                    {item.subjects == null ? '' : item.subjects}
-                                                </Typography>
-                                            </Box>
+                                                {item.author == null ? '' : item.author}
+                                            </Typography>
+                                        </Box>
 
-                                            <Box
-                                                display="flex"
-                                                alignItems="center"
-                                                style={{ marginBottom: 10 }}
+                                        <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            style={{ marginBottom: 10 }}
+                                        >
+                                            <AccountBalanceIcon style={{ height: 20 }} />
+                                            <Typography
+                                                variant="body2"
+                                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
                                             >
-                                                <AccountCircleIcon style={{ height: 20 }} />
-                                                <Typography
-                                                    variant="body2"
-                                                    style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                                                >
-                                                    {item.author == null ? '' : item.author}
-                                                </Typography>
-                                            </Box>
-
-                                            <Box
-                                                display="flex"
-                                                alignItems="center"
-                                                style={{ marginBottom: 10 }}
-                                            >
-                                                <AccountBalanceIcon style={{ height: 20 }} />
-                                                <Typography
-                                                    variant="body2"
-                                                    style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                                                >
-                                                    {item.publisher == null ? '' : item.publisher}
-                                                </Typography>
-                                            </Box>
-                                        </div>
-                                    }
-                                />
-                            </Card>
-                        </AntList.Item>
-                    )}
-                />
-            </div>
+                                                {item.publisher == null ? '' : item.publisher}
+                                            </Typography>
+                                        </Box>
+                                    </div>
+                                }
+                            />
+                        </Card>
+                    </AntList.Item>
+                )}
+            />
             <ChangeInfo
                 title={dialogInfo['title']}
                 oldValue={dialogInfo['oldValue']}
