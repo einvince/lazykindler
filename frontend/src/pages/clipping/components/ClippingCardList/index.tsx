@@ -307,7 +307,12 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                     </GridContent>
 
                     <TablePagination
-                        style={{ textAlign: 'center', position: 'fixed', bottom: 40, right: 20 }}
+                        style={{
+                            textAlign: 'center',
+                            position: 'fixed',
+                            bottom: 50,
+                            right: 20,
+                        }}
                         rowsPerPageOptions={[15, 25, 50, 100, 200, 300, 500]}
                         component="div"
                         count={data.length}
