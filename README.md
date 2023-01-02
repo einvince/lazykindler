@@ -166,11 +166,11 @@ yarn install
 <img width="1438" alt="Snipaste_2022-03-04_18-45-42" src="https://user-images.githubusercontent.com/16133390/167545619-34eb7788-fa19-4262-9417-4ed490e464ac.jpg">
 
 
-<img width="1375" alt="Xnip2023-01-02_20-04-31" src="https://user-images.githubusercontent.com/16133390/210228924-a662db7b-9579-4a00-8244-9a6cf2fd4496.png">
+
 <img width="1263" alt="Xnip2023-01-02_20-05-42" src="https://user-images.githubusercontent.com/16133390/210229013-614212d1-eb97-44ef-be75-5c71ecbd3dde.png">
+<img width="1268" alt="Xnip2023-01-02_20-06-40" src="https://user-images.githubusercontent.com/16133390/210229146-cde726c1-f454-4089-9b8d-8a62b61fe197.png">
 
 
-![Xnip2022-07-23_15-29-44](https://user-images.githubusercontent.com/16133390/180595369-2700a665-762f-4f3a-b080-054f4e52ed4d.jpg)
 
 # 其他
 
