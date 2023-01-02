@@ -79,8 +79,10 @@
 平台会自动检测 `kindle` 是否连接，`kindle` 连接电脑后，平台会把 `kindle` 的 `My Clippings.txt` 导入到系统，用于统一管理和多维度展示。当 `kindle` 的 `My Clippings.txt` 文件发生变化，平台会自动导入 `My Clippings.txt` 里新增的部分，旧的数据不会重复导入。用户只要在在电脑连接`kindle`后刷新一下页面就可以看到新增内容了。
 需要指出的是，`kindle` 会把用户添加的高亮笔记处理成一坨没有换行的文字，即使这是多个段落的内容。`layerkindler` 通过巧妙的方式，在导入 `kindle` 的 `My Clippings.txt`文件时，自动识别并进行了换行处理，如下所示。
 
-![Xnip2023-01-02_15-22-11](https://user-images.githubusercontent.com/16133390/210204612-85a51cfd-7012-4532-a0ff-67d15994832e.jpg)
+<img src="https://user-images.githubusercontent.com/16133390/210204612-85a51cfd-7012-4532-a0ff-67d15994832e.jpg" width="45%">
 
+<!-- ![Xnip2023-01-02_15-22-11](https://user-images.githubusercontent.com/16133390/210204612-85a51cfd-7012-4532-a0ff-67d15994832e.jpg){width=50% height=50%}
+ -->
 
 ## 10. 对高亮笔记进行二次高亮操作
 
