@@ -7,7 +7,7 @@ from ..database.database import db
 def get_comments_of_related_uuid(related_uuid):
     data = db.query(
         "select * from comment where related_uuid='{}';".format(related_uuid))
-    data.sort(key=lambda x: x['create_time'], reverse=True)
+    data.sort(key=lambda x: x['create_time'], reverse=False)
     if data is None:
         data = []
     return jsonify(data)
