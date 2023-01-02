@@ -90,15 +90,13 @@
 <img src="https://user-images.githubusercontent.com/16133390/210229975-4e7145e7-5d91-4aff-85ff-f5550fd7fe2c.png" width="66%">
 
 
-
 ## 10. 对高亮笔记进行二次高亮操作
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高亮笔记是我们在读书时对有感触的文字进行高亮操作后记录下来的部分文字或者相关段落，往往是因为其中一句话或者一个词对我们有某种触动。当我们把高亮笔记导入平台后，在后期整理时，有必要对当时引起你共鸣的句或词进行高亮操作，方便高亮显示引起你共鸣那一小段文字。
 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用 `lazykindler`，你可以很轻易的做二次高亮操作。只要选中相关文字，接着在自动弹出的对话框里点击`确定`即可。
 
-
-<img src="https://user-images.githubusercontent.com/16133390/210205245-ae775d61-f06f-49f8-9f44-6ca7555a9ca7.jpg" width="66%">
+<img src="https://user-images.githubusercontent.com/16133390/210230077-c9a4532b-aafc-4ba2-a163-cd151c98d831.png" width="66%">
 
 ## 11. 对高亮笔记添加评论
 
