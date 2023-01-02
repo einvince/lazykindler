@@ -155,7 +155,9 @@ yarn install
 # 平台展示
 
 下面是我本地自己上传了书籍并配置了集合后的截图
-<img width="1268" alt="Xnip2023-01-02_19-51-11" src="https://user-images.githubusercontent.com/16133390/210227666-dfa34883-d215-42d1-af49-eb7ae52ce5e5.png">
+<img width="1267" alt="Xnip2023-01-02_22-04-44" src="https://user-images.githubusercontent.com/16133390/210241908-0bf7191b-8529-48e7-be49-3285a12fc3d8.png">
+
+
 <img width="1268" alt="Xnip2023-01-02_19-54-16" src="https://user-images.githubusercontent.com/16133390/210227921-9507509c-af2a-4d06-95e2-8ed095e9bfe8.png">
 
 
