@@ -484,7 +484,7 @@ const Clippings: FC = () => {
                         sx={{
                             bgcolor: 'background.paper',
                             position: 'relative',
-                            height: '84vh',
+                            height: '83vh',
                             marginLeft: -1.5,
                             overflow: 'auto',
                             '& ul': { padding: 0 },
@@ -543,7 +543,7 @@ const Clippings: FC = () => {
                             paddingLeft: 10,
                         }}
                     >
-                        <ClippingCardList data={data} fetchClippings={fetchClippings} columns={3} />
+                        <ClippingCardList data={data} fetchClippings={fetchClippings} />
                     </Grid>
                 </Content>
             </Layout>
