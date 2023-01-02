@@ -32,6 +32,7 @@
 # 解决的问题
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从网上下载了**数千本**电子书以后，如何高效的管理这些电子书？
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;各种电子书的质量参差不齐，有普通作家写的，也有世界大文豪写的。种类也很多，有科幻类、言情类、玄幻类型等等。如果每次找书都在一个包含了几千本书的目录里查找，想想都脑壳疼。因此有必要对这些电子书使用恰当的方式管理起来，方便我们使用特定的偏好在一个小范围里查找电子书，从而快速找到希望寻找的书籍，避免浪费过多查找时间。因此就有了`lazykindler`。
 
 # 功能介绍
@@ -39,7 +40,7 @@
 ## 1. 书籍导入
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击`上传文件`按钮，平台将递归扫描 `~/Download`、`~/下载`、`~/Desktop`、`~/桌面` 等目录下受支持的电子书文件。相同文件不会重复上传。
-
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目前仅支持导入 `mobi` 和 `azw3` 格式的电子书, 平台不提供电子书格式转换功能。其实要找指定格式的电子书很容易，我一般在这个网站找电子书 http://www.fast8.com 。 这个网站的好处是书籍全，同时下载时提供了多种格式选择，直接下载指定格式的书籍即可。
 
 ## 2. 书籍信息解析
@@ -61,23 +62,29 @@
 ## 6. 阅读
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;平台提供了阅读书籍的基本功能。目前我没有找到使用 `reactjs` 实现的阅读`mobi`和`azw3`这两种格式电子书的库，因此在第一次点击`阅读书籍`的按钮时，平台会把这两种格式转换为 `epub`格式，使用的工具是 `/Applications/calibre.app/Contents/MacOS/ebook-convert`，因此使用平台时要求电脑要安装 `calibre`，否则阅读书籍功能将无法正常工作。只有在第一次点击`阅读书籍`时涉及格式转换，此时页面可能出现短暂的无法响应的问题，这是正常的，等待时间和电子书大小相关，一般都很快，后面再次打开就快了。转换后的书籍被存放到了平台主目录下的 `backend/data`。
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**如果点击阅读后无法翻页，可以在设置里切换垂直视图或者水平视图**。
 
 ## 7. 处理流程
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在 `书籍 -> 书库` 页面下展示的书籍属于正式存储的书籍，刚导入的书籍会被展示在 `书籍 -> 临时` 页面。(除了页面上位置的区分，正式的和临时的书籍在后台没有多大区别)。
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`临时`书籍被添加到任意集合以后，会从`书籍 -> 临时` 转移到 `书籍 -> 书库` 。这样做的目的是**区分正式存储的书籍和临时导入的书籍。正式存储的书籍经过了筛选，删掉了不喜欢的书籍，并且进行了分类，而临时导入的书籍一般五花八门。**
 
 ### 8. 备份
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数据库采用的是 `sqlite3`，位置是 `backend/lazykindler.db`。
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;初次启动平台时，会自动创建并初始化该数据库文件。该文件包含了平台除书籍外的其余所有数据信息。往平台导入的书籍被复制到了 `backend/data` 目录下。需要注意的是，为了方便平台内部操作，`backend/data` 目录下的书籍名后面都被添加了 书籍的`md5`值。
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果要对平台里所有书籍以及数据进行备份，只需要保存 `backend/lazykindler.db` 和 `backend/data` 这两个目录，下次在其他地方启动服务前，把`backend/lazykindler.db` 和 `backend/data` 复制到对应位置即可。
 
 ## 9. 导入 kindle 高亮笔记
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这个功能目前只支持 mac 平台。
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;平台会自动检测 `kindle` 是否连接，`kindle` 连接电脑后，平台会把 `kindle` 的 `My Clippings.txt` 导入到系统，用于统一管理和多维度展示。当 `kindle` 的 `My Clippings.txt` 文件发生变化，平台会自动导入 `My Clippings.txt` 里新增的部分，旧的数据不会重复导入。用户只要在在电脑连接`kindle`后刷新一下页面就可以看到新增内容了。
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;需要指出的是，`kindle` 会把用户添加的高亮笔记处理成一坨没有换行的文字，即使这是多个段落的内容。`layerkindler` 通过巧妙的方式，在导入 `kindle` 的 `My Clippings.txt`文件时，自动识别并进行了换行处理，如下所示。
 
 <img src="https://user-images.githubusercontent.com/16133390/210204612-85a51cfd-7012-4532-a0ff-67d15994832e.jpg" width="66%">
@@ -88,6 +95,7 @@
 ## 10. 对高亮笔记进行二次高亮操作
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高亮笔记是我们在读书时对有感触的文字进行高亮操作后记录下来的部分文字或者相关段落，往往是因为其中一句话或者一个词对我们有某种触动。当我们把高亮笔记导入平台后，在后期整理时，有必要对当时引起你共鸣的句或词进行高亮操作，方便高亮显示引起你共鸣那一小段文字。
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用 `lazykindler`，你可以很轻易的做二次高亮操作。只要选中相关文字，接着在自动弹出的对话框里点击`确定`即可。
 
 <img src="https://user-images.githubusercontent.com/16133390/210205245-ae775d61-f06f-49f8-9f44-6ca7555a9ca7.jpg" width="66%">
@@ -101,6 +109,7 @@
 ## 12. 导入 静读天下 apk 高亮笔记
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`静读天下apk`是一个安卓平台较为流行的阅读器，目前我在海信阅读器上使用这款软件看书，该软件也支持添加高亮笔记。于是我对该软件高亮笔记的导入也做了支持。
+<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从`静读天下apk`导出的高亮笔记文件的格式是`.mrexpt`。将该文件放在`~/Download`、`~/下载`、`~/Desktop`、`~/桌面` 等任何一个目录下，平台可以自动完成导入操作。
 
 # 运行环境要求
