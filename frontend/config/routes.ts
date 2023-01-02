@@ -18,7 +18,7 @@
                 component: './book_list/all_books',
             },
             {
-                name: '临时导入',
+                name: '临时',
                 icon: 'smile',
                 path: '/book_list/tmp_books',
                 component: './book_list/tmp_books',
