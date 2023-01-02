@@ -189,45 +189,45 @@ export default function BookCardList(props: BookCardListProps) {
                             hoverable
                             cover={<Cover uuid={item.uuid} />}
                             actions={[
-                                // eslint-disable-next-line react/jsx-key
-                                <Menu mode="vertical" selectable={false}>
-                                    <ButtonGroup
-                                        fullWidth
+                                <Menu mode="horizontal" selectable={false}>
+                                    <Button
                                         variant="text"
-                                        aria-label="text button group"
+                                        style={{ width: '33%' }}
+                                        onClick={() => {
+                                            setUUID(uuidv4());
+                                            setChangeBookCollInfo({
+                                                item_uuid: item.uuid,
+                                                open: true,
+                                            });
+                                        }}
                                     >
-                                        <Button
-                                            variant="text"
-                                            // fullWidth
-                                            onClick={() => {
-                                                setUUID(uuidv4());
-                                                setChangeBookCollInfo({
-                                                    item_uuid: item.uuid,
-                                                    open: true,
-                                                });
-                                            }}
-                                        >
-                                            修改集合
-                                        </Button>
-                                        <Button
-                                            variant="text"
-                                            // fullWidth
-                                            onClick={() => {
-                                                setOpenReadBook({
-                                                    open: true,
-                                                    book_uuid: item.uuid,
-                                                    book_title: item.name,
-                                                });
-                                            }}
-                                        >
-                                            阅读书籍
-                                        </Button>
-                                    </ButtonGroup>
+                                        修改集合
+                                    </Button>
+                                    <Divider orientation="vertical" flexItem />
+                                    <Button
+                                        variant="text"
+                                        style={{ width: '33%' }}
+                                        onClick={() => {
+                                            setOpenReadBook({
+                                                open: true,
+                                                book_uuid: item.uuid,
+                                                book_title: item.name,
+                                            });
+                                        }}
+                                    >
+                                        阅读书籍
+                                    </Button>
+                                    <Divider orientation="vertical" flexItem />
                                     <SubMenu
                                         key="sub4"
-                                        icon={<SettingOutlined />}
+                                        // icon={<SettingOutlined />}
                                         title="操作"
-                                        style={{ zIndex: 10 }}
+                                        style={{
+                                            zIndex: 10,
+                                            color: 'dodgerblue',
+                                            width: '34%',
+                                            textAlign: 'center',
+                                        }}
                                     >
                                         <Menu.Item
                                             key="1"

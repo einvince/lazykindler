@@ -170,8 +170,13 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                                     <Divider orientation="vertical" flexItem />
                                     <SubMenu
                                         key="sub4"
-                                        style={{ zIndex: 10, width: '50%' }}
-                                        icon={<SettingOutlined />}
+                                        style={{
+                                            zIndex: 10,
+                                            color: 'dodgerblue',
+                                            width: '50%',
+                                            textAlign: 'center',
+                                        }}
+                                        // icon={<SettingOutlined />}
                                         title="操作"
                                     >
                                         <Menu.Item
