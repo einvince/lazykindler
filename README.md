@@ -163,8 +163,6 @@ yarn install
 
 ![Xnip2023-01-02_02-05-33](https://user-images.githubusercontent.com/16133390/210180707-eee2c326-635c-4f2b-ba4a-37ea0a113e24.jpg)
 
-![Xnip2022-08-03_00-30-22](https://user-images.githubusercontent.com/16133390/182427487-07c4175d-59ad-4061-b844-fd4bfa451a18.jpg)
-
 <img width="1438" alt="Snipaste_2022-03-04_18-45-43" src="https://user-images.githubusercontent.com/16133390/167545628-82ce810d-0c77-448e-8b5c-152c859148aa.jpg">
 <img width="1438" alt="Snipaste_2022-03-04_18-45-42" src="https://user-images.githubusercontent.com/16133390/167545619-34eb7788-fa19-4262-9417-4ed490e464ac.jpg">
 
