@@ -87,10 +87,9 @@
 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;需要指出的是，`kindle` 会把用户添加的高亮笔记处理成一坨没有换行的文字，即使这是多个段落的内容。`layerkindler` 通过巧妙的方式，在导入 `kindle` 的 `My Clippings.txt`文件时，自动识别并进行了换行处理，如下所示。
 
-<img src="https://user-images.githubusercontent.com/16133390/210204612-85a51cfd-7012-4532-a0ff-67d15994832e.jpg" width="66%">
+<img src="https://user-images.githubusercontent.com/16133390/210229975-4e7145e7-5d91-4aff-85ff-f5550fd7fe2c.png" width="66%">
 
-<!-- ![Xnip2023-01-02_15-22-11](https://user-images.githubusercontent.com/16133390/210204612-85a51cfd-7012-4532-a0ff-67d15994832e.jpg){width=50% height=50%}
- -->
+
 
 ## 10. 对高亮笔记进行二次高亮操作
 
