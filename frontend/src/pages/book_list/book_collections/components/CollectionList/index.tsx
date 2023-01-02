@@ -123,10 +123,11 @@ export default function BookCardList(props: BookCardListProps) {
         <div>
             <AntList
                 rowKey="id"
+                style={{ width: '98.3%' }}
                 grid={{
                     gutter: 7,
-                    xs: 3,
-                    sm: 4,
+                    xs: 5,
+                    sm: 5,
                     md: 5,
                     lg: 5,
                     xl: 5,

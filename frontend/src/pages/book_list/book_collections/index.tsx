@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { Dropdown, Menu } from 'antd';
+import { Layout } from 'antd';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
@@ -31,6 +32,8 @@ import Dropzone from 'react-dropzone';
 import ContextMenu from '../components/ContextMenu';
 import BookCardList from './components/CollectionList';
 import { CollectionDataType } from './data';
+
+const { Sider, Content } = Layout;
 
 enum FilterType {
     All = '未分类',
@@ -45,7 +48,6 @@ type SubHeaerType = {
 
 export default function BookCollections() {
     const [data, setData] = useState<any>([]);
-    const { width, height } = useWindowDimensions();
     // 选择的大的分类
     const [selectedType, setSelectedType] = useState<string>(FilterType.All);
     // 选择的大的分类下面的列表
@@ -262,91 +264,90 @@ export default function BookCollections() {
     };
 
     return (
-        <div style={{ height: height - 95 }}>
-            <Box>
-                <Grid container spacing={2}>
-                    <Grid item xs={2} style={{ paddingLeft: 3, paddingTop: 23, overflow: 'auto' }}>
-                        <List
-                            sx={{
-                                width: '100%',
-                                bgcolor: 'background.paper',
-                                position: 'relative',
-                                overflow: 'auto',
-                                height: height - 95,
-                                '& ul': { padding: 0 },
-                            }}
-                            subheader={<li />}
-                        >
-                            <ListSubheader>
-                                <Dropdown overlay={headerDropMenu}>
-                                    <a
-                                        className="ant-dropdown-link"
-                                        onClick={(e) => e.preventDefault()}
+        <>
+            <Layout>
+                <Sider style={{ backgroundColor: 'initial', paddingLeft: 0 }}>
+                    <List
+                        sx={{
+                            width: '100%',
+                            bgcolor: 'background.paper',
+                            position: 'relative',
+                            overflow: 'auto',
+                            height: '89vh',
+                            marginTop: -1.8,
+                            marginLeft: -1.5,
+                            '& ul': { padding: 0 },
+                        }}
+                        subheader={<li />}
+                    >
+                        <ListSubheader>
+                            <Dropdown overlay={headerDropMenu}>
+                                <a
+                                    className="ant-dropdown-link"
+                                    onClick={(e) => e.preventDefault()}
+                                >
+                                    <DatabaseOutlined style={{ paddingRight: 13 }} />
+                                    {selectedType}
+                                    <DownOutlined style={{ paddingLeft: 13 }} />
+                                </a>
+                            </Dropdown>
+                        </ListSubheader>
+                        {selectedSubType.map((item, index) => (
+                            <ContextMenu
+                                key={index}
+                                Content={
+                                    <ListItem
+                                        style={{ padding: 0 }}
+                                        key={index}
+                                        onClick={() => {
+                                            filterData(null, item);
+                                        }}
                                     >
-                                        <DatabaseOutlined style={{ paddingRight: 13 }} />
-                                        {selectedType}
-                                        <DownOutlined style={{ paddingLeft: 13 }} />
-                                    </a>
-                                </Dropdown>
-                            </ListSubheader>
-                            {selectedSubType.map((item, index) => (
-                                <ContextMenu
-                                    key={index}
-                                    Content={
-                                        <ListItem
-                                            style={{ padding: 0 }}
-                                            key={index}
-                                            onClick={() => {
-                                                filterData(null, item);
-                                            }}
+                                        <ListItemButton
+                                            style={{ paddingLeft: 10, paddingRight: 10 }}
+                                            selected={item === selectedItemName}
                                         >
-                                            <ListItemButton
-                                                style={{ paddingLeft: 10, paddingRight: 10 }}
-                                                selected={item === selectedItemName}
-                                            >
-                                                <ListItemText primary={`${index + 1}. ${item}`} />
-                                            </ListItemButton>
-                                        </ListItem>
-                                    }
-                                    MenuInfo={[
-                                        {
-                                            name: '删除',
-                                            handler: () => {
-                                                deleteCollectionByKeyword(
-                                                    selectedType,
-                                                    selectedItemName,
-                                                ).then(() => {
-                                                    fetchBookCollections();
-                                                });
-                                            },
-                                            prefixIcon: <DeleteIcon />,
+                                            <ListItemText primary={`${index + 1}. ${item}`} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                }
+                                MenuInfo={[
+                                    {
+                                        name: '删除',
+                                        handler: () => {
+                                            deleteCollectionByKeyword(
+                                                selectedType,
+                                                selectedItemName,
+                                            ).then(() => {
+                                                fetchBookCollections();
+                                            });
                                         },
-                                    ]}
-                                />
-                            ))}
-                            <ListItemButton onClick={handleClickOpen}>
-                                <ListItemIcon style={{ paddingLeft: 70 }}>
-                                    <AddIcon />
-                                </ListItemIcon>
-                            </ListItemButton>
-                        </List>
-                    </Grid>
+                                        prefixIcon: <DeleteIcon />,
+                                    },
+                                ]}
+                            />
+                        ))}
+                        <ListItemButton onClick={handleClickOpen}>
+                            <ListItemIcon style={{ paddingLeft: 70 }}>
+                                <AddIcon />
+                            </ListItemIcon>
+                        </ListItemButton>
+                    </List>
+                </Sider>
+                <Content>
                     <Grid
                         item
                         xs={10}
                         style={{
-                            paddingTop: 0,
-                            paddingLeft: 5,
-                            height: height - 70,
+                            marginTop: -13.2,
+                            maxHeight: '88.8vh',
                             overflow: 'auto',
                         }}
                     >
-                        <div style={{ width: width - 360 }}>
-                            <BookCardList data={data} fetchBookCollections={fetchBookCollections} />
-                        </div>
+                        <BookCardList data={data} fetchBookCollections={fetchBookCollections} />
                     </Grid>
-                </Grid>
-            </Box>
+                </Content>
+            </Layout>
 
             <Dialog
                 open={open}
@@ -526,6 +527,6 @@ export default function BookCollections() {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </>
     );
 }

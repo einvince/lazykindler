@@ -115,6 +115,7 @@ export default function CollectionList(props: ClippingListProps) {
         <div>
             <AntList
                 rowKey="id"
+                style={{ width: '98.3%' }}
                 grid={{
                     gutter: 16,
                     xs: 1,

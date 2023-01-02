@@ -24,6 +24,7 @@ import {
     Typography,
 } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import { Layout } from 'antd';
 import { Dropdown, Menu } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -31,6 +32,8 @@ import Dropzone from 'react-dropzone';
 
 import ContextMenu from '../../book_list/components/ContextMenu';
 import CollectionList from './components/CollectionList';
+
+const { Sider, Content } = Layout;
 
 enum FilterType {
     All = '未分类',
@@ -73,7 +76,7 @@ export default function BookCollections() {
     };
 
     const fetchClippingCollections = () => {
-        getAllCollections("clipping").then((data: CollectionDataType[]) => {
+        getAllCollections('clipping').then((data: CollectionDataType[]) => {
             if (data == null) {
                 data = [];
             }
@@ -159,11 +162,16 @@ export default function BookCollections() {
         stars = Number(stars.trim());
         cover = cover.trim();
 
-        createBookCollection(name, "clipping", description, preHandleSubjects(subjects), stars, cover).then(
-            () => {
-                fetchClippingCollections();
-            },
-        );
+        createBookCollection(
+            name,
+            'clipping',
+            description,
+            preHandleSubjects(subjects),
+            stars,
+            cover,
+        ).then(() => {
+            fetchClippingCollections();
+        });
         return true;
     };
 
@@ -257,91 +265,93 @@ export default function BookCollections() {
     };
 
     return (
-        <div style={{ height: height - 95 }}>
-            <Box>
-                <Grid container spacing={2}>
-                    <Grid item xs={2} style={{ paddingLeft: 3, paddingTop: 23, overflow: 'auto' }}>
-                        <List
-                            sx={{
-                                width: '100%',
-                                bgcolor: 'background.paper',
-                                position: 'relative',
-                                overflow: 'auto',
-                                height: height - 95,
-                                '& ul': { padding: 0 },
-                            }}
-                            subheader={<li />}
-                        >
-                            <ListSubheader>
-                                <Dropdown overlay={headerDropMenu}>
-                                    <a
-                                        className="ant-dropdown-link"
-                                        onClick={(e) => e.preventDefault()}
+        <>
+            <Layout>
+                <Sider style={{ backgroundColor: 'initial', paddingLeft: 0 }}>
+                    <List
+                        sx={{
+                            width: '100%',
+                            bgcolor: 'background.paper',
+                            position: 'relative',
+                            overflow: 'auto',
+                            height: '89vh',
+                            marginTop: -1.8,
+                            marginLeft: -1.5,
+                            '& ul': { padding: 0 },
+                        }}
+                        subheader={<li />}
+                    >
+                        <ListSubheader>
+                            <Dropdown overlay={headerDropMenu}>
+                                <a
+                                    className="ant-dropdown-link"
+                                    onClick={(e) => e.preventDefault()}
+                                >
+                                    <DatabaseOutlined style={{ paddingRight: 13 }} />
+                                    {selectedType}
+                                    <DownOutlined style={{ paddingLeft: 13 }} />
+                                </a>
+                            </Dropdown>
+                        </ListSubheader>
+                        {selectedSubType.map((item, index) => (
+                            <ContextMenu
+                                key={index}
+                                Content={
+                                    <ListItem
+                                        style={{ padding: 0 }}
+                                        key={index}
+                                        onClick={() => {
+                                            filterData(null, item);
+                                        }}
                                     >
-                                        <DatabaseOutlined style={{ paddingRight: 13 }} />
-                                        {selectedType}
-                                        <DownOutlined style={{ paddingLeft: 13 }} />
-                                    </a>
-                                </Dropdown>
-                            </ListSubheader>
-                            {selectedSubType.map((item, index) => (
-                                <ContextMenu
-                                    key={index}
-                                    Content={
-                                        <ListItem
-                                            style={{ padding: 0 }}
-                                            key={index}
-                                            onClick={() => {
-                                                filterData(null, item);
-                                            }}
+                                        <ListItemButton
+                                            style={{ paddingLeft: 10, paddingRight: 10 }}
+                                            selected={item === selectedItemName}
                                         >
-                                            <ListItemButton
-                                                style={{ paddingLeft: 10, paddingRight: 10 }}
-                                                selected={item === selectedItemName}
-                                            >
-                                                <ListItemText primary={`${index + 1}. ${item}`} />
-                                            </ListItemButton>
-                                        </ListItem>
-                                    }
-                                    MenuInfo={[
-                                        {
-                                            name: '删除',
-                                            handler: () => {
-                                                deleteCollectionByKeyword(
-                                                    selectedType,
-                                                    selectedItemName,
-                                                ).then(() => {
-                                                    fetchClippingCollections();
-                                                });
-                                            },
-                                            prefixIcon: <DeleteIcon />,
+                                            <ListItemText primary={`${index + 1}. ${item}`} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                }
+                                MenuInfo={[
+                                    {
+                                        name: '删除',
+                                        handler: () => {
+                                            deleteCollectionByKeyword(
+                                                selectedType,
+                                                selectedItemName,
+                                            ).then(() => {
+                                                fetchClippingCollections();
+                                            });
                                         },
-                                    ]}
-                                />
-                            ))}
-                            <ListItemButton onClick={handleClickOpen}>
-                                <ListItemIcon style={{ paddingLeft: 70 }}>
-                                    <AddIcon />
-                                </ListItemIcon>
-                            </ListItemButton>
-                        </List>
-                    </Grid>
+                                        prefixIcon: <DeleteIcon />,
+                                    },
+                                ]}
+                            />
+                        ))}
+                        <ListItemButton onClick={handleClickOpen}>
+                            <ListItemIcon style={{ paddingLeft: 70 }}>
+                                <AddIcon />
+                            </ListItemIcon>
+                        </ListItemButton>
+                    </List>
+                </Sider>
+                <Content>
                     <Grid
                         item
                         xs={10}
                         style={{
-                            paddingTop: 0,
-                            paddingLeft: 5,
-                            height: height - 70,
+                            marginTop: -13.2,
+                            maxHeight: '88.8vh',
                             overflow: 'auto',
                         }}
                     >
-                        <div style={{ width: width - 530 }}>
-                            <CollectionList data={data} fetchClippingCollections={fetchClippingCollections} />
-                        </div>
+                        <CollectionList
+                            data={data}
+                            fetchClippingCollections={fetchClippingCollections}
+                        />
                     </Grid>
-                </Grid>
-            </Box>
+                </Content>
+            </Layout>
 
             <Dialog
                 open={open}
@@ -367,7 +377,7 @@ export default function BookCollections() {
                                 gutterBottom
                                 component="div"
                             >
-                                名称<span color='red'>*</span>:
+                                名称<span color="red">*</span>:
                             </Typography>
                             <div style={{ position: 'absolute', paddingLeft: 45 }}>
                                 <Input
@@ -417,7 +427,7 @@ export default function BookCollections() {
                                 gutterBottom
                                 component="div"
                             >
-                                标签<span color='red'>*</span>:
+                                标签<span color="red">*</span>:
                             </Typography>
                             <div style={{ position: 'absolute', paddingLeft: 45 }}>
                                 <Input
@@ -442,7 +452,7 @@ export default function BookCollections() {
                                 gutterBottom
                                 component="div"
                             >
-                                评分<span color='red'>*</span>:
+                                评分<span color="red">*</span>:
                             </Typography>
                             <div style={{ position: 'absolute', paddingLeft: 45 }}>
                                 <Input
@@ -467,7 +477,7 @@ export default function BookCollections() {
                                 gutterBottom
                                 component="div"
                             >
-                                封面<span color='red'>*</span>:
+                                封面<span color="red">*</span>:
                             </Typography>
                             <div style={{ position: 'absolute', paddingLeft: 45 }}>
                                 <Dropzone
@@ -521,6 +531,6 @@ export default function BookCollections() {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </>
     );
 }
