@@ -98,13 +98,14 @@
 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用 `lazykindler`，你可以很轻易的做二次高亮操作。只要选中相关文字，接着在自动弹出的对话框里点击`确定`即可。
 
+
 <img src="https://user-images.githubusercontent.com/16133390/210205245-ae775d61-f06f-49f8-9f44-6ca7555a9ca7.jpg" width="66%">
 
 ## 11. 对高亮笔记添加评论
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以记录一下引起你共鸣的这段文字的一些想法。
 
-![Xnip2022-05-21_11-19-05](https://user-images.githubusercontent.com/16133390/169633455-058f6380-d804-4dbf-963a-22283b74db13.jpg)
+<img width="1267" alt="Xnip2023-01-02_19-49-13" src="https://user-images.githubusercontent.com/16133390/210227415-c3fb1d43-45e6-44fd-a870-7fcefa8fee0a.png">
 
 ## 12. 导入 静读天下 apk 高亮笔记
 
