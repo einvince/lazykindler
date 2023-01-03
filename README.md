@@ -165,7 +165,7 @@ yarn install
 <img width="1264" alt="Xnip2023-01-02_22-07-28" src="https://user-images.githubusercontent.com/16133390/210242285-37e19b33-475c-4668-94cc-cf0242f4b6cb.png">
 
 
-<img width="1273" alt="Xnip2023-01-02_22-10-07" src="https://user-images.githubusercontent.com/16133390/210242501-6b1b9bca-3f9b-4ea6-bbaa-c8009ac7fa62.png">
+<img width="1266" alt="Xnip2023-01-02_22-28-34" src="https://user-images.githubusercontent.com/16133390/210244730-1e793ada-fd11-422d-a083-ab34bbce608d.png">
 
 
 <img width="1270" alt="Xnip2023-01-02_21-56-16" src="https://user-images.githubusercontent.com/16133390/210240869-550b5735-b409-4a2a-a2c6-7390836c058c.png">
