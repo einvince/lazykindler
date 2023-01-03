@@ -118,7 +118,7 @@ export default function CollectionBooks(props: CollectionBooksProps) {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 fullWidth
-                maxWidth="md"
+                maxWidth="lg"
                 style={{ zIndex: 800 }}
             >
                 <DialogTitle id="alert-dialog-title">{collectionInfo.name}</DialogTitle>
@@ -132,9 +132,9 @@ export default function CollectionBooks(props: CollectionBooksProps) {
                             marginTop: 11,
                             marginBottom: 20,
                         }}
-                        onChange={onSearchChange}
+                        onBlur={onSearchChange}
                     />
-                    <BookCardList data={data} fetchBooks={fetchBooks} height={60} />
+                    <BookCardList data={data} fetchBooks={fetchBooks} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>关闭</Button>
