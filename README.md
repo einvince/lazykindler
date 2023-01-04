@@ -80,7 +80,7 @@
 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;初次启动平台时，会自动创建并初始化该数据库文件。该文件包含了平台除书籍外的其余所有数据信息。往平台导入的书籍被复制到了 `backend/data` 目录下。需要注意的是，为了方便平台内部操作，`backend/data` 目录下的书籍名后面都被添加了 书籍的`md5`值。
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果要对平台里所有书籍以及数据进行备份，只需要保存 `backend/lazykindler.db` 和 `backend/data` 这两个目录，下次在其他地方启动服务前，把`backend/lazykindler.db` 和 `backend/data` 复制到对应位置即可。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果要对平台里所有书籍以及数据进行备份，只需要保存 `backend/lazykindler.db` 和 `backend/data` ，下次在其他地方启动服务前，把`backend/lazykindler.db` 和 `backend/data` 复制到对应位置即可。
 
 ## 9. 导入 kindle 高亮笔记
 
