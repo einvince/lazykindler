@@ -36,7 +36,7 @@
 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果每次找书都在一个包含了几千本书的目录里查找，想想都脑壳疼。因此有必要对这些电子书使用恰当的方式管理起来，方便我们使用特定的偏好在一个小范围里查找电子书，从而快速找到希望寻找的书籍，避免浪费过多查找时间。
 <br />
-`lazykindler`因此横空出世。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`lazykindler`因此横空出世。
 
 # 功能介绍
 
