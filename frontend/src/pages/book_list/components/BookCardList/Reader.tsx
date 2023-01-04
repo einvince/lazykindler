@@ -14,6 +14,16 @@ type ReaderProps = {
 export default function ReaderDialog(props: ReaderProps) {
     const { open, book_title, book_uuid, onClose } = props;
 
+    let title = book_title;
+
+    let extracted_book_name_v1 = book_title.split('(')[0];
+    let extracted_book_name_v2 = book_title.split('（')[0];
+    if (extracted_book_name_v1.length < extracted_book_name_v2.length) {
+        title = extracted_book_name_v1;
+    } else {
+        title = extracted_book_name_v2;
+    }
+
     return (
         <div>
             <Dialog open={open} onClose={onClose} maxWidth={'lg'} fullWidth>
@@ -24,7 +34,7 @@ export default function ReaderDialog(props: ReaderProps) {
                     >
                         <Reader
                             url={`${backend_server_addr}/api/book/read/uuid/${book_uuid}/file.epub`}
-                            book_title={book_title}
+                            book_title={title}
                         />
                     </div>
                 </DialogContent>
