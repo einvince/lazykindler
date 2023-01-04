@@ -4,7 +4,6 @@
 
 # Lazy Kindler
 
----
 
 # ✨ 特性
 
