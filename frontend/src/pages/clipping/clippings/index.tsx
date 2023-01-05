@@ -1,4 +1,10 @@
-import { getAllClippings, getMultipleCollections, updateClippingByKeyword } from '@/services';
+import {
+    createClipping,
+    getAllClippings,
+    getMultipleCollections,
+    updateClippingByKeyword,
+} from '@/services';
+import book from '@/slices/book';
 import {
     BookOutlined,
     DatabaseOutlined,
@@ -8,12 +14,26 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Grid, List, ListItem, ListItemButton, ListItemText, ListSubheader } from '@mui/material';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import Textarea from '@mui/joy/Textarea';
+import {
+    Box,
+    Button,
+    Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormHelperText,
+    Grid,
+    Input,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    ListSubheader,
+    Typography,
+} from '@mui/material';
 import { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { alpha, styled } from '@mui/material/styles';
@@ -95,6 +115,18 @@ const Clippings: FC = () => {
         Author: {},
         Book: {},
     });
+
+    const [formData, setFormData] = useState<any>({});
+
+    const [openForCreateClipping, setOpenForCreateClipping] = useState(false);
+
+    const handleClickOpenForCreateClipping = () => {
+        setOpenForCreateClipping(true);
+    };
+
+    const handleCloseForCreateClipping = () => {
+        setOpenForCreateClipping(false);
+    };
 
     const fetchClippings = () => {
         return getAllClippings().then((data: any) => {
@@ -463,6 +495,28 @@ const Clippings: FC = () => {
         );
     };
 
+    const handleCreateClipping = () => {
+        let book_name = formData['book_name'];
+        let author = formData['author'];
+        let clip_content = formData['clip_content'];
+
+        if (book_name == null || author == null || clip_content == null) {
+            return false;
+        }
+        book_name = book_name.trim();
+        author = author.trim();
+        clip_content = clip_content.trim();
+
+        if (book_name == '' || author == '' || clip_content == '') {
+            return false;
+        }
+
+        createClipping(book_name, author, clip_content).then(() => {
+            fetchClippings();
+        });
+        return true;
+    };
+
     return (
         <>
             <Layout>
@@ -476,10 +530,21 @@ const Clippings: FC = () => {
                             marginTop: -15,
                             marginLeft: -13.5,
                             width: '108%',
-                            height: '7%',
+                            // height: '7%',
                         }}
                         onChange={onSearchChange}
                     />
+                    <Button
+                        id="demo-customized-button"
+                        aria-haspopup="true"
+                        variant="contained"
+                        fullWidth
+                        disableElevation
+                        style={{ width: '107%', marginLeft: -13 }}
+                        onClick={handleClickOpenForCreateClipping}
+                    >
+                        添加笔记
+                    </Button>
                     <List
                         sx={{
                             bgcolor: 'background.paper',
@@ -591,6 +656,124 @@ const Clippings: FC = () => {
                         }}
                     >
                         确定
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={openForCreateClipping}
+                onClose={handleCloseForCreateClipping}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle id="alert-dialog-title">{'创建书籍集合'}</DialogTitle>
+                <DialogContent style={{ margin: '0 auto', height: '55vh' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            '& .MuiTextField-root': { width: '45ch' },
+                        }}
+                    >
+                        <FormControl variant="standard" sx={{ m: 3, mt: 5, width: '45ch' }}>
+                            <Typography
+                                style={{ position: 'relative', paddingTop: 5 }}
+                                variant="subtitle1"
+                                gutterBottom
+                                component="div"
+                            >
+                                书名<span color="red">*</span>:
+                            </Typography>
+                            <div style={{ position: 'absolute', paddingLeft: 55 }}>
+                                <Input
+                                    id="standard-adornment-weight"
+                                    aria-describedby="standard-weight-helper-text"
+                                    inputProps={{
+                                        'aria-label': 'weight',
+                                    }}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setFormData({ ...formData, book_name: event.target.value });
+                                    }}
+                                    style={{ width: '190%' }}
+                                />
+                                <FormHelperText id="standard-weight-helper-text">
+                                    不能为空
+                                </FormHelperText>
+                            </div>
+                        </FormControl>
+                        <FormControl variant="standard" sx={{ m: 3, mt: 5, width: '45ch' }}>
+                            <Typography
+                                style={{ position: 'relative', paddingTop: 5 }}
+                                variant="subtitle1"
+                                gutterBottom
+                                component="div"
+                            >
+                                作者:
+                            </Typography>
+                            <div style={{ position: 'absolute', paddingLeft: 55 }}>
+                                <Input
+                                    id="standard-adornment-weight"
+                                    aria-describedby="standard-weight-helper-text"
+                                    inputProps={{
+                                        'aria-label': 'weight',
+                                    }}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setFormData({
+                                            ...formData,
+                                            author: event.target.value,
+                                        });
+                                    }}
+                                    style={{ width: '190%' }}
+                                />
+                                <FormHelperText id="standard-weight-helper-text">
+                                    不能为空
+                                </FormHelperText>
+                            </div>
+                        </FormControl>
+                        <FormControl variant="standard" sx={{ m: 3, mt: 5, width: '45ch' }}>
+                            <Typography
+                                style={{ position: 'relative', paddingTop: 5 }}
+                                variant="subtitle1"
+                                gutterBottom
+                                component="div"
+                            >
+                                内容<span color="red">*</span>:
+                            </Typography>
+                            <div style={{ position: 'absolute', paddingLeft: 55 }}>
+                                <TextField
+                                    label="笔记"
+                                    multiline
+                                    rows={4}
+                                    variant="outlined"
+                                    style={{ width: '157%' }}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setFormData({
+                                            ...formData,
+                                            clip_content: event.target.value,
+                                        });
+                                    }}
+                                />
+                                <FormHelperText id="standard-weight-helper-text">
+                                    不能为空
+                                </FormHelperText>
+                            </div>
+                        </FormControl>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseForCreateClipping}>取消</Button>
+                    <Button
+                        onClick={() => {
+                            let ok = handleCreateClipping();
+                            if (ok) {
+                                handleCloseForCreateClipping();
+                            }
+                        }}
+                        autoFocus
+                    >
+                        确认
                     </Button>
                 </DialogActions>
             </Dialog>

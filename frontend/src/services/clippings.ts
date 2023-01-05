@@ -69,3 +69,13 @@ export const deleteHighlight = async (uuid: string, highlight: string) => {
     });
     return data.data;
 };
+
+// 手动创建笔记
+export const createClipping = async (book_name: string, author: string, clip_content: any) => {
+    const data = await axiosInstance.post(`/api/clipping/create`, {
+        book_name,
+        author,
+        clip_content,
+    });
+    return data.data;
+};

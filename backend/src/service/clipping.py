@@ -287,3 +287,10 @@ def delete_highlight_from_clipping(clipping_uuid, highlight):
         db.run_sql("update clipping set highlights='{}' where uuid='{}'".format(
             "___".join(updated_highlight_arr), clipping_uuid))
     return "success"
+
+# 支持手动创建笔记
+def create_clipping(book_name, author, content):
+    str_md5 = hashlib.md5(content.encode('utf-8')).hexdigest()
+    db.insert_clipping(generate_uuid(), book_name, author,
+                    content, time.time(), str_md5)
+    return "success"

@@ -48,3 +48,11 @@ def delete_highlight_from_clipping():
     uuid = content['uuid']
     highlight = content['highlight']
     return clipping.delete_highlight_from_clipping(uuid, highlight)
+
+
+def create_clipping():
+    content = request.json
+    book_name = content['book_name']
+    author = content['author']
+    clip_content = content['clip_content']
+    return clipping.create_clipping(book_name, author, clip_content)
