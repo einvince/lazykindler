@@ -176,6 +176,11 @@ yarn install
 
 <img width="1265" alt="Xnip2023-01-02_20-11-10" src="https://user-images.githubusercontent.com/16133390/210229596-f5c5ee3d-f51e-439a-b249-827dcad7ce14.png">
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=leowucn/lazykindler&type=Date)](https://star-history.com/#leowucn/lazykindler&Date)
+
+
 
 # 其他
 
