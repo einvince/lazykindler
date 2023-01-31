@@ -26,7 +26,7 @@ export default function ReaderDialog(props: ReaderProps) {
 
     return (
         <div>
-            <Dialog open={open} onClose={onClose} maxWidth={'lg'} fullWidth>
+            <Dialog open={open} onClose={onClose} maxWidth={false} fullWidth>
                 <DialogContent>
                     <div
                         // style={{ position: 'relative', height: '85vh', backgroundColor: '#ead8bc' }}
