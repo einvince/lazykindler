@@ -9,6 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
+import { height } from '@mui/system';
 import { Button as AntdButton, Avatar, Comment, Form, Input } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
@@ -101,10 +102,10 @@ export default function ClippingDialog(props: ClippingDialogProps) {
                 }}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                maxWidth="md"
+                maxWidth="lg"
                 fullWidth
             >
-                <div style={{ backgroundColor: 'darkseagreen' }}>
+                <div style={{ backgroundColor: 'darkseagreen'}}>
                     <DialogTitle id="alert-dialog-title">
                         <article className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']}`}>
                             {`来自《${book_name} 》的笔记`}
@@ -115,12 +116,10 @@ export default function ClippingDialog(props: ClippingDialogProps) {
                         <article
                             className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']} ${hetiStyles['heti-hang']} ${hetiStyles['heti-meta heti-small']} `}
                             style={{
-                                height: '100%',
                                 paddingTop: 10,
                                 fontSize: 16,
                                 whiteSpace: 'pre-wrap',
-                                // textIndent: '2em',
-                                maxHeight: '37vh',
+                                maxHeight: '47vh',
                                 overflow: 'auto',
                             }}
                             onMouseUp={() => {
