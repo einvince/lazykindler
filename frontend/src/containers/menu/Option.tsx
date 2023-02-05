@@ -4,9 +4,9 @@ import Drawer from '@mui/material/Drawer';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
-import ControlIconBtn from '../../components/option/ControlIconBtn';
-import ControlIconBtnWrapper from '../../components/option/ControlIconBtnWrapper';
-import OptionSlider from '../../components/option/Slider';
+import ControlIconBtn from '../option/ControlIconBtn';
+import ControlIconBtnWrapper from '../option/ControlIconBtnWrapper';
+import OptionSlider from '../option/Slider';
 // components
 import { MenuControl } from '../../lib/hooks/useMenu';
 // types

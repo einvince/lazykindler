@@ -9,8 +9,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
-import { height } from '@mui/system';
-import { Button as AntdButton, Avatar, Comment, Form, Input } from 'antd';
+import { Button as AntdButton, Avatar, Form, Input } from 'antd';
+import { Comment } from "@ant-design/compatible";
 import _ from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -124,7 +124,7 @@ export default function ClippingDialog(props: ClippingDialogProps) {
                             }}
                             onMouseUp={() => {
                                 let selectedText = window.getSelection()!.toString();
-                                if (selectedText != '') {
+                                if (selectedText !== '') {
                                     let info = {
                                         open: true,
                                         selectedText: selectedText,
@@ -153,6 +153,7 @@ export default function ClippingDialog(props: ClippingDialogProps) {
                                     return (
                                         <Comment
                                             key={index}
+                                            style={{ backgroundColor: 'darkseagreen' }}
                                             actions={[
                                                 <span
                                                     key="comment-list-reply-to-0"
@@ -189,13 +190,14 @@ export default function ClippingDialog(props: ClippingDialogProps) {
                                     alt="Han Solo"
                                 />
                             }
+                            style={{ backgroundColor: 'darkseagreen' }}
                             content={
                                 <Editor
                                     onChange={(e: any) => {
                                         setTextArea(e.target.value);
                                     }}
                                     onSubmit={() => {
-                                        if (textArea == '') {
+                                        if (textArea === '') {
                                             return;
                                         }
                                         setSubmitting(true);
@@ -213,9 +215,6 @@ export default function ClippingDialog(props: ClippingDialogProps) {
                             }
                         />
                     </DialogContent>
-                    {/* <DialogActions>
-                        <Button onClick={handleClose}>取消</Button>
-                    </DialogActions> */}
                 </div>
             </Dialog>
 
@@ -233,7 +232,7 @@ export default function ClippingDialog(props: ClippingDialogProps) {
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
                             请选择要进行的操作! (要删除高亮部分，请完整选择某一高亮部分。否则
-                            "删除高亮" 操作不会成功执行)
+                            删除高亮 操作不会成功执行)
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

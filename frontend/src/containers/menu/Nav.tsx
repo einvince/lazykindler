@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import BookInfo from '../../components/nav/BookInfo';
+import BookInfo from '../nav/BookInfo';
 import { MenuControl } from '../../lib/hooks/useMenu';
 import { RootState } from '../../slices';
 import Book from '../../types/book';

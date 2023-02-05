@@ -79,7 +79,7 @@ export default function AddBooks(props: AddBooksProps) {
     const [collInfo, setCollInfo] = useState<any>({});
 
     const fetchAllBooks = () => {
-        if (book_type == 'coll') {
+        if (book_type === 'coll') {
             getCollBooks(collection_uuid).then((data) => {
                 let d = _.map(data, (item: BookMetaDataType) => {
                     return Object.assign({}, item, { key: item.uuid });

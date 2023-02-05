@@ -8,7 +8,7 @@ import time
 
 from ..service.clipping import ClippingHelper
 from ..service.moon_reader import import_moon_reader_clipping
-from ..routes import books, clipping, collection, comment
+from ..routes import books, clipping, collection, comment, chatgpt
 
 
 app = Flask(__name__)
@@ -79,3 +79,5 @@ else:
     app.add_url_rule('/api/comment/create', view_func=comment.create_comment, methods=['POST'])
     app.add_url_rule('/api/comment/update', view_func=comment.update_comment, methods=['POST'])
     app.add_url_rule('/api/comment/delete', view_func=comment.delete_comment, methods=['DELETE'])
+
+    app.add_url_rule('/api/chatgpt/get', view_func=chatgpt.get_awnser_from_chatgpt, methods=['POST'])
