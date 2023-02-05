@@ -163,15 +163,17 @@ yarn install
 下面是我本地自己上传了书籍并配置了集合后的截图
 
 <img width="1418" alt="1" src="https://user-images.githubusercontent.com/16133390/216806475-97ee4960-40cc-4649-b414-0687724bb6ad.png">
-
+<br />
 <img width="1398" alt="Xnip2023-02-05_15-13-49" src="https://user-images.githubusercontent.com/16133390/216806612-dc1baf4f-7ed5-4b3d-ab44-73c7f07c73a7.png">
-
+<br />
 <img width="1418" alt="2" src="https://user-images.githubusercontent.com/16133390/216806480-def76f45-f8ba-41fc-9512-a448e9fbce32.png">
+<br />
 <img width="1418" alt="3" src="https://user-images.githubusercontent.com/16133390/216806485-caf74fe2-0cef-45f8-9a29-47780e72132d.png">
+<br />
 <img width="1420" alt="4" src="https://user-images.githubusercontent.com/16133390/216806488-dc2e23d5-6655-4bca-9e2e-db0a6771ba0c.png">
-
+<br />
 <img width="1420" alt="5" src="https://user-images.githubusercontent.com/16133390/216806495-8cb5b836-4792-47fd-a93d-49e6f5164916.png">
-
+<br />
 
 # 其他
 
