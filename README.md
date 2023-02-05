@@ -113,7 +113,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以记录一下引起你共鸣的这段文字的一些想法。
 
-<img width="1267" alt="Xnip2023-01-02_19-49-13" src="https://user-images.githubusercontent.com/16133390/210227415-c3fb1d43-45e6-44fd-a870-7fcefa8fee0a.png">
+<img width="1379" alt="Xnip2023-02-05_15-19-18" src="https://user-images.githubusercontent.com/16133390/216806787-4b76a541-608d-4e8e-9d8e-2651bf7842ef.png">
+
 
 ## 12. 导入 静读天下 apk 高亮笔记
 
@@ -123,9 +124,11 @@
 
 # 运行环境要求
 
-`python 3.10.4`
-`nodejs v16.14.2`
-`Calibre 软件`
+`python 3.10.4` 
+
+`nodejs v19.6.0`
+
+`Calibre`
 
 其他版本未经测试
 
@@ -166,31 +169,26 @@ yarn install
 # 平台展示
 
 下面是我本地自己上传了书籍并配置了集合后的截图
-<img width="1267" alt="Xnip2023-01-02_22-04-44" src="https://user-images.githubusercontent.com/16133390/210241908-0bf7191b-8529-48e7-be49-3285a12fc3d8.png">
 
-
-<img width="1268" alt="Xnip2023-01-02_19-54-16" src="https://user-images.githubusercontent.com/16133390/210227921-9507509c-af2a-4d06-95e2-8ed095e9bfe8.png">
-
-
-
-<img width="1264" alt="Xnip2023-01-02_22-07-28" src="https://user-images.githubusercontent.com/16133390/210242285-37e19b33-475c-4668-94cc-cf0242f4b6cb.png">
-
-
-<img width="1266" alt="Xnip2023-01-02_22-28-34" src="https://user-images.githubusercontent.com/16133390/210244730-1e793ada-fd11-422d-a083-ab34bbce608d.png">
-
-
-<img width="1270" alt="Xnip2023-01-02_21-56-16" src="https://user-images.githubusercontent.com/16133390/210240869-550b5735-b409-4a2a-a2c6-7390836c058c.png">
-
-
-<img width="1265" alt="Xnip2023-01-02_20-11-10" src="https://user-images.githubusercontent.com/16133390/210229596-f5c5ee3d-f51e-439a-b249-827dcad7ce14.png">
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=leowucn/lazykindler&type=Date)](https://star-history.com/#leowucn/lazykindler&Date)
-
-
+<img width="1418" alt="1" src="https://user-images.githubusercontent.com/16133390/216806475-97ee4960-40cc-4649-b414-0687724bb6ad.png">
+<br />
+<img width="1398" alt="Xnip2023-02-05_15-13-49" src="https://user-images.githubusercontent.com/16133390/216806612-dc1baf4f-7ed5-4b3d-ab44-73c7f07c73a7.png">
+<br />
+<img width="1418" alt="2" src="https://user-images.githubusercontent.com/16133390/216806480-def76f45-f8ba-41fc-9512-a448e9fbce32.png">
+<br />
+<img width="1418" alt="3" src="https://user-images.githubusercontent.com/16133390/216806485-caf74fe2-0cef-45f8-9a29-47780e72132d.png">
+<br />
+<img width="1420" alt="4" src="https://user-images.githubusercontent.com/16133390/216806488-dc2e23d5-6655-4bca-9e2e-db0a6771ba0c.png">
+<br />
+<img width="1420" alt="5" src="https://user-images.githubusercontent.com/16133390/216806495-8cb5b836-4792-47fd-a93d-49e6f5164916.png">
+<br />
 
 # 其他
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用于 `kindle` 的相关工具最有名的应该是 `calibre`，但是这个软件的功能偏向于 "编辑"，对于电子书的多维度展示做的相对简陋，因此打算自己写一个贴合实际需求的专门用来管理电子书的工具。
 目前正在抽空开发，如果您也喜欢看电子书，并且对管理电子书有功能建议，不妨提一下 issue，谢谢~
+
+
+# Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=leowucn/lazykindler&type=Date)](https://star-history.com/#leowucn/lazykindler&Date)
