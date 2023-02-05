@@ -264,7 +264,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                     <br />
                     时间:
                     <span style={{ paddingLeft: 5 }}>
-                      {moment.unix(~~item.addDate).format('yyyy-MM-DD HH:mm:ss')}
+                      {moment.unix(~~item.addDate).format('YYYY-MM-DD HH:mm:ss')}
                     </span>
                     <br />
                     标签:
