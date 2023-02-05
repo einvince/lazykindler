@@ -135,7 +135,7 @@ export default function CollectionList(props: ClippingListProps) {
           <AntList.Item>
             <Card
               hoverable
-              style={{ width: 260 }}
+              style={{ width: 200 }}
               cover={<Cover uuid={item.uuid} />}
               actions={[
                 <Menu mode="vertical" key={1} selectable={false}>
@@ -252,7 +252,7 @@ export default function CollectionList(props: ClippingListProps) {
                       maxHeight: '30vh',
                       overflow: 'auto',
                       marginTop: 5,
-                      textAlign: "center"
+                      textAlign: 'center',
                     }}
                   >
                     <Typography

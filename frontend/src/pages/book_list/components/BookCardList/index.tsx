@@ -193,7 +193,7 @@ export default function BookCardList(props: BookCardListProps) {
           <AntList.Item>
             <Card
               hoverable
-              style={{ width: 260 }}
+              style={{ width: 200 }}
               cover={<Cover uuid={item.uuid} />}
               actions={[
                 <Menu key={1} mode="horizontal" selectable={false}>
