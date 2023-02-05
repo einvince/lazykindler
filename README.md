@@ -108,7 +108,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以记录一下引起你共鸣的这段文字的一些想法。
 
-<img width="1267" alt="Xnip2023-01-02_19-49-13" src="https://user-images.githubusercontent.com/16133390/210227415-c3fb1d43-45e6-44fd-a870-7fcefa8fee0a.png">
+<img width="1379" alt="Xnip2023-02-05_15-19-18" src="https://user-images.githubusercontent.com/16133390/216806787-4b76a541-608d-4e8e-9d8e-2651bf7842ef.png">
+
 
 ## 12. 导入 静读天下 apk 高亮笔记
 
