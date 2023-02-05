@@ -118,9 +118,11 @@
 
 # 运行环境要求
 
-`python 3.10.4`
-`nodejs v16.14.2`
-`Calibre 软件`
+`python 3.10.4` 
+
+`nodejs v19.6.0`
+
+`Calibre`
 
 其他版本未经测试
 
