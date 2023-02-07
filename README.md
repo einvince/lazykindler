@@ -187,8 +187,3 @@ yarn install
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用于 `kindle` 的相关工具最有名的应该是 `calibre`，但是这个软件的功能偏向于 "编辑"，对于电子书的多维度展示做的相对简陋，因此打算自己写一个贴合实际需求的专门用来管理电子书的工具。
 目前正在抽空开发，如果您也喜欢看电子书，并且对管理电子书有功能建议，不妨提一下 issue，谢谢~
-
-
-# Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=leowucn/lazykindler&type=Date)](https://star-history.com/#leowucn/lazykindler&Date)
