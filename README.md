@@ -178,9 +178,11 @@ yarn install
 <br />
 <img width="1418" alt="3" src="https://user-images.githubusercontent.com/16133390/216806485-caf74fe2-0cef-45f8-9a29-47780e72132d.png">
 <br />
-<img width="1420" alt="4" src="https://user-images.githubusercontent.com/16133390/216806488-dc2e23d5-6655-4bca-9e2e-db0a6771ba0c.png">
+<img width="1799" alt="Xnip2023-02-14_12-36-20" src="https://user-images.githubusercontent.com/16133390/218640667-ba74048a-3b78-41c6-a772-dc1e56485b56.png">
+
 <br />
-<img width="1420" alt="5" src="https://user-images.githubusercontent.com/16133390/216806495-8cb5b836-4792-47fd-a93d-49e6f5164916.png">
+<img width="1801" alt="Xnip2023-02-14_12-36-38" src="https://user-images.githubusercontent.com/16133390/218640680-263195c2-7ac3-4947-b7a5-b70375074e9c.png">
+
 <br />
 
 # 其他
