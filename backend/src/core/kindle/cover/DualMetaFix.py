@@ -36,7 +36,7 @@ title_offset = 84
 
 
 def getint(data, ofs, sz='L'):
-    i, = struct.unpack_from('>'+sz, data, ofs)
+    i, = struct.unpack_from(f'>{sz}', data, ofs)
     return i
 
 
@@ -87,14 +87,22 @@ def get_exth_params(rec0):
 def add_exth(rec0, exth_num, exth_bytes):
     ebase, elen, enum, rlen = get_exth_params(rec0)
     newrecsize = 8+len(exth_bytes)
-    newrec0 = rec0[0:ebase+4]+struct.pack('>L', elen+newrecsize)+struct.pack('>L', enum+1)+struct.pack('>L', exth_num)\
-        + struct.pack('>L', newrecsize)+exth_bytes+rec0[ebase+12:]
+    newrec0 = (
+        (
+            rec0[: ebase + 4]
+            + struct.pack('>L', elen + newrecsize)
+            + struct.pack('>L', enum + 1)
+            + struct.pack('>L', exth_num)
+            + struct.pack('>L', newrecsize)
+        )
+        + exth_bytes
+    ) + rec0[ebase + 12 :]
     newrec0 = writeint(newrec0, title_offset, getint(newrec0, title_offset)+newrecsize)
     # keep constant record length by removing newrecsize null bytes from end
     sectail = newrec0[-newrecsize:]
     if sectail != b'\0'*newrecsize:
         raise DualMetaFixException('add_exth: trimmed non-null bytes at end of section')
-    newrec0 = newrec0[0:rlen]
+    newrec0 = newrec0[:rlen]
     return newrec0
 
 
@@ -123,7 +131,12 @@ def del_exth(rec0, exth_num):
             newrec0 = rec0
             newrec0 = writeint(newrec0, title_offset, getint(newrec0, title_offset)-exth_size)
             newrec0 = newrec0[:ebase_idx]+newrec0[ebase_idx+exth_size:]
-            newrec0 = newrec0[0:ebase+4]+struct.pack('>L', elen-exth_size)+struct.pack('>L', enum-1)+newrec0[ebase+12:]
+            newrec0 = (
+                newrec0[: ebase + 4]
+                + struct.pack('>L', elen - exth_size)
+                + struct.pack('>L', enum - 1)
+                + newrec0[ebase + 12 :]
+            )
             newrec0 += b'\0'*exth_size
             if rlen != len(newrec0):
                 raise DualMetaFixException('del_exth: incorrect section size change')

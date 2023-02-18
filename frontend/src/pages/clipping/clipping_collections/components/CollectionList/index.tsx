@@ -175,10 +175,10 @@ export default function CollectionList(props: ClippingListProps) {
                       onClick={() => {
                         setDialogInfo({
                           title: '修改评分',
-                          oldValue: item.stars,
+                          oldValue: item.star,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
-                            updateCollection(item.uuid, 'stars', newValue).then(() => {
+                            updateCollection(item.uuid, 'star', newValue).then(() => {
                               fetchClippingCollections();
                             });
                           },
@@ -193,16 +193,14 @@ export default function CollectionList(props: ClippingListProps) {
                       onClick={() => {
                         setDialogInfo({
                           title: '修改标签',
-                          oldValue: item.subjects,
+                          oldValue: item.tags,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
-                            updateCollection(
-                              item.uuid,
-                              'subjects',
-                              preHandleSubjects(newValue),
-                            ).then(() => {
-                              fetchClippingCollections();
-                            });
+                            updateCollection(item.uuid, 'tag', preHandleSubjects(newValue)).then(
+                              () => {
+                                fetchClippingCollections();
+                              },
+                            );
                           },
                           open: true,
                         });
@@ -284,7 +282,7 @@ export default function CollectionList(props: ClippingListProps) {
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                       <StarIcon style={{ height: 20 }} />
                       <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.stars}
+                        {item.star}
                       </Typography>
                     </Box>
 
@@ -298,7 +296,7 @@ export default function CollectionList(props: ClippingListProps) {
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                       <TagOutlined style={{ height: 16, paddingLeft: 4.5 }} />
                       <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.subjects}
+                        {item.tag}
                       </Typography>
                     </Box>
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>

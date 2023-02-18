@@ -1,3 +1,6 @@
+#!/usr/bin/env pytho3
+# -*- coding: utf-8 -*-
+
 from flask import request
 from ..service import comment
 

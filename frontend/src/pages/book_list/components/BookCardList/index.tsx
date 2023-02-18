@@ -241,10 +241,10 @@ export default function BookCardList(props: BookCardListProps) {
                       onClick={() => {
                         setDialogInfo({
                           title: '修改评分',
-                          oldValue: item.stars,
+                          oldValue: item.star,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
-                            updateBookMeta(item.uuid, 'stars', newValue).then(() => {
+                            updateBookMeta(item.uuid, 'star', newValue).then(() => {
                               fetchBooks();
                             });
                           },
@@ -259,10 +259,10 @@ export default function BookCardList(props: BookCardListProps) {
                       onClick={() => {
                         setDialogInfo({
                           title: '修改标签',
-                          oldValue: item.subjects,
+                          oldValue: item.tag,
                           allowEmptyStr: true,
                           handleOK: (newValue: any) => {
-                            updateBookMeta(item.uuid, 'subjects', newValue).then(() => {
+                            updateBookMeta(item.uuid, 'tags', newValue).then(() => {
                               fetchBooks();
                             });
                           },
@@ -425,7 +425,7 @@ export default function BookCardList(props: BookCardListProps) {
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                       <StarIcon style={{ height: 20 }} />
                       <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.stars}
+                        {item.star}
                       </Typography>
                     </Box>
 
@@ -448,7 +448,7 @@ export default function BookCardList(props: BookCardListProps) {
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                       <LocalOfferIcon style={{ height: 20 }} />
                       <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.subjects == null ? '' : item.subjects}
+                        {item.tags == null ? '' : item.tags}
                       </Typography>
                     </Box>
 

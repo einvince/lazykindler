@@ -1,3 +1,6 @@
+#!/usr/bin/env pytho3
+# -*- coding: utf-8 -*-
+
 from flask import request
 from ..service import collection
 from ..service import cover
@@ -6,39 +9,16 @@ from ..database.database import db
 
 def create_collection():
     content = request.json
+
     name = content['name']
-
-    coll = db.query(
-        "select uuid from coll where name='{}'".format(name))
-    if len(coll) > 0:
-        return "success"
-
     coll_type = content['coll_type']
-
-    description = None
-    if 'description' in content:
-        value = content['description']
-        if value is not None and value != "":
-            description = value
-
-    subjects = None
-    if 'subjects' in content:
-        value = content['subjects']
-        if value is not None and value != "":
-            subjects = value
-
-    stars = 0
-    if 'stars' in content:
-        stars = content['stars']
-
-    cover = None
-    if 'cover' in content:
-        value = content['cover']
-        if value is not None and value != "":
-            cover = value
+    description = content['description']
+    tags = content['tag']
+    star = content['star'] if 'star' in content else 0
+    cover = content['cover']
 
     collection.create_collection(
-        name, coll_type, description, subjects, stars, cover)
+        name, coll_type, description, tags, star, cover)
     return "success"
 
 
@@ -62,6 +42,10 @@ def delete_coll_with_items():
     return collection.delete_colls_with_items(uuid)
 
 
+def delete_all_colls_hard():
+    return collection.delete_all_colls_hard()
+
+
 def add_book_to_collection():
     content = request.json
     coll_uuid = content['coll_uuid']
@@ -77,17 +61,11 @@ def update_coll():
     return collection.update_collection(uuid, key, value)
 
 
-def delete_coll_by_keyword():
-    keyword = request.args.get('keyword')
-    value = request.args.get('value')
-    return collection.delete_colls_by_keyword(keyword, value)
-
-
 def update_coll_cover():
     content = request.json
     coll_uuid = content['coll_uuid']
     cover_str = content['cover']
-    return cover.update_coll_cover(coll_uuid, cover_str)
+    return cover.upsert_cover(coll_uuid, cover_str)
 
 
 def get_coll_books():

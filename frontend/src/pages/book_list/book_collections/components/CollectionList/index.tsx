@@ -209,10 +209,10 @@ export default function BookCardList(props: BookCardListProps) {
                       onClick={() => {
                         setDialogInfo({
                           title: '修改评分',
-                          oldValue: item.stars,
+                          oldValue: item.star,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
-                            updateCollection(item.uuid, 'stars', newValue).then(() => {
+                            updateCollection(item.uuid, 'star', newValue).then(() => {
                               fetchBookCollections();
                             });
                           },
@@ -227,16 +227,14 @@ export default function BookCardList(props: BookCardListProps) {
                       onClick={() => {
                         setDialogInfo({
                           title: '修改标签',
-                          oldValue: item.subjects,
+                          oldValue: item.tags,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
-                            updateCollection(
-                              item.uuid,
-                              'subjects',
-                              preHandleSubjects(newValue),
-                            ).then(() => {
-                              fetchBookCollections();
-                            });
+                            updateCollection(item.uuid, 'tags', preHandleSubjects(newValue)).then(
+                              () => {
+                                fetchBookCollections();
+                              },
+                            );
                           },
                           open: true,
                         });
@@ -318,7 +316,7 @@ export default function BookCardList(props: BookCardListProps) {
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                       <StarIcon style={{ height: 20 }} />
                       <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.stars}
+                        {item.star}
                       </Typography>
                     </Box>
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
@@ -331,7 +329,7 @@ export default function BookCardList(props: BookCardListProps) {
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                       <ArchiveIcon style={{ height: 16 }} />
                       <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.subjects}
+                        {item.tags}
                       </Typography>
                     </Box>
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>

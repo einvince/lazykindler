@@ -182,10 +182,10 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                       onClick={() => {
                         setDialogInfo({
                           title: '修改评分',
-                          oldValue: item.stars,
+                          oldValue: item.star,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
-                            updateClipping(item.uuid, 'stars', newValue).then(() => {
+                            updateClipping(item.uuid, 'star', newValue).then(() => {
                               fetchClippings();
                             });
                           },
@@ -200,10 +200,10 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                       onClick={() => {
                         setDialogInfo({
                           title: '修改标签',
-                          oldValue: item.subjects,
+                          oldValue: item.tag,
                           allowEmptyStr: true,
                           handleOK: (newValue: any) => {
-                            updateClipping(item.uuid, 'subjects', newValue).then(() => {
+                            updateClipping(item.uuid, 'tag', newValue).then(() => {
                               fetchClippings();
                             });
                           },
@@ -268,7 +268,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                     </span>
                     <br />
                     标签:
-                    <span style={{ paddingLeft: 5 }}>{item.subjects}</span>
+                    <span style={{ paddingLeft: 5 }}>{item.tag}</span>
                   </div>
                 }
               />

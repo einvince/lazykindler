@@ -42,15 +42,15 @@ const { Sider, Content } = Layout;
 
 enum FilterType {
   All = '未分类',
-  Stars = '评分',
-  Subjects = '标签',
+  Star = '评分',
+  Tags = '标签',
   Author = '作者',
   Book = '书名',
 }
 
 type SubHeaerType = {
-  Stars: Object;
-  Subjects: Object;
+  Star: Object;
+  Tags: Object;
   Author: Object;
   Book: Object;
 };
@@ -73,8 +73,8 @@ const Clippings: FC = () => {
   const [selectedSecondLevel, setSelectedSecondLevel] = useState<any>(null);
 
   const [classifiedInfo, setClassifiedInfo] = useState<SubHeaerType>({
-    Stars: {},
-    Subjects: {},
+    Star: {},
+    Tags: {},
     Author: {},
     Book: {},
   });
@@ -127,32 +127,32 @@ const Clippings: FC = () => {
         setAllClippings(data);
       });
 
-      const stars: any = {};
-      const subjects: any = {};
+      const star: any = {};
+      const tag: any = {};
       const authors: any = {};
       const books: any = {};
 
       _.forEach(data, (item: ClippingDataType) => {
-        if (stars[item.stars] == null) {
-          stars[item.stars] = {};
+        if (star[item.star] == null) {
+          star[item.star] = {};
         }
-        if (item.stars != null) {
-          stars[item.stars][item.uuid] = null;
+        if (item.star != null) {
+          star[item.star][item.uuid] = null;
         }
 
-        if (item.subjects != null) {
-          let subjectsList = item.subjects.split(';');
+        if (item.tag != null) {
+          let subjectsList = item.tag.split(';');
           subjectsList.forEach((subject) => {
-            if (subjects[subject] == null) {
-              subjects[subject] = {};
+            if (tag[subject] == null) {
+              tag[subject] = {};
             }
-            subjects[subject][item.uuid] = null;
+            tag[subject][item.uuid] = null;
           });
         } else {
-          if (subjects['无标签'] == null) {
-            subjects['无标签'] = {};
+          if (tag['无标签'] == null) {
+            tag['无标签'] = {};
           }
-          subjects['无标签'][item.uuid] = null;
+          tag['无标签'][item.uuid] = null;
         }
 
         if (item.author == null) {
@@ -182,8 +182,8 @@ const Clippings: FC = () => {
       });
 
       let allInfo = {
-        Stars: stars,
-        Subjects: subjects,
+        Star: star,
+        Tags: tag,
         Author: authors,
         Book: books,
       };
@@ -194,11 +194,11 @@ const Clippings: FC = () => {
         case FilterType.All:
           setSecondLevelMenuList([]);
           break;
-        case FilterType.Stars:
-          setSecondLevelMenuList(Object.keys(allInfo.Stars));
+        case FilterType.Star:
+          setSecondLevelMenuList(Object.keys(allInfo.Star));
           break;
-        case FilterType.Subjects:
-          setSecondLevelMenuList(Object.keys(allInfo.Subjects));
+        case FilterType.Tags:
+          setSecondLevelMenuList(Object.keys(allInfo.Tags));
           break;
         case FilterType.Author:
           setSecondLevelMenuList(Object.keys(allInfo.Author));
@@ -231,8 +231,8 @@ const Clippings: FC = () => {
       case FilterType.All:
         filteredClippings = allClippingsList;
         break;
-      case FilterType.Stars:
-        o = allInfo.Stars[selectedKeyword];
+      case FilterType.Star:
+        o = allInfo.Star[selectedKeyword];
         if (o == null) {
           o = {};
         }
@@ -244,8 +244,8 @@ const Clippings: FC = () => {
         });
         setData(filteredClippings);
         break;
-      case FilterType.Subjects:
-        o = allInfo.Subjects[selectedKeyword];
+      case FilterType.Tags:
+        o = allInfo.Tags[selectedKeyword];
         if (o == null) {
           o = {};
         }
@@ -306,26 +306,26 @@ const Clippings: FC = () => {
             未分类
           </a>
         </AntMenu.Item>
-        <AntMenu.Item key="stars" icon={<StarOutlined />}>
+        <AntMenu.Item key="star" icon={<StarOutlined />}>
           <a
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Stars);
-              setSecondLevelMenuList(Object.keys(classifiedInfo.Stars));
+              setFirstLevelType(FilterType.Star);
+              setSecondLevelMenuList(Object.keys(classifiedInfo.Star));
             }}
             style={{ paddingLeft: 13 }}
           >
             评分
           </a>
         </AntMenu.Item>
-        <AntMenu.Item key="subjects" icon={<TagsOutlined />}>
+        <AntMenu.Item key="tag" icon={<TagsOutlined />}>
           <a
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Subjects);
-              setSecondLevelMenuList(Object.keys(classifiedInfo.Subjects));
+              setFirstLevelType(FilterType.Tags);
+              setSecondLevelMenuList(Object.keys(classifiedInfo.Tags));
             }}
             style={{ paddingLeft: 13 }}
           >
@@ -405,7 +405,7 @@ const Clippings: FC = () => {
         );
         break;
 
-      case FilterType.Stars:
+      case FilterType.Star:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -419,7 +419,7 @@ const Clippings: FC = () => {
         );
         break;
 
-      case FilterType.Subjects:
+      case FilterType.Tags:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -446,7 +446,7 @@ const Clippings: FC = () => {
         if (
           (item.book_name != null && item.book_name.includes(keyword)) ||
           (item.author != null && item.author.includes(keyword)) ||
-          (item.subjects != null && item.subjects.includes(keyword)) ||
+          (item.tag != null && item.tag.includes(keyword)) ||
           (item.content != null && item.content.includes(keyword))
         ) {
           return true;
@@ -481,7 +481,9 @@ const Clippings: FC = () => {
   return (
     <>
       <Layout>
-        <Sider style={{ backgroundColor: 'initial', width: 200, paddingLeft: 0, position: "fixed" }}>
+        <Sider
+          style={{ backgroundColor: 'initial', width: 200, paddingLeft: 0, position: 'fixed' }}
+        >
           <Input
             style={{ marginBottom: 10, marginLeft: -11, height: 45 }}
             placeholder="搜索"

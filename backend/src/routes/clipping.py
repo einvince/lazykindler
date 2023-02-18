@@ -1,3 +1,6 @@
+#!/usr/bin/env pytho3
+# -*- coding: utf-8 -*-
+
 from flask import request
 from ..service import clipping
 
@@ -8,8 +11,7 @@ def get_all_clippings():
 
 def get_clipping_by_uuids():
     uuids_str = request.args.get('uuids')
-    data = clipping.get_clipping_by_uuids(uuids_str.split(";"))
-    return data
+    return clipping.get_clipping_by_uuids(uuids_str.split(";"))
 
 
 def delete_clipping():

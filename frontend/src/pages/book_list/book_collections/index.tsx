@@ -1,4 +1,4 @@
-import { createBookCollection, deleteCollectionByKeyword, getAllCollections } from '@/services';
+import { createBookCollection, getAllCollections } from '@/services';
 import { preHandleSubjects, toBase64 } from '@/util';
 import { DatabaseOutlined, DownOutlined, StarOutlined, TagsOutlined } from '@ant-design/icons';
 import AddIcon from '@mui/icons-material/Add';
@@ -27,7 +27,6 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
-import ContextMenu from '../components/ContextMenu';
 import BookCardList from './components/CollectionList';
 import { CollectionDataType } from './data';
 
@@ -35,13 +34,13 @@ const { Sider, Content } = Layout;
 
 enum FilterType {
   All = '未分类',
-  Stars = '评分',
-  Subjects = '标签',
+  Star = '评分',
+  Tags = '标签',
 }
 
 type SubHeaerType = {
-  Stars: Object;
-  Subjects: Object;
+  Star: Object;
+  Tags: Object;
 };
 
 export default function BookCollections() {
@@ -56,8 +55,8 @@ export default function BookCollections() {
   const [allBookCollections, setAllBookCollections] = useState<CollectionDataType[]>([]);
 
   const [classifiedInfo, setClassifiedInfo] = useState<SubHeaerType>({
-    Stars: {},
-    Subjects: {},
+    Star: {},
+    Tags: {},
   });
 
   const [formData, setFormData] = useState<any>({});
@@ -80,30 +79,32 @@ export default function BookCollections() {
       setAllBookCollections(data);
       setData(data);
 
-      const stars: any = {};
-      const subjects: any = {};
+      const star: any = {};
+      const tag: any = {};
       _.forEach(data, (item: CollectionDataType) => {
-        if (stars[item.stars] == null) {
-          stars[item.stars] = {};
+        if (star[item.star] == null) {
+          star[item.star] = {};
         }
-        if (item.stars != null) {
-          stars[item.stars][item.uuid] = null;
+        if (item.star != null) {
+          star[item.star][item.uuid] = null;
         }
 
-        if (item.subjects != null) {
-          let subjectsList = item.subjects.split(';');
-          subjectsList.forEach((subject) => {
-            if (subjects[subject] == null) {
-              subjects[subject] = {};
+        if (item.tags != null) {
+          item.tags.split(';').forEach((subject) => {
+            if (subject == "") {
+              return
             }
-            subjects[subject][item.uuid] = null;
+            if (tag[subject] == null) {
+              tag[subject] = {};
+            }
+            tag[subject][item.uuid] = null;
           });
         }
       });
 
       let allInfo = {
-        Stars: stars,
-        Subjects: subjects,
+        Star: star,
+        Tags: tag,
       };
 
       setClassifiedInfo(allInfo);
@@ -112,11 +113,11 @@ export default function BookCollections() {
         case FilterType.All:
           setSelectedSubType([]);
           break;
-        case FilterType.Stars:
-          setSelectedSubType(Object.keys(allInfo.Stars));
+        case FilterType.Star:
+          setSelectedSubType(Object.keys(allInfo.Star));
           break;
-        case FilterType.Subjects:
-          setSelectedSubType(Object.keys(allInfo.Subjects));
+        case FilterType.Tags:
+          setSelectedSubType(Object.keys(allInfo.Tags));
           break;
       }
 
@@ -131,8 +132,8 @@ export default function BookCollections() {
   const handleCreate = () => {
     let name = formData['name'];
     let description = formData['description'];
-    let subjects = formData['subjects'];
-    let stars = formData['stars'];
+    let tag = formData['tag'];
+    let star = formData['star'];
     let cover = formData['cover'];
 
     if (name == null || name.trim() == '') {
@@ -141,10 +142,10 @@ export default function BookCollections() {
     if (description == null || description.trim() == '') {
       description = '';
     }
-    if (subjects == null || subjects.trim() == '') {
+    if (tag == null || tag.trim() == '') {
       return false;
     }
-    if (stars == null || stars.trim() == '') {
+    if (star == null || star.trim() == '') {
       return false;
     }
     if (cover == null || cover.trim() == '') {
@@ -153,13 +154,13 @@ export default function BookCollections() {
 
     name = name.trim();
     description = description.trim();
-    if (isNaN(stars.trim())) {
+    if (isNaN(star.trim())) {
       return false;
     }
-    stars = Number(stars.trim());
+    star = Number(star.trim());
     cover = cover.trim();
 
-    createBookCollection(name, 'book', description, preHandleSubjects(subjects), stars, cover).then(
+    createBookCollection(name, 'book', description, preHandleSubjects(tag), star, cover).then(
       () => {
         fetchBookCollections();
       },
@@ -185,26 +186,26 @@ export default function BookCollections() {
             未分类
           </a>
         </Menu.Item>
-        <Menu.Item key="stars" icon={<StarOutlined />}>
+        <Menu.Item key="star" icon={<StarOutlined />}>
           <a
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setSelectedType(FilterType.Stars);
-              setSelectedSubType(Object.keys(classifiedInfo.Stars));
+              setSelectedType(FilterType.Star);
+              setSelectedSubType(Object.keys(classifiedInfo.Star));
             }}
             style={{ paddingLeft: 13 }}
           >
             评分
           </a>
         </Menu.Item>
-        <Menu.Item key="subjects" icon={<TagsOutlined />}>
+        <Menu.Item key="tag" icon={<TagsOutlined />}>
           <a
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setSelectedType(FilterType.Subjects);
-              setSelectedSubType(Object.keys(classifiedInfo.Subjects));
+              setSelectedType(FilterType.Tags);
+              setSelectedSubType(Object.keys(classifiedInfo.Tags));
             }}
             style={{ paddingLeft: 13 }}
           >
@@ -227,8 +228,8 @@ export default function BookCollections() {
     let filteredBooks;
     let o = {};
     switch (selectedType) {
-      case FilterType.Stars:
-        o = allInfo.Stars[selectedKeyword];
+      case FilterType.Star:
+        o = allInfo.Star[selectedKeyword];
         if (o == null) {
           o = {};
         }
@@ -240,8 +241,8 @@ export default function BookCollections() {
         });
         setData(filteredBooks);
         break;
-      case FilterType.Subjects:
-        o = allInfo.Subjects[selectedKeyword];
+      case FilterType.Tags:
+        o = allInfo.Tags[selectedKeyword];
         if (o == null) {
           o = {};
         }
@@ -283,36 +284,20 @@ export default function BookCollections() {
               </Dropdown>
             </ListSubheader>
             {selectedSubType.map((item, index) => (
-              <ContextMenu
+              <ListItem
+                style={{ padding: 0 }}
                 key={index}
-                Content={
-                  <ListItem
-                    style={{ padding: 0 }}
-                    key={index}
-                    onClick={() => {
-                      filterData(null, item);
-                    }}
-                  >
-                    <ListItemButton
-                      style={{ paddingLeft: 10, paddingRight: 10 }}
-                      selected={item === selectedItemName}
-                    >
-                      <ListItemText primary={`${index + 1}. ${item}`} />
-                    </ListItemButton>
-                  </ListItem>
-                }
-                MenuInfo={[
-                  {
-                    name: '删除',
-                    handler: () => {
-                      deleteCollectionByKeyword(selectedType, selectedItemName).then(() => {
-                        fetchBookCollections();
-                      });
-                    },
-                    prefixIcon: <DeleteIcon />,
-                  },
-                ]}
-              />
+                onClick={() => {
+                  filterData(null, item);
+                }}
+              >
+                <ListItemButton
+                  style={{ paddingLeft: 10, paddingRight: 10 }}
+                  selected={item === selectedItemName}
+                >
+                  <ListItemText primary={`${index + 1}. ${item}`} />
+                </ListItemButton>
+              </ListItem>
             ))}
             <ListItemButton onClick={handleClickOpen}>
               <ListItemIcon style={{ paddingLeft: 70 }}>
@@ -408,7 +393,7 @@ export default function BookCollections() {
                     'aria-label': 'weight',
                   }}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setFormData({ ...formData, subjects: event.target.value });
+                    setFormData({ ...formData, tag: event.target.value });
                   }}
                 />
                 <FormHelperText id="standard-weight-helper-text">
@@ -433,7 +418,7 @@ export default function BookCollections() {
                     'aria-label': 'weight',
                   }}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setFormData({ ...formData, stars: event.target.value });
+                    setFormData({ ...formData, star: event.target.value });
                   }}
                 />
                 <FormHelperText id="standard-weight-helper-text">

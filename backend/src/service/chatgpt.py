@@ -14,10 +14,10 @@ def get_awnser_from_chatgpt(keyword_type, keyword):
 
     prompt = ""
     if keyword_type == "书名":
-        prompt="Awnser in Chinese。the book name is {}, Please introduce in detail.\nA:".format(keyword)
-    if keyword_type == "作者":
-        prompt="Awnser in Chinese。There is an author whose name is {}, he/she writes book, Please introduce in detail.\nA:".format(keyword)
-    
+        prompt = f"Awnser in Chinese。the book name is {keyword}, Please introduce in detail.\nA:"
+    elif keyword_type == "作者":
+        prompt = f"Awnser in Chinese。There is an author whose name is {keyword}, he/she writes book, Please introduce in detail.\nA:"
+
     try:
         response = openai.Completion.create(
             model="text-davinci-003",

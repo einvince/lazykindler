@@ -1,3 +1,6 @@
+#!/usr/bin/env pytho3
+# -*- coding: utf-8 -*-
+
 import sqlite3
 from sqlite3 import Error
 import sys
@@ -62,22 +65,19 @@ class DB:
 
             desc = cursor.description
             column_names = [col[0] for col in desc]
-            data = [dict(zip(column_names, row))
-                    for row in cursor.fetchall()]
-            return data
-
+            return [dict(zip(column_names, row)) for row in cursor.fetchall()]
         except Exception as error:
             print("Failed to get record. ", error)
 
-    def insert_book(self, uuid, title, description, author, subjects, book_size, publisher, coll_uuids,
+    def insert_book(self, uuid, title, author, tags, book_size, publisher, coll_uuids,
                     md5, book_path):
         cursor = self.conn.cursor()
         cursor.execute("begin")
 
         try:
             # 插入书籍元数据信息
-            sql = """INSERT INTO book_meta (uuid, name, description, author, subjects, stars, size, publisher, coll_uuids, done_dates, md5, create_time) 
-                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
+            sql = """INSERT INTO book_meta (uuid, name, author, tags, star, size, publisher, coll_uuids, done_dates, md5, create_time) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
             err = None
             cover = None
             try:
@@ -91,9 +91,8 @@ class DB:
             data_tuple = (
                 uuid,
                 title,
-                description,
                 author,
-                subjects,
+                tags,
                 0,
                 book_size,
                 publisher,
@@ -124,20 +123,25 @@ class DB:
         self.conn.commit()
         cursor.close()
 
-    def insert_coll(self, uuid, name, coll_type, description, subjects, stars, cover_content):
+    def insert_coll(self, uuid, name, coll_type, description, tags, star, cover_content):
+        if description is None:
+            description = ""
+        if tags is None:
+            tags = ""
         cursor = self.conn.cursor()
         cursor.execute("begin")
         try:
 
-            sql = """INSERT INTO coll (uuid, name, coll_type, description, subjects, stars, create_time) 
-                                        VALUES (?, ?, ?, ?, ?, ?, ?) """
+            sql = """INSERT INTO coll (uuid, name, coll_type, description, item_uuids, tags, star, create_time) 
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?) """
             data_tuple = (
                 uuid,
                 name,
                 coll_type,
                 description,
-                subjects,
-                stars,
+                "",
+                tags,
+                star,
                 get_now()
             )
             cursor.execute(sql, data_tuple)
@@ -157,19 +161,25 @@ class DB:
         cursor.close()
 
     def insert_clipping(self, uuid, book_name, author, content, addDate, md5):
+        if author is None:
+            author = ""
+
         cursor = self.conn.cursor()
         cursor.execute("begin")
         try:
-            sql = """INSERT INTO clipping (uuid, book_name, author, content, addDate, md5, stars, create_time) 
-                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?) """
+            sql = """INSERT INTO clipping (uuid, book_name, author, content, addDate, tags, coll_uuids, md5, star, highlights, create_time) 
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
             data_tuple = (
                 uuid,
                 book_name,
                 author,
                 content,
                 addDate,
+                "",
+                "",
                 md5,
                 0,
+                "",
                 get_now()
             )
             cursor.execute(sql, data_tuple)

@@ -3,15 +3,31 @@ CREATE TABLE book_meta (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	uuid                TEXT,
     name                TEXT,         -- 书名
-    description         TEXT,         -- 描述
     author              TEXT,         -- 作者
-	subjects            TEXT,         -- 标签
-	stars               INTEGER,      -- 评分。满分10分
+	tags                TEXT,         -- 标签
+	star               INTEGER,      -- 评分。满分10分
     size                INTEGER,      -- 图书大小
     publisher           TEXT,         -- 出版商
 	coll_uuids          LONGTEXT,     -- colls uuids列表，分号相隔
 	done_dates          TEXT,         -- 读完日期
 	md5                 TEXT,         -- md5
+	create_time         TEXT          -- 创建时间
+);
+
+-- 存放clipping
+CREATE TABLE clipping (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	uuid                TEXT,
+	book_name           TEXT,         -- 书名
+    author              TEXT,         -- 作者
+    content             TEXT,         -- 剪切内容
+	addDate             TEXT,         -- 添加时间
+	tags                TEXT,         -- 标签
+	star               INTEGER,      -- 评分。满分10分
+	highlights          TEXT,         -- 高亮部分。如果有多个高亮，用 ___ 连接
+	coll_uuids          LONGTEXT,     -- clipping_collections uuids列表，分号相隔
+	md5                 TEXT,         -- md5
+	deleted             INTEGER,      -- 是否被删除。1: 删除
 	create_time         TEXT          -- 创建时间
 );
 
@@ -40,27 +56,11 @@ CREATE TABLE coll (
 	coll_type           TEXT,           -- 类型，取值 book clipping
 	description         TEXT,           -- 描述
     item_uuids          LONGTEXT,       -- item uuid集合
-	subjects            TEXT,           -- 标签
-	stars               INTEGER,        -- 评分。满分10分
+	tags                TEXT,           -- 标签
+	star               INTEGER,        -- 评分。满分10分
     create_time         TEXT
 );
 
--- 存放clipping
-CREATE TABLE clipping (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	uuid                TEXT,
-	book_name           TEXT,         -- 书名
-    author              TEXT,         -- 作者
-    content             TEXT,         -- 剪切内容
-	addDate             TEXT,         -- 添加时间
-	subjects            TEXT,         -- 标签
-	stars               INTEGER,      -- 评分。满分10分
-	highlights          TEXT,         -- 高亮部分。如果有多个高亮，用 ___ 连接
-	coll_uuids          LONGTEXT,     -- clipping_collections uuids列表，分号相隔
-	md5                 TEXT,         -- md5
-	deleted             INTEGER,      -- 是否被删除。1: 删除
-	create_time         TEXT          -- 创建时间
-);
 
 -- 存放 comment
 CREATE TABLE comment (

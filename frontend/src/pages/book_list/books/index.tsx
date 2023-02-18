@@ -1,4 +1,4 @@
-import { deleteBookByKeyword, getBooksMeta, getMultipleCollections } from '@/services';
+import { getBooksMeta, getMultipleCollections } from '@/services';
 import {
   BankOutlined,
   DatabaseOutlined,
@@ -7,7 +7,6 @@ import {
   TagsOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { List, ListItem, ListItemButton, ListItemText, ListSubheader } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -20,7 +19,6 @@ import { FC, useEffect, useState } from 'react';
 
 import type { BookMetaDataType, CollectionDataType } from '../../data';
 import BookCardList from '../components/BookCardList';
-import ContextMenu from '../components/ContextMenu';
 
 const { Sider, Content } = Layout;
 
@@ -63,15 +61,15 @@ const StyledMenu = styled((props: MenuProps) => (
 
 enum FilterType {
   All = '未分类',
-  Stars = '评分',
-  Subjects = '标签',
+  Star = '评分',
+  Tags = '标签',
   Author = '作者',
   Publisher = '出版社',
 }
 
 type SubHeaerType = {
-  Stars: Object;
-  Subjects: Object;
+  Star: Object;
+  Tags: Object;
   Author: Object;
   Publisher: Object;
 };
@@ -96,8 +94,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
   const [selectedSecondLevel, setSelectedSecondLevel] = useState<any>(null);
 
   const [classifiedInfo, setClassifiedInfo] = useState<SubHeaerType>({
-    Stars: {},
-    Subjects: {},
+    Star: {},
+    Tags: {},
     Author: {},
     Publisher: {},
   });
@@ -268,32 +266,34 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         setAllBooksMeta(data);
       });
 
-      const stars: any = {};
-      const subjects: any = {};
+      const star: any = {};
+      const tag: any = {};
       const authors: any = {};
       const publisher: any = {};
 
       _.forEach(data, (item: BookMetaDataType) => {
-        if (stars[item.stars] == null) {
-          stars[item.stars] = {};
+        if (star[item.star] == null) {
+          star[item.star] = {};
         }
-        if (item.stars != null) {
-          stars[item.stars][item.uuid] = null;
+        if (item.star != null) {
+          star[item.star][item.uuid] = null;
         }
 
-        if (item.subjects != null) {
-          let subjectsList = item.subjects.split(';');
-          subjectsList.forEach((subject) => {
-            if (subjects[subject] == null) {
-              subjects[subject] = {};
+        if (item.tags != null) {
+          item.tags.split(';').forEach((subject) => {
+            if (subject == "") {
+              return
             }
-            subjects[subject][item.uuid] = null;
+            if (tag[subject] == null) {
+              tag[subject] = {};
+            }
+            tag[subject][item.uuid] = null;
           });
         } else {
-          if (subjects['无标签'] == null) {
-            subjects['无标签'] = {};
+          if (tag['无标签'] == null) {
+            tag['无标签'] = {};
           }
-          subjects['无标签'][item.uuid] = null;
+          tag['无标签'][item.uuid] = null;
         }
 
         if (item.author == null) {
@@ -322,8 +322,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
       });
 
       let allInfo = {
-        Stars: stars,
-        Subjects: subjects,
+        Star: star,
+        Tags: tag,
         Author: authors,
         Publisher: publisher,
       };
@@ -334,11 +334,11 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         case FilterType.All:
           setSecondLevelMenuList([]);
           break;
-        case FilterType.Stars:
-          setSecondLevelMenuList(Object.keys(allInfo.Stars));
+        case FilterType.Star:
+          setSecondLevelMenuList(Object.keys(allInfo.Star));
           break;
-        case FilterType.Subjects:
-          setSecondLevelMenuList(Object.keys(allInfo.Subjects));
+        case FilterType.Tags:
+          setSecondLevelMenuList(Object.keys(allInfo.Tags));
           break;
         case FilterType.Author:
           setSecondLevelMenuList(Object.keys(allInfo.Author));
@@ -371,8 +371,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
       case FilterType.All:
         filteredBooks = allBooksMetaList;
         break;
-      case FilterType.Stars:
-        o = allInfo.Stars[selectedKeyword];
+      case FilterType.Star:
+        o = allInfo.Star[selectedKeyword];
         if (o == null) {
           o = {};
         }
@@ -384,8 +384,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         });
         setData(filteredBooks);
         break;
-      case FilterType.Subjects:
-        o = allInfo.Subjects[selectedKeyword];
+      case FilterType.Tags:
+        o = allInfo.Tags[selectedKeyword];
         if (o == null) {
           o = {};
         }
@@ -445,26 +445,26 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             未分类
           </a>
         </AntMenu.Item>
-        <AntMenu.Item key="stars" icon={<StarOutlined />}>
+        <AntMenu.Item key="star" icon={<StarOutlined />}>
           <a
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Stars);
-              setSecondLevelMenuList(Object.keys(classifiedInfo.Stars));
+              setFirstLevelType(FilterType.Star);
+              setSecondLevelMenuList(Object.keys(classifiedInfo.Star));
             }}
             style={{ paddingLeft: 13 }}
           >
             评分
           </a>
         </AntMenu.Item>
-        <AntMenu.Item key="subjects" icon={<TagsOutlined />}>
+        <AntMenu.Item key="tag" icon={<TagsOutlined />}>
           <a
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Subjects);
-              setSecondLevelMenuList(Object.keys(classifiedInfo.Subjects));
+              setFirstLevelType(FilterType.Tags);
+              setSecondLevelMenuList(Object.keys(classifiedInfo.Tags));
             }}
             style={{ paddingLeft: 13 }}
           >
@@ -544,7 +544,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         );
         break;
 
-      case FilterType.Stars:
+      case FilterType.Star:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -558,7 +558,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         );
         break;
 
-      case FilterType.Subjects:
+      case FilterType.Tags:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -586,7 +586,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
           (item.name != null && item.name.includes(keyword)) ||
           (item.author != null && item.author.includes(keyword)) ||
           (item.publisher != null && item.publisher.includes(keyword)) ||
-          (item.subjects != null && item.subjects.includes(keyword))
+          (item.tag != null && item.tag.includes(keyword))
         ) {
           return true;
         }
@@ -620,37 +620,20 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             {<MenuHeader />}
 
             {secondLevelMenuList.map((item, index) => (
-              <ContextMenu
+              <ListItem
                 key={index}
-                Content={
-                  <ListItem
-                    style={{ padding: 0 }}
-                    onClick={() => {
-                      filterData(null, item, allBooksMeta);
-                    }}
-                  >
-                    <ListItemButton
-                      style={{ paddingLeft: 10, paddingRight: 10 }}
-                      selected={item === selectedSecondLevel}
-                    >
-                      <ListItemText primary={`${index + 1}. ${item}`} />
-                    </ListItemButton>
-                  </ListItem>
-                }
-                MenuInfo={[
-                  {
-                    name: '删除',
-                    handler: () => {
-                      deleteBookByKeyword(storeType, firstLevelType, selectedSecondLevel).then(
-                        () => {
-                          fetchBooks(sortTypeValue);
-                        },
-                      );
-                    },
-                    prefixIcon: <DeleteIcon />,
-                  },
-                ]}
-              />
+                style={{ padding: 0 }}
+                onClick={() => {
+                  filterData(null, item, allBooksMeta);
+                }}
+              >
+                <ListItemButton
+                  style={{ paddingLeft: 10, paddingRight: 10 }}
+                  selected={item === selectedSecondLevel}
+                >
+                  <ListItemText primary={`${index + 1}. ${item}`} />
+                </ListItemButton>
+              </ListItem>
             ))}
           </List>
         </Sider>

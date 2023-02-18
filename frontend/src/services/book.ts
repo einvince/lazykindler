@@ -66,6 +66,11 @@ export const deleteAllTmpBooks = () => {
     return axiosInstance.delete(`/api/book/delete/all/tmp`);
 };
 
+// 根据所有集合
+export const deleteAllCollections = () => {
+    return axiosInstance.delete(`/api/collection/delete/all`);
+};
+
 // 上传书籍或书籍所在目录
 export const uploadBooks = async () => {
     const data = await axiosInstance.post(`/api/book/upload`);

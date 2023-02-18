@@ -38,7 +38,7 @@ class MOBIFile:
         if file_extension not in ['.MOBI', '.AZW', '.AZW3']:
             raise OSError('The specified file is not E-Book!')
         mobi_header = open(self.path, 'rb').read(100)
-        palm_header = mobi_header[0:78]
+        palm_header = mobi_header[:78]
         ident = palm_header[0x3C:0x3C+8]
         if ident != b'BOOKMOBI':
             raise OSError('The specified file is not E-Book!')
@@ -54,27 +54,24 @@ class MOBIFile:
         imgnames = []
         for i in range(beg, end):
             data = section.load_section(i)
-            tmptype = data[0:4]
-            if tmptype in ["FLIS", "FCIS", "FDST", "DATP"]:
-                imgnames.append(None)
-                continue
-            elif tmptype == "SRCS":
-                imgnames.append(None)
-                continue
-            elif tmptype == "CMET":
-                imgnames.append(None)
-                continue
-            elif tmptype == "FONT":
-                imgnames.append(None)
-                continue
-            elif tmptype == "RESC":
+            tmptype = data[:4]
+            if tmptype in [
+                "FLIS",
+                "FCIS",
+                "FDST",
+                "DATP",
+                "SRCS",
+                "CMET",
+                "FONT",
+                "RESC",
+            ]:
                 imgnames.append(None)
                 continue
             if data == chr(0xe9) + chr(0x8e) + "\r\n":
                 imgnames.append(None)
                 continue
             imgtype = what(None, data)
-            if imgtype is None and data[0:2] == b'\xFF\xD8':
+            if imgtype is None and data[:2] == b'\xFF\xD8':
                 last = len(data)
                 while data[last-1:last] == b'\x00':
                     last -= 1

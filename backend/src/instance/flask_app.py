@@ -60,10 +60,10 @@ else:
     app.add_url_rule('/api/collection/get/multiple', view_func=collection.get_multiple_collections, methods=['GET'])
     app.add_url_rule('/api/collection/delete/withoutitems', view_func=collection.delete_coll_without_items, methods=['DELETE'])
     app.add_url_rule('/api/collection/delete/withitems', view_func=collection.delete_coll_with_items, methods=['DELETE'])
-    app.add_url_rule('/api/collection/delete/bykeyword', view_func=collection.delete_coll_by_keyword, methods=['DELETE'])
     app.add_url_rule('/api/collection/update', view_func=collection.update_coll, methods=['POST'])
     app.add_url_rule('/api/collection/add/book', view_func=collection.add_book_to_collection, methods=['POST'])
     app.add_url_rule('/api/collection/update/cover', view_func=collection.update_coll_cover, methods=['POST'])
+    app.add_url_rule('/api/collection/delete/all', view_func=collection.delete_all_colls_hard, methods=['DELETE'])
 
     app.add_url_rule('/api/clipping/get/all', view_func=clipping.get_all_clippings, methods=['GET'])
     app.add_url_rule('/api/clipping/get/uuids', view_func=clipping.get_clipping_by_uuids, methods=['GET'])

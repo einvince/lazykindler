@@ -24,29 +24,27 @@ def if_ext_supported_book_ext(ext):
 
 
 def ls_books(dir):
-    files = list()
+    files = []
     for item in os.listdir(dir):
         abspath = os.path.join(dir, item)
         try:
             if os.path.isdir(abspath):
                 files = files + ls_books(abspath)
-            else:
-                if if_ext_supported_book_ext(pathlib.Path(abspath).suffix):
-                    files.append(abspath)
+            elif if_ext_supported_book_ext(pathlib.Path(abspath).suffix):
+                files.append(abspath)
         except FileNotFoundError as err:
             print('invalid directory\n', 'Error: ', err)
     return files
 
 
 def ls_moon_reader_clippings(dir):
-    files = list()
+    files = []
     for item in os.listdir(dir):
         abspath = os.path.join(dir, item)
         if os.path.isdir(abspath):
             files = files + ls_books(abspath)
-        else:
-            if pathlib.Path(abspath).suffix == ".mrexpt":
-                files.append(abspath)
+        elif pathlib.Path(abspath).suffix == ".mrexpt":
+            files.append(abspath)
     return files
 
 
@@ -82,19 +80,12 @@ def get_now():
 
 
 def is_all_chinese(strs):
-    for _char in strs:
-        if not '\u4e00' <= _char <= '\u9fa5':
-            return False
-    return True
+    return all('\u4e00' <= _char <= '\u9fa5' for _char in strs)
 
 
-# 返回 list1 去掉 list2 元素后的数组
+# 返回 list1 减去 list2 后的数组
 def difference(list1, list2):
-    list_difference = []
-    for item in list1:
-        if item not in list2:
-            list_difference.append(item)
-    return list_difference
+    return [item for item in list1 if item not in list2]
 
 
 def utf8len(s):
@@ -119,6 +110,10 @@ def remove_md5_from_filename(filepath):
 def get_md5_from_filename(filepath):
     filename, _ = os.path.splitext(filepath)
     return filename.split("______", 1)[1]
+
+
+def convert_str_to_list(str_data):
+    return [a for a in str_data.split(";") if a != ""]
 
 
 # 转换文件格式时，文件名中可能会包含各种特殊字符，

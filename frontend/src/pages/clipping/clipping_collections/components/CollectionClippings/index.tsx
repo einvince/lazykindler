@@ -61,7 +61,7 @@ export default function CollectionClippings(props: CollectionClippingsProps) {
                 return;
             }
             getClippingByUUIDs(item_uuids).then((data) => {
-                let clippingCollsInfo = {};
+                let clippingCollsInfo: any = {};
                 let coll_uuids: any = [];
 
                 let clippings_info: any = _.map(data, (item: ClippingDataType) => {
@@ -106,9 +106,9 @@ export default function CollectionClippings(props: CollectionClippingsProps) {
         setData(
             _.filter(allClippings, (item: ClippingDataType) => {
                 return (
-                    item.book_name.includes(keyword) ||
-                    item.author.includes(keyword) ||
-                    item.content.includes(keyword)
+                    (item.book_name != null && item.book_name.includes(keyword)) ||
+                    (item.author != null && item.author.includes(keyword)) ||
+                    (item.content != null && item.content.includes(keyword))
                 );
             }),
         );
@@ -141,8 +141,6 @@ export default function CollectionClippings(props: CollectionClippingsProps) {
                     <ClippingCardList
                         data={data}
                         fetchClippings={fetchClipping}
-                        height={60}
-                        columns={2}
                     />
                 </DialogContent>
                 <DialogActions>

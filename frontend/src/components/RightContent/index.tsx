@@ -1,6 +1,7 @@
 import {
   deleteAllBooks,
   deleteAllClipping,
+  deleteAllCollections,
   deleteAllTmpBooks,
   downloadAllBooks,
   uploadBooks,
@@ -133,7 +134,7 @@ const GlobalHeaderRight: React.FC = () => {
             setDeleteType(1);
           }}
         >
-          删除书籍
+          删除所有书籍
         </a>
       ),
     },
@@ -235,6 +236,7 @@ const GlobalHeaderRight: React.FC = () => {
                 } else {
                   deleteAllBooks();
                   deleteAllClipping();
+                  deleteAllCollections()
                 }
               }}
             >

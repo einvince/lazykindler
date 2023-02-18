@@ -55,45 +55,50 @@ def handle_moon_reader_clipping_file(filepath):
         book_name = extracted_book_name_v2
 
     with open(filepath, 'r') as file:
-        blocks = []
-        current_block = []
-        empty_strings = 0
+        extract_clipping(file, book_name)
 
-        for line in file:
-            line = line.strip()
-            if line == "":
-                empty_strings += 1
-            else:
-                empty_strings = 0
-                current_block.append(line)
 
-            if empty_strings == 2:
-                blocks.append(current_block)
-                current_block = []
-                empty_strings = 0
-        blocks.append(current_block)
+def extract_clipping(file, book_name):
+    blocks = []
+    current_block = []
+    empty_strings = 0
 
-        for line_list in blocks:
-            clip_content = line_list[0]
-            timestamp = int(line_list[-1])
+    for line in file:
+        line = line.strip()
+        if line == "":
+            empty_strings += 1
+        else:
+            empty_strings = 0
+            current_block.append(line)
 
-            # TODO 高亮文件中没有作者信息
-            author = None
+        if empty_strings == 2:
+            blocks.append(current_block)
+            current_block = []
+            empty_strings = 0
+    blocks.append(current_block)
 
-            str_md5 = hashlib.md5(clip_content.encode('utf-8')).hexdigest()
-            clips = db.query(
-                "select uuid from clipping where md5='{}';".format(str_md5))
-            if clips is not None and len(clips) > 0:
-                if timestamp != 0:
-                    db.run_sql("update clipping set {}='{}' where uuid='{}'".format(
-                                "addDate", timestamp/1000, clips[0]["uuid"]))
-                if author is not None:
-                    db.run_sql("update clipping set {}={} where uuid='{}'".format(
-                                "author", author, clips[0]["uuid"]))
-            else:
-                clip_content = clip_content.replace('<BR><BR><BR>', '\n')
-                clip_content = clip_content.replace('<BR><BR>', '\n')
-                clip_content = clip_content.replace('<BR>', '\n')
-                clip_content = clip_content.strip()
-                db.insert_clipping(generate_uuid(), book_name, author,
-                        clip_content, timestamp, str_md5)
+    for line_list in blocks:
+        clip_content = line_list[0]
+        timestamp = int(line_list[-1])
+
+        # TODO 高亮文件中没有作者信息
+        author = None
+
+        str_md5 = hashlib.md5(clip_content.encode('utf-8')).hexdigest()
+        clips = db.query(f"select uuid from clipping where md5='{str_md5}';")
+        if clips is not None and len(clips) > 0:
+            if timestamp != 0:
+                db.run_sql(
+                    f"""update clipping set addDate='{timestamp / 1000}' where uuid='{clips[0]["uuid"]}'"""
+                )
+            if author is not None:
+                db.run_sql(
+                    f"""update clipping set author={author} where uuid='{clips[0]["uuid"]}'"""
+                )
+        else:
+            clip_content = clip_content.replace('<BR><BR><BR>', '\n')
+            clip_content = clip_content.replace('<BR><BR>', '\n')
+            clip_content = clip_content.replace('<BR>', '\n')
+            clip_content = clip_content.strip()
+            db.insert_clipping(generate_uuid(), book_name, author,
+                    clip_content, timestamp, str_md5)

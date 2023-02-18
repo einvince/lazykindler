@@ -112,15 +112,14 @@ class Kindle:
                 v = v.decode(errors="replace")
             if k in EXTH_Types:
                 type_ = EXTH_Types[k]
-                if type_ not in meta:
-                    meta[type_] = [v]
-                else:
+                if type_ in meta:
                     meta[type_].append(v)
-            else:
-                if str(k) not in meta:
-                    meta[str(k)] = [v]
                 else:
-                    meta[str(k)].append(v)
+                    meta[type_] = [v]
+            elif str(k) not in meta:
+                meta[str(k)] = [v]
+            else:
+                meta[str(k)].append(v)
         return meta
 
 
@@ -210,8 +209,7 @@ class Epub:
         metadata = []
         for tag in self.tags:
             pat1 = re.compile(f"<{tag}.*?>(.*)</{tag}", re.S | re.M)
-            result = pat1.search(text)
-            if result:
+            if result := pat1.search(text):
                 groups = result.groups()
                 if isinstance(groups, str):
                     record = (tag, groups)
@@ -326,8 +324,7 @@ class MetadataFetcher:
             dict: Metadata keys and values embedded in the file.
         """
         meta = cls(path)
-        metadata = meta.get_metadata()
-        return metadata
+        return meta.get_metadata()
 
 
 def get_metadata(path):
@@ -340,8 +337,7 @@ def get_metadata(path):
     Returns:
         dict: Metadata keys and values embedded in the file.
     """
-    metadata = MetadataFetcher.get(path)
-    return metadata
+    return MetadataFetcher.get(path)
 
 
 def format_output(book):
@@ -369,7 +365,7 @@ def format_output(book):
         "date",
     ]
     longest_line = 0
-    longest_field = max([len(i) for i in fields])
+    longest_field = max(len(i) for i in fields)
     for field in fields:
         if field in book:
             extra_spaces = longest_field - len(field)
@@ -406,13 +402,12 @@ def path_meta(path):
     """
     if isinstance(path, str):
         path = Path(path)
-    metadata = [
+    return [
         ("filename", path.name),
         ("path", str(path)),
         ("extension", path.suffix),
         ("size", path.stat().st_size),
     ]
-    return metadata
 
 
 def reverse_tag_iter(block):
@@ -490,7 +485,7 @@ def getLanguage(langID, sublangID):
             32: "es-ve",
         },  # Spanish
     }
-    sublangID = 0 if not sublangID else sublangID
+    sublangID = sublangID or 0
     try:
         lang = langdict[langID][sublangID]
     except KeyError:
