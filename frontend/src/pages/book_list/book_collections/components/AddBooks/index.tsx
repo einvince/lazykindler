@@ -182,7 +182,7 @@ export default function AddBooks(props: AddBooksProps) {
         <DialogTitle id="alert-dialog-title">
           {book_type === 'tmp' ? '添加临时书籍' : '添加正式书籍'}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ height: "73vh" }}>
           <RedditTextField
             label="搜索书名或作者"
             // defaultValue="react-reddit"
