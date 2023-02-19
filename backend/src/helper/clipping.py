@@ -1,6 +1,7 @@
 #!/usr/bin/env pytho3
 # -*- coding: utf-8 -*-
 
+import re
 from ..database.database import db
 from .collection import remove_item_uuid_from_coll
 
@@ -41,11 +42,25 @@ def update_clipping_tag(old_value, new_value):
     db.query(f"update clipping set tags='{new_value}' where tags='{old_value}';")
 
 def update_clipping_author(old_value, new_value):
-    db.query(f"update clipping set author='{new_value}' where author='{old_value}';")
+    clipp_list = get_all_clippings()
+    for clipp in clipp_list:
+        print(clipp["author"], old_value, compare_strings_ignore_special_chars(clipp["author"], old_value))
+        if compare_strings_ignore_special_chars(clipp["author"], old_value):
+            db.run_sql(f"update clipping set author='{new_value}' where uuid='{clipp['uuid']}';")
 
 def update_clipping_book_name(old_value, new_value):
-    db.query(f"update clipping set book_name='{new_value}' where book_name='{old_value}';")
+    clipp_list = get_all_clippings()
+    for clipp in clipp_list:
+        print(clipp["book_name"], old_value, compare_strings_ignore_special_chars(clipp["book_name"], old_value))
+        if compare_strings_ignore_special_chars(clipp["book_name"], old_value):
+            db.run_sql(f"update clipping set book_name='{new_value}' where uuid='{clipp['uuid']}';")
 
+def compare_strings_ignore_special_chars(s1, s2):
+    # 书名或者作者命中，可能包含特殊字符，导致无法进行比较
+    # 这里去掉任何特殊字符后比较是否相等
+    s1 = re.sub(r'\W+', '', s1).lower()
+    s2 = re.sub(r'\W+', '', s2).lower()
+    return s1 == s2
 
 def delete_clipping(uuid):
     db.run_sql(f"update clipping set deleted=1 where uuid='{uuid}'")

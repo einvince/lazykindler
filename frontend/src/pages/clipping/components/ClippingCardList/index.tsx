@@ -268,7 +268,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                     </span>
                     <br />
                     标签:
-                    <span style={{ paddingLeft: 5 }}>{item.tag}</span>
+                    <span style={{ paddingLeft: 5 }}>{item.tags}</span>
                   </div>
                 }
               />

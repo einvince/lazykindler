@@ -28,8 +28,9 @@ def get_all_collections():
 
 
 def get_multiple_collections():
-    uuids = request.args.get('uuids')
-    return collection.get_multiple_collections(uuids.split(';'))
+    uuids = request.args.get('uuids').split(';')
+    uuids = [uuid for uuid in uuids if uuid != ""]
+    return collection.get_multiple_collections(uuids)
 
 
 def delete_coll_without_items():

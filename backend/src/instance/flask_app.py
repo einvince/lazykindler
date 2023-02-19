@@ -72,7 +72,7 @@ else:
     app.add_url_rule('/api/clipping/delete/all', view_func=clipping.delete_all_clipping, methods=['DELETE'])
     app.add_url_rule('/api/clipping/highlight/add', view_func=clipping.add_highlight_to_clipping, methods=['POST'])
     app.add_url_rule('/api/clipping/highlight/delete', view_func=clipping.delete_highlight_from_clipping, methods=['POST'])
-    app.add_url_rule('/api/clipping/update/bykeyword', view_func=clipping.update_by_keyword, methods=['GET'])
+    app.add_url_rule('/api/clipping/update/bykeyword', view_func=clipping.update_by_keyword, methods=['POST'])
     app.add_url_rule('/api/clipping/create', view_func=clipping.create_clipping, methods=['POST'])
 
     app.add_url_rule('/api/comment/get/by_related_uuid', view_func=comment.get_comments_of_related_uuid, methods=['GET'])

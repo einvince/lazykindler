@@ -133,52 +133,31 @@ const Clippings: FC = () => {
       const books: any = {};
 
       _.forEach(data, (item: ClippingDataType) => {
+        // 评分
         if (star[item.star] == null) {
           star[item.star] = {};
         }
-        if (item.star != null) {
-          star[item.star][item.uuid] = null;
-        }
+        star[item.star][item.uuid] = null;
 
-        if (item.tag != null) {
-          let subjectsList = item.tag.split(';');
-          subjectsList.forEach((subject) => {
-            if (tag[subject] == null) {
-              tag[subject] = {};
-            }
-            tag[subject][item.uuid] = null;
-          });
-        } else {
-          if (tag['无标签'] == null) {
-            tag['无标签'] = {};
+        // 标签
+        item.tags.split(';').forEach((subject) => {
+          if (tag[subject] == null) {
+            tag[subject] = {};
           }
-          tag['无标签'][item.uuid] = null;
-        }
+          tag[subject][item.uuid] = null;
+        });
 
-        if (item.author == null) {
-          if (authors['无作者'] == null) {
-            authors['无作者'] = {};
-          }
-          authors['无作者'][item.uuid] = null;
-        } else {
-          if (authors[item.author] == null) {
-            authors[item.author] = {};
-          }
-          authors[item.author][item.uuid] = null;
+        // 作者
+        if (authors[item.author] == null) {
+          authors[item.author] = {};
         }
+        authors[item.author][item.uuid] = null;
 
-        if (item.book_name == null) {
-          if (books['无书名'] == null) {
-            books['无书名'] = {};
-          }
-          books['无书名'][item.uuid] = null;
-        } else {
-          let book_name = item.book_name;
-          if (books[book_name] == null) {
-            books[book_name] = {};
-          }
-          books[book_name][item.uuid] = null;
+        // 书名
+        if (books[item.book_name] == null) {
+          books[item.book_name] = {};
         }
+        books[item.book_name][item.uuid] = null;
       });
 
       let allInfo = {
@@ -633,9 +612,9 @@ const Clippings: FC = () => {
                 <Input
                   id="standard-adornment-weight"
                   aria-describedby="standard-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
+                  // inputProps={{
+                  //   'aria-label': 'weight',
+                  // }}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     setFormData({ ...formData, book_name: event.target.value });
                   }}
@@ -657,9 +636,9 @@ const Clippings: FC = () => {
                 <Input
                   id="standard-adornment-weight"
                   aria-describedby="standard-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
+                  // inputProps={{
+                  //   'aria-label': 'weight',
+                  // }}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     setFormData({
                       ...formData,

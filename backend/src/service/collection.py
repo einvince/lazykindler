@@ -38,7 +38,7 @@ def get_all_collections(coll_type):
 
 
 def get_multiple_collections(uuids):
-    data = [collection.get_coll(uuid) for uuid in uuids if uuid != ""]
+    data = [collection.get_coll(uuid) for uuid in uuids]
     return jsonify(data)
 
 

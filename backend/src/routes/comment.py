@@ -1,12 +1,14 @@
 #!/usr/bin/env pytho3
 # -*- coding: utf-8 -*-
 
-from flask import request
+from flask import request, jsonify
 from ..service import comment
 
 
 def get_comments_of_related_uuid():
     related_uuid = request.args.get('related_uuid')
+    if related_uuid == "":
+        return jsonify([])
     return comment.get_comments_of_related_uuid(related_uuid)
 
 

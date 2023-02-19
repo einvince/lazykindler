@@ -65,8 +65,13 @@ class ClippingHelper(object):
 
 def get_all_clippings():
     data = clipping.get_all_clippings()
-    data.sort(key=lambda x: x['addDate'], reverse=True)
-    return jsonify(data)
+
+    result = []
+    for item in data:
+        item["highlights"] = convert_str_to_list(item["highlights"])
+        result.append(item)
+    result.sort(key=lambda x: x['addDate'], reverse=True)
+    return jsonify(result)
 
 
 def get_clipping_by_uuids(uuids):
@@ -112,7 +117,6 @@ def update_clipping_colls(uuid, value):
 
 def update_by_keyword(keyword, new_value, old_value):
     new_value = new_value.strip()
-    old_value = old_value.strip()
 
     if keyword == "评分":
         clipping.update_clipping_star(old_value, new_value)

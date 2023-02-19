@@ -26,7 +26,7 @@ export const deleteClipping = (uuid: string) => {
 // 更新摘抄
 export const updateClippingByKeyword = (keyword: string, new_value: any, old_value: any) => {
     return axiosInstance
-        .get(
+        .post(
             `/api/clipping/update/bykeyword?keyword=${keyword}&new_value=${new_value}&old_value=${old_value}`,
         )
         .then((data: any) => {

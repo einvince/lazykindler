@@ -42,7 +42,7 @@ export interface ClippingDataType {
   author: string;
   content: string;
   addDate: string;
-  tag: string;
+  tags: string;
   star: number;
   highlights: string[];
   coll_uuids: string;

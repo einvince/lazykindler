@@ -45,13 +45,13 @@ const Editor = ({ onChange, onSubmit, submitting, value }: any) => (
     <>
         <Form.Item style={{ float: 'left' }}>
             <TextArea
-                style={{ backgroundColor: 'darkseagreen', width: 650 }}
+                style={{ backgroundColor: 'darkseagreen', width: "70vw" }}
                 rows={3}
                 onChange={onChange}
                 value={value}
             />
         </Form.Item>
-        <Form.Item style={{ float: 'right', marginBottom: 0, paddingTop: 41 }}>
+        <Form.Item style={{ float: 'right', marginBottom: 0, paddingTop: 10 }}>
             <AntdButton htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
                 添加评论
             </AntdButton>
@@ -207,7 +207,7 @@ export default function ClippingDialog(props: ClippingDialogProps) {
                                             });
                                             setTextArea('');
                                             setSubmitting(false);
-                                        }, 600);
+                                        }, 200);
                                     }}
                                     submitting={submitting}
                                     value={textArea}
