@@ -58,3 +58,20 @@ def create_clipping():
     author = content['author']
     clip_content = content['clip_content']
     return clipping.create_clipping(book_name, author, clip_content)
+
+
+def get_clippings_count_by_book_name():
+    content = request.json
+    book_name = content['book_name']
+    return clipping.get_clippings_count_by_book_name(book_name)
+
+
+def get_clippings_by_book_name():
+    content = request.json
+    book_name = content['book_name']
+    return clipping.get_clippings_by_book_name(book_name)
+
+
+def get_clippings_by_book_meta_uuid():
+    book_meta_uuid = request.args.get('book_meta_uuid')
+    return clipping.get_clippings_by_book_meta_uuid(book_meta_uuid)

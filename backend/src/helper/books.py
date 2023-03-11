@@ -3,6 +3,8 @@
 
 import os
 from pathlib import Path
+
+from .book_clipping import delete_relation_by_book_meta_uuid
 from ..helper.collection import remove_item_uuid_from_coll
 from ..util.util import ls_books
 from ..database.database import db
@@ -20,12 +22,12 @@ def get_book_meta(uuid):
 
 def get_all_books():
     return db.query(
-        "select uuid from book_meta")
+        "select * from book_meta")
 
 
 def get_all_tmp_books():
     return db.query(
-        "select uuid from tmp_book")
+        "select * from tmp_book")
 
 
 def get_book_meta_list_by_star(star):
@@ -59,6 +61,8 @@ def delete_book(uuid):
     db.run_sql(f"delete from cover where uuid='{uuid}'")
     db.run_sql(f"delete from tmp_book where uuid='{uuid}'")
 
+    delete_relation_by_book_meta_uuid(uuid)
+
     colls = db.query(
         f"select uuid, item_uuids from coll where item_uuids like '%{uuid}%'"
     )
@@ -90,8 +94,3 @@ def delete_book_data_by_uuid(uuid):
                 break
             except OSError:
                 break
-
-
-def update_book_cover(book_uuid, new_cover):
-    db.run_sql(
-        f"update cover set content='{new_cover}' where uuid='{book_uuid}'")

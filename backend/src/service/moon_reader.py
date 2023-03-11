@@ -34,8 +34,11 @@ def import_moon_reader_clipping():
     if os.path.isdir(dir_path):
         path_list.append(dir_path)
 
-    for clipping_path in path_list:
-        filepaths = ls_moon_reader_clippings(clipping_path)
+    for file_path in path_list:
+        _, ext = os.path.splitext(file_path)
+        if ext != ".mrexpt":
+            continue
+        filepaths = ls_moon_reader_clippings(file_path)
         for filepath in filepaths:
             handle_moon_reader_clipping_file(filepath)
     return
@@ -53,7 +56,7 @@ def handle_moon_reader_clipping_file(filepath):
         book_name = extracted_book_name_v1
     else:
         book_name = extracted_book_name_v2
-
+    
     with open(filepath, 'r') as file:
         extract_clipping(file, book_name)
 

@@ -6,11 +6,11 @@ import shutil
 from pathlib import Path
 from flask import jsonify, send_file
 
+from ..service.cover import upsert_cover
+
 from ..helper.books import delete_book, get_all_books, get_all_tmp_books, get_book_meta, get_book_meta_list_by_author, get_book_meta_list_by_publisher, get_book_meta_list_by_star, get_book_meta_list_by_tag
 from ..helper.collection import add_item_uuid_to_coll, remove_item_uuid_from_coll
 from ..helper.common import clean_sqlite_sequence
-
-from ..helper import books
 
 
 from ..routes.books import ls_books
@@ -220,7 +220,7 @@ def delete_all_tmp_books():
 
 
 def upsert_book_cover(uuid, cover_str):
-    books.update_book_cover(uuid, cover_str)
+    upsert_cover(uuid, cover_str)
     return "success"
 
 

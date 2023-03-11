@@ -76,4 +76,18 @@ export default [
       { component: './404' },
     ],
   },
+  {
+    path: '/book_to_clipping',
+    name: '书籍笔记',
+    icon: 'RocketOutlined',
+    routes: [
+      {
+        path: '/book_to_clipping/relation_list',
+        name: '集合',
+        icon: 'smile',
+        component: './book_to_clipping/relation_list',
+      },
+      { component: './404' },
+    ],
+  },
 ];

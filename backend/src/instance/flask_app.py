@@ -6,9 +6,11 @@ from flask_cors import CORS
 import os
 import time
 
+from ..service.book_clipping import maintain_relation
+
 from ..service.clipping import ClippingHelper
 from ..service.moon_reader import import_moon_reader_clipping
-from ..routes import books, clipping, collection, comment, chatgpt
+from ..routes import books, clipping, collection, comment, chatgpt, books_clipping
 
 
 app = Flask(__name__)
@@ -34,6 +36,9 @@ if pid == 0:
 
         # 导入 静读天下apk 中导出的电子书高亮文件
         import_moon_reader_clipping()
+
+        maintain_relation()
+
         time.sleep(10)
 
         # 如果检测父进程退出，子进程也退出
@@ -74,6 +79,9 @@ else:
     app.add_url_rule('/api/clipping/highlight/delete', view_func=clipping.delete_highlight_from_clipping, methods=['POST'])
     app.add_url_rule('/api/clipping/update/bykeyword', view_func=clipping.update_by_keyword, methods=['POST'])
     app.add_url_rule('/api/clipping/create', view_func=clipping.create_clipping, methods=['POST'])
+    app.add_url_rule('/api/clipping/get/by/book_name', view_func=clipping.get_clippings_by_book_name, methods=['POST'])
+    app.add_url_rule('/api/clipping/count/get/by/book_name', view_func=clipping.get_clippings_count_by_book_name, methods=['POST'])
+    app.add_url_rule('/api/clipping/get/by/book_meta_uuid', view_func=clipping.get_clippings_by_book_meta_uuid, methods=['GET'])
 
     app.add_url_rule('/api/comment/get/by_related_uuid', view_func=comment.get_comments_of_related_uuid, methods=['GET'])
     app.add_url_rule('/api/comment/create', view_func=comment.create_comment, methods=['POST'])
@@ -81,3 +89,6 @@ else:
     app.add_url_rule('/api/comment/delete', view_func=comment.delete_comment, methods=['DELETE'])
 
     app.add_url_rule('/api/chatgpt/get', view_func=chatgpt.get_awnser_from_chatgpt, methods=['POST'])
+
+    app.add_url_rule('/api/book_clipping/get/all', view_func=books_clipping.get_all_book_clipping, methods=['GET'])
+    app.add_url_rule('/api/book_clipping/update', view_func=books_clipping.update_relation, methods=['POST'])

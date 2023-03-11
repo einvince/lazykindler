@@ -32,7 +32,7 @@ import { BookMetaDataType } from '../../../data';
 import ChangeInfo from '../ChangeInfoDialog';
 import Cover from '../Cover';
 import ChangeBookColl from './ChangeBookColl';
-import ReaderDialog from './Reader';
+import ReaderDialog from '../../../../components/Reader';
 
 const { SubMenu } = Menu;
 

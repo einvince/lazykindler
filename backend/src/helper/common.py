@@ -22,25 +22,30 @@ def get_clipping_by_uuid(uuid):
 
 
 def clean_sqlite_sequence():
-    data = db.query("select uuid from book_meta")
+    data = db.query("select * from book_meta")
     if data is not None and len(data) == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'book_meta'")
 
-    data = db.query("select uuid from tmp_book;")
+    data = db.query("select *  from tmp_book;")
     if data is not None and len(data) == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'tmp_book'")
 
-    data = db.query("select uuid from cover")
+    data = db.query("select * from cover")
     if data is not None and len(data) == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'cover'")
 
-    data = db.query("select uuid from coll")
+    data = db.query("select * from coll")
     if data is not None and len(data) == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'coll'")
 
-    data = db.query("select uuid from clipping")
+    data = db.query("select * from clipping")
     if data is not None and len(data) == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'clipping'")
+
+    data = db.query("select * from book_to_clipping_book")
+    if data is not None and len(data) == 0:
+        db.run_sql(
+            "DELETE FROM sqlite_sequence WHERE name = 'book_to_clipping_book'")
 
 
 def delete_cover(uuid):

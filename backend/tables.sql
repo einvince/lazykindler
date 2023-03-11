@@ -35,7 +35,6 @@ CREATE TABLE clipping (
 CREATE TABLE cover (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	uuid           TEXT,
-    name           TEXT,         -- 书名
     size           INTEGER,      -- 文件大小
 	content        LONGTEXT,     -- 内容
 	create_time    TEXT          -- 创建时间
@@ -69,4 +68,14 @@ CREATE TABLE comment (
 	related_uuid        TEXT,         -- 被关联的uuid。比如该评论属于某个摘抄的
     content             TEXT,         -- 内容
 	create_time         TEXT          -- 创建时间
+);
+
+-- book_meta中记录的name和clipping中book_name的映射。
+-- 只有名称足够相似的书籍和高亮笔记的书名才会创建映射关系
+CREATE TABLE book_to_clipping_book (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	book_meta_uuid           		TEXT,         -- book_meta 中的旧书名
+	clipping_book_name              TEXT,         -- 高亮笔记关联的旧书名
+	status              			INTEGER,      -- 状态。0: 待确认;1: 已保存; 2: 已删除
+	create_time         			TEXT          -- 创建时间
 );

@@ -66,3 +66,11 @@ export interface CommentDataType {
   content: string;
   create_time: string;
 }
+
+export interface BookToClippingBookType {
+  book_meta_uuid: string;
+  clipping_book_name: string;
+  clipping_count: int;
+  status: int;
+  create_time: string;
+}

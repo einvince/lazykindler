@@ -3,6 +3,8 @@ import os
 import pathlib
 import hashlib
 import epub_meta
+import difflib
+import re
 
 from flask import jsonify
 
@@ -152,3 +154,47 @@ def escape_string(str):
                                         "·":  r"\·",
                                         })
                          )
+
+
+
+def string_similarity(s1, s2):
+    """
+    计算两个字符串的相似度
+    """
+    seq = difflib.SequenceMatcher(None, s1, s2)
+    return seq.ratio()
+
+def compare_strings_with_similarity(similarity, s1, s2):
+    """
+    比较两个字符串的相似度
+
+    similarity 是一个0到1之间的小数
+    """
+    len1 = len(s1)
+    len2 = len(s2)
+
+    if len1 < len2:
+        s1, s2 = s2, s1
+        len1, len2 = len2, len1
+
+    intersection = set(s1).intersection(set(s2))
+    if len(intersection) >= similarity * len(s2):
+        return True
+
+    s1_count = sum(ch in s2 for ch in s1)
+    s2_count = sum(ch in s1 for ch in s2)
+    if s1_count / len1 >= similarity or s2_count / len2 >= similarity:
+        return True
+
+    similarity_value = string_similarity(s1, s2)
+    return similarity_value >= similarity
+
+def compare_strings_ignore_special_chars(s1, s2):
+    # 书名或者作者命中，可能包含特殊字符，导致无法进行比较
+    # 这里去掉任何特殊字符后比较是否相等
+    s1 = re.sub(r'\W+', '', s1).lower()
+    s2 = re.sub(r'\W+', '', s2).lower()
+    return s1 == s2
+
+def remove_special_chars_from_str(string):
+    return re.sub(r'\W+', '', string)

@@ -8,7 +8,7 @@ import datetime
 import hashlib
 from flask import jsonify
 
-from ..helper import clipping, collection, common
+from ..helper import clipping, collection, common, book_clipping
 
 from ..util.util import convert_str_to_list, difference, generate_uuid
 from ..database.database import db
@@ -167,3 +167,17 @@ def create_clipping(book_name, author, content):
     db.insert_clipping(generate_uuid(), book_name, author,
                        content, time.time(), str_md5)
     return "success"
+
+
+def get_clippings_count_by_book_name(book_name):
+    res = clipping.get_clippings_by_book_name(book_name)
+    return str(0) if res is None or len(res) == 0 else str(len(res))
+
+
+def get_clippings_by_book_meta_uuid(book_meta_uuid):
+    relation = book_clipping.get_relation_by_book_meta_uuid(book_meta_uuid)
+    if relation is None or len(relation) == 0:
+        return jsonify([])
+    res = clipping.get_clippings_by_book_name(
+        relation[0]["clipping_book_name"])
+    return jsonify([]) if res is None or len(res) == 0 else jsonify(res)

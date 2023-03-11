@@ -104,10 +104,10 @@ class DB:
             cursor.execute(sql, data_tuple)
 
             # 插入书籍封面信息
-            sql = """INSERT INTO cover (uuid, name, size, content, create_time ) 
-                                        VALUES (?, ?, ?, ?, ?) """
+            sql = """INSERT INTO cover (uuid, size, content, create_time ) 
+                                        VALUES (?, ?, ?, ?) """
             if cover is not None:
-                data_tuple = (uuid, title, sys.getsizeof(
+                data_tuple = (uuid, sys.getsizeof(
                     cover["content"]), base64.b64encode(cover["content"]), get_now())
                 cursor.execute(sql, data_tuple)
 
@@ -208,6 +208,27 @@ class DB:
         except Exception as error:
             self.conn.execute("rollback")
             print("Failed to insert comment. ", error)
+
+        self.conn.commit()
+        cursor.close()
+
+    def insert_book_relation(self, book_meta_uuid, clipping_book_name, status):
+        cursor = self.conn.cursor()
+        cursor.execute("begin")
+        try:
+            sql = """INSERT INTO book_to_clipping_book (book_meta_uuid, clipping_book_name, status, create_time) 
+                                        VALUES (?, ?, ?, ?) """
+            data_tuple = (
+                book_meta_uuid,
+                clipping_book_name,
+                status,
+                get_now()
+            )
+            cursor.execute(sql, data_tuple)
+
+        except Exception as error:
+            self.conn.execute("rollback")
+            print("Failed to insert book_to_clipping_book. ", error)
 
         self.conn.commit()
         cursor.close()
