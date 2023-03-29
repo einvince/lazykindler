@@ -6,11 +6,11 @@ from flask_cors import CORS
 import os
 import time
 
+from ..service.vocab import sync_vocab_to_lazykindler
 from ..service.book_clipping import maintain_relation
-
 from ..service.clipping import ClippingHelper
 from ..service.moon_reader import import_moon_reader_clipping
-from ..routes import books, clipping, collection, comment, chatgpt, books_clipping
+from ..routes import books, clipping, collection, comment, chatgpt, books_clipping, vocab
 
 
 app = Flask(__name__)
@@ -37,7 +37,11 @@ if pid == 0:
         # 导入 静读天下apk 中导出的电子书高亮文件
         import_moon_reader_clipping()
 
+        # 维护书籍和高亮笔记书籍的关系。TODO 后期会把书籍和高亮笔记做关联
         maintain_relation()
+
+        # 同步kindle中的生词本到数据库
+        sync_vocab_to_lazykindler()
 
         time.sleep(10)
 
@@ -92,3 +96,6 @@ else:
 
     app.add_url_rule('/api/book_clipping/get/all', view_func=books_clipping.get_all_book_clipping, methods=['GET'])
     app.add_url_rule('/api/book_clipping/update', view_func=books_clipping.update_relation, methods=['POST'])
+
+    app.add_url_rule('/api/vocab/book/get', view_func=vocab.get_vocab_book_list, methods=['POST'])
+    app.add_url_rule('/api/vocab/word/get', view_func=vocab.get_vocab_words_by_book, methods=['POST'])

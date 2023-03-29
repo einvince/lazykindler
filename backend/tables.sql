@@ -79,3 +79,33 @@ CREATE TABLE book_to_clipping_book (
 	status              			INTEGER,      -- 状态。0: 待确认;1: 已保存; 2: 已删除
 	create_time         			TEXT          -- 创建时间
 );
+
+
+-- kindle中单词本关联的书籍
+CREATE TABLE vocab_related_books (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	key                 TEXT,         -- kindle里为书籍生成的id 
+	title               TEXT,         -- 书名
+	author        		TEXT,         -- 作者
+	create_time         TEXT          -- 创建时间
+);
+
+-- kindle中的单词本
+CREATE TABLE vocab_words (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	book_key           TEXT,         -- 书籍的key
+	language           TEXT,         -- 语言
+	word               TEXT,         -- 生词
+	create_time        TEXT          -- 创建时间
+);
+
+-- kindle中的单词的用法列表
+CREATE TABLE vocab_words_usage (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	book_key           TEXT,         -- 书籍的key
+	language           TEXT,         -- 语言
+	word               TEXT,         -- 生词
+	usage              TEXT,         -- 用例
+	translated_usage   TEXT,         -- 翻译后的用例
+	timestamp          TEXT          -- 创建时间
+);

@@ -233,5 +233,69 @@ class DB:
         self.conn.commit()
         cursor.close()
 
+    def insert_vocab_related_books(self, key, title, author):
+        cursor = self.conn.cursor()
+        cursor.execute("begin")
+        try:
+            sql = """INSERT INTO vocab_related_books (key, title, author, create_time) 
+                                        VALUES (?, ?, ?, ?) """
+            data_tuple = (
+                key,
+                title,
+                author,
+                get_now()
+            )
+            cursor.execute(sql, data_tuple)
+
+        except Exception as error:
+            self.conn.execute("rollback")
+            print("Failed to insert vocab_related_books. ", error)
+
+        self.conn.commit()
+        cursor.close()
+
+    def insert_vocab_words(self, book_key, word, language):
+        cursor = self.conn.cursor()
+        cursor.execute("begin")
+        try:
+            sql = """INSERT INTO vocab_words (book_key, word, language, create_time) 
+                                        VALUES (?, ?, ?, ?) """
+            data_tuple = (
+                book_key,
+                word,
+                language,
+                get_now()
+            )
+            cursor.execute(sql, data_tuple)
+
+        except Exception as error:
+            self.conn.execute("rollback")
+            print("Failed to insert vocab_words. ", error)
+
+        self.conn.commit()
+        cursor.close()
+
+    def insert_vocab_words_usage(self, book_key, word, usage, translated_usage, language, timestamp):
+        cursor = self.conn.cursor()
+        cursor.execute("begin")
+        try:
+            sql = """INSERT INTO vocab_words_usage (book_key, word, usage, translated_usage, language, timestamp) 
+                                        VALUES (?, ?, ?, ?, ?, ?) """
+            data_tuple = (
+                book_key,
+                word,
+                usage,
+                translated_usage,
+                language,
+                timestamp
+            )
+            cursor.execute(sql, data_tuple)
+
+        except Exception as error:
+            self.conn.execute("rollback")
+            print("Failed to insert vocab_words_usage. ", error)
+
+        self.conn.commit()
+        cursor.close()
 
 db = DB()

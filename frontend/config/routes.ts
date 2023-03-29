@@ -90,4 +90,18 @@ export default [
       { component: './404' },
     ],
   },
+  {
+    path: '/vocab',
+    name: 'kindle生词本',
+    icon: 'DribbbleOutlined',
+    routes: [
+      {
+        path: '/vocab/list',
+        name: '生词本',
+        icon: 'smile',
+        component: './vocab',
+      },
+      { component: './404' },
+    ],
+  },
 ];

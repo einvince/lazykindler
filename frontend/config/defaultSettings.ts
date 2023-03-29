@@ -13,7 +13,7 @@ const Settings: ProLayoutProps & {
   layout: 'mix',
   contentWidth: 'Fluid',
   fixedHeader: false,
-  siderWidth: 170,
+  siderWidth: 200,
   fixSiderbar: true,
   colorWeak: false,
   title: 'LazyKindler',

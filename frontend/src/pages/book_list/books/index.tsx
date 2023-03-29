@@ -586,7 +586,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
           (item.name != null && item.name.includes(keyword)) ||
           (item.author != null && item.author.includes(keyword)) ||
           (item.publisher != null && item.publisher.includes(keyword)) ||
-          (item.tag != null && item.tag.includes(keyword))
+          (item.tags != null && item.tags.includes(keyword))
         ) {
           return true;
         }
@@ -637,7 +637,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             ))}
           </List>
         </Sider>
-        <Content style={{ marginLeft: 190 }}>
+        <Content style={{ marginLeft: 210 }}>
           <BookCardList data={data} fetchBooks={fetchBooks} />
         </Content>
       </Layout>

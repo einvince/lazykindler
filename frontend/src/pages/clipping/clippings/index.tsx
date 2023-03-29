@@ -425,7 +425,7 @@ const Clippings: FC = () => {
         if (
           (item.book_name != null && item.book_name.includes(keyword)) ||
           (item.author != null && item.author.includes(keyword)) ||
-          (item.tag != null && item.tag.includes(keyword)) ||
+          (item.tags != null && item.tags.includes(keyword)) ||
           (item.content != null && item.content.includes(keyword))
         ) {
           return true;

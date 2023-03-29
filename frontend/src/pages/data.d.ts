@@ -74,3 +74,24 @@ export interface BookToClippingBookType {
   status: int;
   create_time: string;
 }
+
+export interface VocabRelatedBookType {
+  key: string;
+  title: string;
+  author: int;
+  status: int;
+  create_time: string;
+}
+
+export interface VocabWordsType {
+  book_key: string;
+  word: string;
+  usage: VocabWordUsageItemType[];
+  create_time: string;
+}
+
+export interface VocabWordUsageItemType {
+  book_key: string;
+  usage: string;
+  timestamp: string;
+}
