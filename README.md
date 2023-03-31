@@ -121,6 +121,7 @@
 
 ## 14. 导入 kindle 生词本
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生词本是kindle中的一个功能，用于记录阅读书籍过程查询过的字或者词，通过这种方式阅读英文原版书籍记录单词，后续可以用来学习和复习这些单词。平台支持导入这些生词。
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在支持导入这些生词的基础上，平台提供了良好的界面用于展示这些信息，在展示的部分，可以对原单词用例提供英文翻译。
 
 <img width="1322" alt="Xnip2023-03-31_23-23-41" src="https://user-images.githubusercontent.com/16133390/229163528-952ee43f-bf31-43a7-b39b-98d637e584da.png">
