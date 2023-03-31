@@ -14,7 +14,7 @@ def update_clipping(uuid, key, value):
 
 
 def get_clipping_by_md5(md5_str):
-    return db.query(f"select uuid from clipping where md5='{md5_str}';")[0]
+    return db.query(f"select uuid from clipping where md5='{md5_str}';")
 
 
 def check_if_there_is_book_clipping(book_name):
@@ -49,7 +49,7 @@ def get_clipping_by_uuid(uuid):
 
 
 def update_clipping_highlights(clipping):
-    db.query(
+    db.run_sql(
         f"""update clipping set highlights='{"___".join(clipping["highlights"])}' where uuid='{clipping['uuid']}'""")
 
 

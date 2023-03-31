@@ -10,7 +10,8 @@ from ..database.database import db
 from ..helper import vocab
 
 
-vocab_path = "/Users/wupeng/Documents/vocab.db"
+# vocab_path = "/Users/wupeng/Documents/vocab.db"
+vocab_path = "/Volumes/Kindle/system/vocabulary/vocab.db"
 
 
 def sync_vocab_to_lazykindler():
@@ -22,18 +23,22 @@ def sync_vocab_to_lazykindler():
         vocab.insert_vocab_related_book_if_need(
             item["id"],
             item["title"],
+            item["lang"],
             item["authors"],
         )
 
     lookup_list = read_data_from_sqlite_table("LOOKUPS")
     for item in lookup_list:
+        word = item["word_key"]
+        if ":" in word:
+            word = word.split(":")[1]
         vocab.insert_vocab_word_if_need(
             item["book_key"],
-            item["word_key"],
+            word,
         )
-        vocab.insert_vocab_words_usage_if_need(
+        vocab.upsert_vocab_words_usage_if_need(
             item["book_key"],
-            item["word_key"],
+            word,
             item["usage"],
             "",
             item["timestamp"],
@@ -107,6 +112,16 @@ def get_vocab_words_by_book(book_key_list):
         result.append(item)
 
     return jsonify(result)
+
+def upsert_word_and_usage(book_key, word, usage, translated_usage):
+    word_info = vocab.get_vocab_word_by_word(book_key, word)
+    if word_info is None or len(word_info) == 0:
+        vocab.insert_vocab_word_if_need(
+            book_key,
+            word,
+        )
+    vocab.upsert_vocab_words_usage_if_need(book_key, word, usage, translated_usage)
+    return "success"
 
 
 if __name__ == "__main__":

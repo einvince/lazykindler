@@ -115,7 +115,7 @@ def get_md5_from_filename(filepath):
 
 
 def convert_str_to_list(str_data):
-    return [a for a in str_data.split(";") if a != ""]
+    return [a for a in str_data.split("___") if a != ""]
 
 
 # 转换文件格式时，文件名中可能会包含各种特殊字符，

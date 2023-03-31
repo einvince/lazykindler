@@ -40,7 +40,7 @@ class ClippingHelper(object):
         md5_str = hashlib.md5(clip_content.encode('utf-8')).hexdigest()
 
         clips = clipping.get_clipping_by_md5(md5_str)
-        if len(clips) > 0:
+        if clips is not None and len(clips) > 0:
             return
 
         clip_content = clip_content.replace(' ', '\n')

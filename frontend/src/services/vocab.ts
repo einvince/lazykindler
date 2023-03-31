@@ -13,3 +13,13 @@ export const getVocabWordsByBookKeyList = (book_key_list: string[]) => {
     book_key_list,
   });
 };
+
+// 更新生词和用法
+export const upsertWordAndUsage = (book_key: string, word: string, usage: string, translated_usage: string) => {
+  return axiosInstance.post(`/api/vocab/word/upsert`, {
+    book_key,
+    word,
+    usage,
+    translated_usage
+  });
+};

@@ -14,7 +14,8 @@ from ..routes import books, clipping, collection, comment, chatgpt, books_clippi
 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app)
 
 
 def pid_exists(pid):
@@ -99,3 +100,4 @@ else:
 
     app.add_url_rule('/api/vocab/book/get', view_func=vocab.get_vocab_book_list, methods=['POST'])
     app.add_url_rule('/api/vocab/word/get', view_func=vocab.get_vocab_words_by_book, methods=['POST'])
+    app.add_url_rule('/api/vocab/word/upsert', view_func=vocab.upsert_word_and_usage, methods=['POST'])

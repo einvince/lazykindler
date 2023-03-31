@@ -59,15 +59,12 @@ class DB:
         self.conn.commit()
 
     def query(self, sql):
-        try:
-            cursor = self.conn.cursor()
-            cursor.execute(sql)
+        cursor = self.conn.cursor()
+        cursor.execute(sql)
 
-            desc = cursor.description
-            column_names = [col[0] for col in desc]
-            return [dict(zip(column_names, row)) for row in cursor.fetchall()]
-        except Exception as error:
-            print("Failed to get record. ", error)
+        desc = cursor.description
+        column_names = [col[0] for col in desc]
+        return [dict(zip(column_names, row)) for row in cursor.fetchall()]
 
     def insert_book(self, uuid, title, author, tags, book_size, publisher, coll_uuids,
                     md5, book_path):
@@ -233,16 +230,17 @@ class DB:
         self.conn.commit()
         cursor.close()
 
-    def insert_vocab_related_books(self, key, title, author):
+    def insert_vocab_related_books(self, key, title, lang, author):
         cursor = self.conn.cursor()
         cursor.execute("begin")
         try:
-            sql = """INSERT INTO vocab_related_books (key, title, author, create_time) 
-                                        VALUES (?, ?, ?, ?) """
+            sql = """INSERT INTO vocab_related_books (key, title, author, lang, create_time) 
+                                        VALUES (?, ?, ?, ?, ?) """
             data_tuple = (
                 key,
                 title,
                 author,
+                lang,
                 get_now()
             )
             cursor.execute(sql, data_tuple)
@@ -254,16 +252,15 @@ class DB:
         self.conn.commit()
         cursor.close()
 
-    def insert_vocab_words(self, book_key, word, language):
+    def insert_vocab_words(self, book_key, word):
         cursor = self.conn.cursor()
         cursor.execute("begin")
         try:
-            sql = """INSERT INTO vocab_words (book_key, word, language, create_time) 
-                                        VALUES (?, ?, ?, ?) """
+            sql = """INSERT INTO vocab_words (book_key, word, create_time) 
+                                        VALUES (?, ?, ?) """
             data_tuple = (
                 book_key,
                 word,
-                language,
                 get_now()
             )
             cursor.execute(sql, data_tuple)
@@ -275,18 +272,17 @@ class DB:
         self.conn.commit()
         cursor.close()
 
-    def insert_vocab_words_usage(self, book_key, word, usage, translated_usage, language, timestamp):
+    def insert_vocab_words_usage(self, book_key, word, usage, translated_usage, timestamp):
         cursor = self.conn.cursor()
         cursor.execute("begin")
         try:
-            sql = """INSERT INTO vocab_words_usage (book_key, word, usage, translated_usage, language, timestamp) 
-                                        VALUES (?, ?, ?, ?, ?, ?) """
+            sql = """INSERT INTO vocab_words_usage (book_key, word, usage, translated_usage, timestamp) 
+                                        VALUES (?, ?, ?, ?, ?) """
             data_tuple = (
                 book_key,
                 word,
                 usage,
                 translated_usage,
-                language,
                 timestamp
             )
             cursor.execute(sql, data_tuple)
