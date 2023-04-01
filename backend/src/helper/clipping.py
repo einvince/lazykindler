@@ -18,6 +18,7 @@ def get_clipping_by_md5(md5_str):
 
 
 def check_if_there_is_book_clipping(book_name):
+    book_name = book_name.replace("'", "")
     res = db.query(f"SELECT id FROM clipping WHERE book_name = '{book_name}'")
     return res is not None and len(res) != 0
 
@@ -27,6 +28,7 @@ def get_all_clippings():
 
 
 def get_clippings_by_book_name(book_name):
+    book_name = book_name.replace("'", "")
     return db.query(f"select * from clipping where book_name='{book_name}' and deleted is null;")
 
 def delete_clipping_hard(uuid):

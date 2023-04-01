@@ -88,6 +88,7 @@ CREATE TABLE vocab_related_books (
 	title               TEXT,         -- 书名
 	lang                TEXT,         -- 语言
 	author        		TEXT,         -- 作者
+	deleted             INTEGER,      -- 是否被删除。1: 删除
 	create_time         TEXT          -- 创建时间
 );
 
@@ -96,6 +97,7 @@ CREATE TABLE vocab_words (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	book_key           TEXT,         -- 书籍的key
 	word               TEXT,         -- 生词
+	deleted            INTEGER,      -- 是否被删除。1: 删除
 	create_time        TEXT          -- 创建时间
 );
 
@@ -106,5 +108,6 @@ CREATE TABLE vocab_words_usage (
 	word               TEXT,         -- 生词
 	usage              TEXT,         -- 用例
 	translated_usage   TEXT,         -- 翻译后的用例
+	deleted            INTEGER,      -- 是否被删除。1: 删除
 	timestamp          TEXT          -- 创建时间
 );

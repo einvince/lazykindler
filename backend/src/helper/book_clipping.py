@@ -9,6 +9,7 @@ from ..database.database import db
 
 
 def get_relation_by_relation(book_meta_uuid, clipping_book_name):
+    clipping_book_name = clipping_book_name.replace("'", "")
     return db.query(f"select * from book_to_clipping_book where book_meta_uuid='{book_meta_uuid}' and clipping_book_name='{clipping_book_name}'")
 
 
@@ -25,6 +26,7 @@ def get_all_relation():
 
 
 def delete_relation_by_book_name(book_name):
+    book_name = book_name.replace("'", "")
     return db.run_sql(f"delete from book_to_clipping_book where clipping_book_name='{book_name}'")
 
 
