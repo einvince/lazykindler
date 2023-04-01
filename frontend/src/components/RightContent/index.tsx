@@ -22,7 +22,6 @@ import { SelectLang, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import { Dropdown, Popover, Space } from 'antd';
 import React, { useState } from 'react';
-import Avatar from './AvatarDropdown';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -196,7 +195,6 @@ const GlobalHeaderRight: React.FC = () => {
             </Space>
           </a>
         </Dropdown>
-        <Avatar />
         <SelectLang className={actionClassName} />
 
         <Toaster />
@@ -236,7 +234,7 @@ const GlobalHeaderRight: React.FC = () => {
                 } else {
                   deleteAllBooks();
                   deleteAllClipping();
-                  deleteAllCollections()
+                  deleteAllCollections();
                 }
               }}
             >
