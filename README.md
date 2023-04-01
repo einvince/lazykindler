@@ -96,11 +96,7 @@
 <img src="https://user-images.githubusercontent.com/16133390/210229975-4e7145e7-5d91-4aff-85ff-f5550fd7fe2c.png" width="66%">
 
 
-## 11. 导入 kindle 生词本
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生词本是kindle中的一个功能，用于记录阅读书籍过程查询过的字或者词，通过这种方式阅读英文原版书籍记录单词，后续可以用来学习和复习这些单词。平台支持导入这些生词。
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在支持导入这些生词的基础上，平台提供了良好的界面用于展示这些信息，在展示的部分，可以对原单词用例提供英文翻译。
-
-## 10. 对高亮笔记进行二次高亮操作
+## 11. 对高亮笔记进行二次高亮操作
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高亮笔记是我们在读书时对有感触的文字进行高亮操作后记录下来的部分文字或者相关段落，往往是因为其中一句话或者一个词对我们有某种触动。当我们把高亮笔记导入平台后，在后期整理时，有必要对当时引起你共鸣的句或词进行高亮操作，方便高亮显示引起你共鸣那一小段文字。
 <br />
@@ -108,18 +104,29 @@
 
 <img src="https://user-images.githubusercontent.com/16133390/210230077-c9a4532b-aafc-4ba2-a163-cd151c98d831.png" width="66%">
 
-## 11. 对高亮笔记添加评论
+## 12. 对高亮笔记添加评论
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以记录一下引起你共鸣的这段文字的一些想法。
 
 <img width="1379" alt="Xnip2023-02-05_15-19-18" src="https://user-images.githubusercontent.com/16133390/216806787-4b76a541-608d-4e8e-9d8e-2651bf7842ef.png">
 
 
-## 12. 导入 静读天下 apk 高亮笔记
+## 13. 导入 静读天下 apk 高亮笔记
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`静读天下apk`是一个安卓平台较为流行的阅读器，目前我在海信阅读器上使用这款软件看书，该软件也支持添加高亮笔记。于是我对该软件高亮笔记的导入也做了支持。
 <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从`静读天下apk`导出的高亮笔记文件的格式是`.mrexpt`。将该文件放在`~/Download`、`~/下载`、`~/Desktop`、`~/桌面` 等任何一个目录下，平台可以自动完成导入操作。
+
+
+
+## 14. 导入 kindle 生词本
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生词本是kindle中的一个功能，用于记录阅读书籍过程查询过的字或者词，通过这种方式阅读英文原版书籍记录单词，后续可以用来学习和复习这些单词。平台支持导入这些生词。
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在支持导入这些生词的基础上，平台提供了良好的界面用于展示这些信息，还可以手动创建生词和用例，同时可以给用例增加翻译。
+
+<img width="1322" alt="Xnip2023-03-31_23-23-41" src="https://user-images.githubusercontent.com/16133390/229163528-952ee43f-bf31-43a7-b39b-98d637e584da.png">
+<img width="1320" alt="Xnip2023-03-31_23-23-57" src="https://user-images.githubusercontent.com/16133390/229163550-8c321a41-7df4-41af-9bd0-fd765e113a1f.png">
+
 
 # 运行环境要求
 
