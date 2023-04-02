@@ -1,8 +1,9 @@
+# Lazy Kindler
+<br>
+
 <!-- ![cooltext400798739959192](https://user-images.githubusercontent.com/16133390/147348820-9db84863-9431-4e67-814c-f1e1ddde8372.png) -->
 
 <img src="./header.svg" width="800" height="400" alt="Click to see the source">
-
-# Lazy Kindler
 
 
 # ✨ 特性
@@ -120,7 +121,7 @@ lazykindler因此橫空出世。
 <img width="1379" alt="Xnip2023-02-05_15-19-18" src="https://user-images.githubusercontent.com/16133390/216806787-4b76a541-608d-4e8e-9d8e-2651bf7842ef.png">
 
 
-13. 導入靜讀天下apk的高亮筆記
+## 13. 導入靜讀天下apk的高亮筆記
 
 「靜讀天下apk」是一款在安卓平台上相當流行的閱讀器，目前我使用這款軟體在海信閱讀器上看書，該軟體也支援添加高亮筆記。因此我對該軟體高亮筆記的導入也做了支援。
 
@@ -128,7 +129,7 @@ lazykindler因此橫空出世。
 
 從「靜讀天下apk」匯出的高亮筆記檔案格式為`.mrexpt`。將該檔案放在`~/Download`、`~/下載`、`~/Desktop`、`~/桌面 `等任何一個目錄下，平台可以自動完成導入操作。
 
-14. 導入kindle生字本
+## 14. 導入kindle生字本
 
 生字本是Kindle中的一項功能，用於紀錄閱讀過程中查詢過的單字或者詞語，通過這種方式閱讀英文原版書籍並紀錄單字，後續可以用來學習和復習這些單字。平台支持匯入這些生字。
 

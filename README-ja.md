@@ -1,11 +1,12 @@
+# Lazy Kindler
+<br>
 
 <!-- ![cooltext400798739959192](https://user-images.githubusercontent.com/16133390/147348820-9db84863-9431-4e67-814c-f1e1ddde8372.png) -->
 
 <img src="./header.svg" width="800" height="400" alt="Click to see the source">
 
-# Lazy Kindler
 
-＃ ✨ 特徴
+#  ✨ 特徴
 
 - 🌈 書籍をインポートし、効率的に書籍リストを表示します。
 
@@ -230,7 +231,7 @@ yarn install
 
 <br />
 
-＃その他
+# その他
 
 `Kindle`の最も有名なツールはおそらく `calibre` であり、このソフトウェアの機能は「編集」により焦点が当てられており、電子書籍の多次元表示は比較的シンプルです。したがって、実用的なニーズを満たす電子書籍を管理するために特別に開発されたツールを作成する予定です。
 
