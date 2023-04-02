@@ -4,6 +4,7 @@ import { humanFileSize, toBase64 } from '@/util';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArchiveIcon from '@mui/icons-material/Archive';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import StarIcon from '@mui/icons-material/Star';
@@ -18,7 +19,7 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
-  FormHelperText,
+  IconButton,
   Snackbar,
   Typography,
 } from '@mui/material';
@@ -26,13 +27,14 @@ import Divider from '@mui/material/Divider';
 import { Card, Dropdown, List as AntList, Menu, Spin } from 'antd';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
+import { FormattedMessage, useIntl } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 
+import ReaderDialog from '../../../../components/Reader';
 import { BookMetaDataType } from '../../../data';
 import ChangeInfo from '../ChangeInfoDialog';
 import Cover from '../Cover';
 import ChangeBookColl from './ChangeBookColl';
-import ReaderDialog from '../../../../components/Reader';
 
 const { SubMenu } = Menu;
 
@@ -56,6 +58,8 @@ const initialDialogInfoForReadBook = {
 
 export default function BookCardList(props: BookCardListProps) {
   const { data, fetchBooks } = props;
+
+  const intl = useIntl();
 
   const [dialogInfo, setDialogInfo] = useState<any>(initialDialogInfo);
   const [changeBookCollInfo, setChangeBookCollInfo] = useState<any>({
@@ -182,7 +186,10 @@ export default function BookCardList(props: BookCardListProps) {
                   placement="top"
                   arrow
                 >
-                  <Button>每页数目{pageNumberSize}</Button>
+                  <Button>
+                    <FormattedMessage id="pages.items_per_page" />
+                    {pageNumberSize}
+                  </Button>
                 </Dropdown>
               </>
             );
@@ -208,7 +215,7 @@ export default function BookCardList(props: BookCardListProps) {
                       });
                     }}
                   >
-                    集合
+                    <FormattedMessage id="pages.books.book.action.collection" />
                   </Button>
                   <Divider orientation="vertical" flexItem />
                   <Button
@@ -222,13 +229,12 @@ export default function BookCardList(props: BookCardListProps) {
                       });
                     }}
                   >
-                    阅读
+                    <FormattedMessage id="pages.books.book.action.read" />
                   </Button>
                   <Divider orientation="vertical" flexItem />
                   <SubMenu
                     key="sub4"
-                    // icon={<SettingOutlined />}
-                    title="操作"
+                    title={intl.formatMessage({ id: 'pages.books.book.action' })}
                     style={{
                       zIndex: 10,
                       color: 'dodgerblue',
@@ -240,7 +246,7 @@ export default function BookCardList(props: BookCardListProps) {
                       key="1"
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改评分',
+                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_rating' }),
                           oldValue: item.star,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
@@ -252,14 +258,14 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      修改评分
+                      <FormattedMessage id="pages.books.book.action.edit_rating" />
                     </Menu.Item>
                     <Menu.Item
                       key="2"
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改标签',
-                          oldValue: item.tag,
+                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_tags' }),
+                          oldValue: item.tags,
                           allowEmptyStr: true,
                           handleOK: (newValue: any) => {
                             updateBookMeta(item.uuid, 'tags', newValue).then(() => {
@@ -270,7 +276,7 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      修改标签
+                      <FormattedMessage id="pages.books.book.action.edit_tags" />
                     </Menu.Item>
                     <Menu.Item
                       key="3"
@@ -282,13 +288,13 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      修改集合
+                      <FormattedMessage id="pages.books.book.action.edit_collection" />
                     </Menu.Item>
                     <Menu.Item
                       key="4"
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改作者',
+                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_author' }),
                           oldValue: item.author,
                           allowEmptyStr: true,
                           handleOK: (newValue: any) => {
@@ -300,13 +306,15 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      修改作者
+                      <FormattedMessage id="pages.books.book.action.edit_author" />
                     </Menu.Item>
                     <Menu.Item
                       key="5"
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改出版社',
+                          title: intl.formatMessage({
+                            id: 'pages.books.book.action.edit_publisher',
+                          }),
                           oldValue: item.publisher,
                           allowEmptyStr: true,
                           handleOK: (newValue: any) => {
@@ -318,7 +326,7 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      修改出版社
+                      <FormattedMessage id="pages.books.book.action.edit_publisher" />
                     </Menu.Item>
                     <Menu.Item
                       key="6"
@@ -327,20 +335,20 @@ export default function BookCardList(props: BookCardListProps) {
                         setUUIDForEditCover(item.uuid);
                       }}
                     >
-                      修改封面
+                      <FormattedMessage id="pages.books.book.action.edit_cover" />
                     </Menu.Item>
                     <Menu.Item
                       key="7"
                       onClick={() => {
                         downloadBook(item.uuid).then(() => {
                           setSnackBar({
-                            message: '下载成功!',
+                            message: intl.formatMessage({ id: 'pages.download_success' }),
                             open: true,
                           });
                         });
                       }}
                     >
-                      下载书籍
+                      <FormattedMessage id="pages.books.book.action.download" />
                     </Menu.Item>
                     <Menu.Item
                       key="8"
@@ -352,15 +360,15 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      阅读
+                      <FormattedMessage id="pages.books.book.action.read" />
                     </Menu.Item>
-                    <Menu.Item
+                    {/* <Menu.Item
                       key="9"
                       onClick={() => {
                         get_book_related_info('作者', item.author);
                       }}
                     >
-                      查询作者信息
+                      <FormattedMessage id="pages.books.book.action.view_author_info" />
                     </Menu.Item>
                     <Menu.Item
                       key="10"
@@ -369,8 +377,8 @@ export default function BookCardList(props: BookCardListProps) {
                         get_book_related_info('书名', item.name);
                       }}
                     >
-                      查询书籍信息
-                    </Menu.Item>
+                      <FormattedMessage id="pages.books.book.action.view_book_info" />
+                    </Menu.Item> */}
                     <Menu.Item
                       key="11"
                       onClick={() => {
@@ -378,7 +386,9 @@ export default function BookCardList(props: BookCardListProps) {
                         handleClickOpen(item.uuid);
                       }}
                     >
-                      <span style={{ color: 'red' }}>删除</span>
+                      <span style={{ color: 'red' }}>
+                        <FormattedMessage id="pages.books.book.action.delete" />
+                      </span>
                     </Menu.Item>
                   </SubMenu>
                 </Menu>,
@@ -487,13 +497,20 @@ export default function BookCardList(props: BookCardListProps) {
           onClose={handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          fullWidth
         >
-          <DialogTitle id="alert-dialog-title">警告</DialogTitle>
+          <DialogTitle id="alert-dialog-title">
+            <FormattedMessage id="pages.warning" />
+          </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">确定删除这本书吗？</DialogContentText>
+            <DialogContentText id="alert-dialog-description">
+              <FormattedMessage id="pages.books.book.action.delete.info" />
+            </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>取消</Button>
+            <Button onClick={handleClose}>
+              <FormattedMessage id="pages.cancel" />
+            </Button>
             <Button
               onClick={() => {
                 handleClose();
@@ -503,7 +520,7 @@ export default function BookCardList(props: BookCardListProps) {
               }}
               autoFocus
             >
-              确定
+              <FormattedMessage id="pages.ok" />
             </Button>
           </DialogActions>
         </Dialog>
@@ -517,7 +534,9 @@ export default function BookCardList(props: BookCardListProps) {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle id="alert-dialog-title">{'修改集合封面'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="pages.books.book.action.edit_cover" />
+        </DialogTitle>
         <DialogContent style={{ margin: '0 auto' }}>
           <Box
             sx={{
@@ -526,16 +545,8 @@ export default function BookCardList(props: BookCardListProps) {
               '& .MuiTextField-root': { width: '25ch' },
             }}
           >
-            <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                封面:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 45 }}>
+            <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Dropzone
                   onDrop={async (acceptedFiles) => {
                     let base64Str = await toBase64(acceptedFiles[0]);
@@ -546,32 +557,34 @@ export default function BookCardList(props: BookCardListProps) {
                     <section>
                       <div {...getRootProps()}>
                         <input {...getInputProps()} />
-                        {formData.cover == null ? (
-                          <Button variant="contained">上传</Button>
-                        ) : (
-                          <Chip
-                            label="封面"
-                            onDelete={() => {
-                              setFormData({
-                                ...formData,
-                                cover: null,
-                              });
-                            }}
-                            deleteIcon={<DeleteIcon />}
-                            variant="outlined"
-                          />
-                        )}
+                        <IconButton color="primary" aria-label="upload picture" component="span">
+                          <CloudUploadIcon />
+                        </IconButton>
                       </div>
                     </section>
                   )}
                 </Dropzone>
-                <FormHelperText id="standard-weight-helper-text">不能为空</FormHelperText>
-              </div>
+                {formData.cover && (
+                  <Chip
+                    label={<FormattedMessage id="pages.books.book.create_book_collection.cover" />}
+                    onDelete={() => {
+                      setFormData({
+                        ...formData,
+                        cover: null,
+                      });
+                    }}
+                    deleteIcon={<DeleteIcon />}
+                    variant="outlined"
+                  />
+                )}
+              </Box>
             </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseForEditCover}>取消</Button>
+          <Button onClick={handleCloseForEditCover}>
+            <FormattedMessage id="pages.cancel" />
+          </Button>
           <Button
             onClick={() => {
               let ok = handleEditCollCover();
@@ -581,7 +594,7 @@ export default function BookCardList(props: BookCardListProps) {
             }}
             autoFocus
           >
-            确认
+            <FormattedMessage id="pages.ok" />
           </Button>
         </DialogActions>
       </Dialog>

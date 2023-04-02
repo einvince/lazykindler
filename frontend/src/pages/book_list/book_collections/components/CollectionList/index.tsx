@@ -22,13 +22,13 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
-  FormHelperText,
   Typography,
 } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { Card, List as AntList, Menu } from 'antd';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
+import { FormattedMessage, useIntl } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 
 import ChangeInfo from '../../../components/ChangeInfoDialog';
@@ -76,6 +76,8 @@ export default function BookCardList(props: BookCardListProps) {
 
   const [uuidForEditCover, setUUIDForEditCover] = useState<any>();
   const [openForEditCover, setOpenForEditCover] = useState(false);
+
+  const intl = useIntl();
 
   const handleOpenForEditCover = () => {
     setOpenForEditCover(true);
@@ -146,9 +148,14 @@ export default function BookCardList(props: BookCardListProps) {
               cover={<Cover uuid={item.uuid} />}
               actions={[
                 <Menu mode="vertical" key={'1'} selectable={false}>
-                  <SubMenu key="sub4" icon={<SettingOutlined />} title="操作">
-                    <Menu.Item
+                  <SubMenu
+                    key="sub4"
+                    icon={<SettingOutlined />}
+                    title={<FormattedMessage id="pages.books.collection.action" />}
+                  >
+                    {/* <Menu.Item
                       key="1"
+                      style={{ width: 280 }}
                       onClick={() => {
                         setUUID2(uuidv4());
                         setAddBooksInfo({
@@ -158,10 +165,11 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      管理书籍
-                    </Menu.Item>
+                      <FormattedMessage id="pages.books.collection.action.manage_books" />
+                    </Menu.Item> */}
                     <Menu.Item
                       key="2"
+                      style={{ width: 280 }}
                       onClick={() => {
                         setUUID2(uuidv4());
                         setAddBooksInfo({
@@ -171,10 +179,11 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      添加正式书籍
+                      <FormattedMessage id="pages.books.collection.action.add_books_to_storage" />
                     </Menu.Item>
                     <Menu.Item
                       key="3"
+                      style={{ width: 280 }}
                       onClick={() => {
                         setUUID2(uuidv4());
                         setAddBooksInfo({
@@ -184,13 +193,16 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      添加临时书籍
+                      <FormattedMessage id="pages.books.collection.action.add_books_to_tmp_storage" />
                     </Menu.Item>
                     <Menu.Item
                       key="4"
+                      style={{ width: 280 }}
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改名称',
+                          title: intl.formatMessage({
+                            id: 'pages.books.collection.action.edit_title',
+                          }),
                           oldValue: item.name,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
@@ -202,13 +214,16 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      修改名称
+                      <FormattedMessage id="pages.books.collection.action.edit_title" />
                     </Menu.Item>
                     <Menu.Item
                       key="5"
+                      style={{ width: 280 }}
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改评分',
+                          title: intl.formatMessage({
+                            id: 'pages.books.collection.action.edit_rating',
+                          }),
                           oldValue: item.star,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
@@ -220,13 +235,16 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      修改评分
+                      <FormattedMessage id="pages.books.collection.action.edit_rating" />
                     </Menu.Item>
                     <Menu.Item
                       key="6"
+                      style={{ width: 280 }}
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改标签',
+                          title: intl.formatMessage({
+                            id: 'pages.books.collection.action.edit_tags',
+                          }),
                           oldValue: item.tags,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
@@ -240,32 +258,39 @@ export default function BookCardList(props: BookCardListProps) {
                         });
                       }}
                     >
-                      修改标签
+                      <FormattedMessage id="pages.books.collection.action.edit_tags" />
                     </Menu.Item>
                     <Menu.Item
                       key="7"
+                      style={{ width: 280 }}
                       onClick={() => {
                         handleOpenForEditCover();
                         setUUIDForEditCover(item.uuid);
                       }}
                     >
-                      修改封面
+                      <FormattedMessage id="pages.books.collection.action.edit_cover" />
                     </Menu.Item>
                     <Menu.Item
                       key="8"
+                      style={{ width: 280 }}
                       onClick={() => {
                         handleClickOpen(item.uuid, 1);
                       }}
                     >
-                      <span style={{ color: 'red' }}>删除 (不删书籍)</span>
+                      <span style={{ color: 'red' }}>
+                        <FormattedMessage id="pages.books.collection.action.remove_but_keep_book" />
+                      </span>
                     </Menu.Item>
                     <Menu.Item
                       key="9"
+                      style={{ width: 280 }}
                       onClick={() => {
                         handleClickOpen(item.uuid, 2);
                       }}
                     >
-                      <span style={{ color: 'red' }}>删除 (删除书籍)</span>
+                      <span style={{ color: 'red' }}>
+                        <FormattedMessage id="pages.books.collection.action.remove_and_remove_book" />
+                      </span>
                     </Menu.Item>
                   </SubMenu>
                 </Menu>,
@@ -361,17 +386,24 @@ export default function BookCardList(props: BookCardListProps) {
           onClose={handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          fullWidth
         >
-          <DialogTitle id="alert-dialog-title">警告</DialogTitle>
+          <DialogTitle id="alert-dialog-title">
+            <FormattedMessage id="pages.warning" />
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {deleteBookInfo.deleteType == 1
-                ? '删除集合将保留书籍,确定删除该集合吗?'
-                : '删除集合将同时删除关联书籍,确定删除该集合吗?'}
+              {deleteBookInfo.deleteType == 1 ? (
+                <FormattedMessage id="pages.books.collection.action.delete_without_books" />
+              ) : (
+                <FormattedMessage id="pages.books.collection.action.delete_with_books" />
+              )}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>取消</Button>
+            <Button onClick={handleClose}>
+              <FormattedMessage id="pages.cancel" />
+            </Button>
             <Button
               onClick={() => {
                 handleClose();
@@ -387,7 +419,7 @@ export default function BookCardList(props: BookCardListProps) {
               }}
               autoFocus
             >
-              确定
+              <FormattedMessage id="pages.ok" />
             </Button>
           </DialogActions>
         </Dialog>
@@ -401,73 +433,76 @@ export default function BookCardList(props: BookCardListProps) {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle id="alert-dialog-title">{'修改集合封面'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="pages.books.collection.action.edit_cover.title" />
+        </DialogTitle>
         <DialogContent style={{ margin: '0 auto' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              '& .MuiTextField-root': { width: '25ch' },
-            }}
-          >
-            <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                封面:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 45 }}>
-                <Dropzone
-                  onDrop={async (acceptedFiles) => {
-                    let base64Str = await toBase64(acceptedFiles[0]);
-                    setFormData({ ...formData, cover: base64Str });
-                  }}
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <section>
-                      <div {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        {formData.cover == null ? (
-                          <Button variant="contained">上传</Button>
-                        ) : (
-                          <Chip
-                            label="封面"
-                            onDelete={() => {
-                              setFormData({
-                                ...formData,
-                                cover: null,
-                              });
-                            }}
-                            deleteIcon={<DeleteIcon />}
-                            variant="outlined"
-                          />
-                        )}
-                      </div>
-                    </section>
-                  )}
-                </Dropzone>
-                <FormHelperText id="standard-weight-helper-text">不能为空</FormHelperText>
-              </div>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseForEditCover}>取消</Button>
-          <Button
-            onClick={() => {
+          <form
+            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+              // event.preventDefault();
+
               let ok = handleEditCollCover();
               if (ok) {
                 handleCloseForEditCover();
               }
             }}
-            autoFocus
           >
-            确认
-          </Button>
-        </DialogActions>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                '& .MuiTextField-root': { width: '25ch' },
+              }}
+            >
+              <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
+                <Typography
+                  style={{ position: 'relative', paddingTop: 5 }}
+                  variant="subtitle1"
+                  gutterBottom
+                  component="div"
+                >
+                  <FormattedMessage id="pages.books.book.create_book_collection.cover" />:
+                </Typography>
+                <div style={{ position: 'absolute', paddingLeft: 45 }}>
+                  <Dropzone
+                    onDrop={async (acceptedFiles) => {
+                      let base64Str = await toBase64(acceptedFiles[0]);
+                      setFormData({ ...formData, cover: base64Str });
+                    }}
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          {formData.cover == null ? (
+                            <Button variant="contained">上传</Button>
+                          ) : (
+                            <Chip
+                              label={
+                                <FormattedMessage id="pages.books.book.create_book_collection.cover" />
+                              }
+                              onDelete={() => {
+                                setFormData({
+                                  ...formData,
+                                  cover: null,
+                                });
+                              }}
+                              deleteIcon={<DeleteIcon />}
+                              variant="outlined"
+                            />
+                          )}
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                </div>
+              </FormControl>
+              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, ml: 1 }}>
+                <FormattedMessage id="pages.books.book.create_book_collection.commit" />
+              </Button>
+            </Box>
+          </form>
+        </DialogContent>
       </Dialog>
 
       <AddBooks

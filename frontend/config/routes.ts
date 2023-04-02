@@ -23,22 +23,23 @@ export default [
   {
     path: '/book_list',
     icon: 'ReadOutlined',
-    name: '书籍',
+    // name: '书籍',
+    name: 'book',
     routes: [
       {
-        name: '集合',
+        name: 'collection',
         icon: 'smile',
         path: '/book_list/colls',
         component: './book_list/book_collections',
       },
       {
-        name: '书库',
+        name: 'library',
         icon: 'smile',
         path: '/book_list/all_books',
         component: './book_list/all_books',
       },
       {
-        name: '临时',
+        name: 'tmp_library',
         icon: 'smile',
         path: '/book_list/tmp_books',
         component: './book_list/tmp_books',
@@ -47,18 +48,18 @@ export default [
   },
   {
     path: '/clipping',
-    name: '高亮笔记',
+    name: 'highlights',
     icon: 'FireOutlined',
     routes: [
       {
         path: '/clipping/colls',
-        name: '集合',
+        name: 'collection',
         icon: 'smile',
         component: './clipping/clipping_collections',
       },
       {
         path: '/clipping/clippings',
-        name: '摘抄',
+        name: 'highlights_list',
         icon: 'smile',
         component: './clipping/clippings',
       },
@@ -67,12 +68,12 @@ export default [
   },
   {
     path: '/book_to_clipping',
-    name: '书籍笔记',
+    name: 'book_to_highlights',
     icon: 'RocketOutlined',
     routes: [
       {
         path: '/book_to_clipping/relation_list',
-        name: '集合',
+        name: 'collection',
         icon: 'smile',
         component: './book_to_clipping/relation_list',
       },
@@ -81,12 +82,12 @@ export default [
   },
   {
     path: '/vocab',
-    name: 'kindle生词本',
+    name: 'kindle_vobulary',
     icon: 'DribbbleOutlined',
     routes: [
       {
         path: '/vocab/list',
-        name: '生词本',
+        name: 'vobulary',
         icon: 'smile',
         component: './vocab',
       },

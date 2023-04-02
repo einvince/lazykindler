@@ -289,14 +289,14 @@ export default function CollectionList(props: ClippingListProps) {
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                       <FormatListNumberedIcon style={{ height: 20 }} />
                       <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {countChOfStr(item.item_uuids, ';')} 个摘抄
+                        {countChOfStr(item.item_uuids, ';')}
                       </Typography>
                     </Box>
 
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                       <TagOutlined style={{ height: 16, paddingLeft: 4.5 }} />
                       <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.tag}
+                        {item.tags}
                       </Typography>
                     </Box>
                     <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>

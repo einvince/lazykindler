@@ -3,17 +3,17 @@ import { createBookCollection, getAllCollections } from '@/services';
 import { preHandleSubjects, toBase64, useWindowDimensions } from '@/util';
 import { DatabaseOutlined, DownOutlined, StarOutlined, TagsOutlined } from '@ant-design/icons';
 import AddIcon from '@mui/icons-material/Add';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Button,
   Chip,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
-  FormHelperText,
+  IconButton,
   Input,
   List,
   ListItem,
@@ -27,6 +27,7 @@ import { Dropdown, Layout, Menu } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
+import { FormattedMessage } from 'umi';
 
 import ContextMenu from '../../book_list/components/ContextMenu';
 import CollectionList from './components/CollectionList';
@@ -39,6 +40,12 @@ enum FilterType {
   Tags = '标签',
 }
 
+const filterTypeMessages = {
+  [FilterType.All]: <FormattedMessage id="pages.books.uncategorized" />,
+  [FilterType.Star]: <FormattedMessage id="pages.books.rating" />,
+  [FilterType.Tags]: <FormattedMessage id="pages.books.labels" />,
+};
+
 type SubHeaerType = {
   Star: Object;
   Tags: Object;
@@ -48,7 +55,7 @@ export default function BookCollections() {
   const [data, setData] = useState<any>([]);
   const { width, height } = useWindowDimensions();
   // 选择的大的分类
-  const [selectedType, setSelectedType] = useState<string>(FilterType.All);
+  const [selectedType, setSelectedType] = useState<any>(filterTypeMessages[FilterType.All]);
   // 选择的大的分类下面的列表
   const [selectedSubType, setSelectedSubType] = useState<string[]>([]);
   // 选择的大的分类下面的列表的小条目
@@ -81,8 +88,8 @@ export default function BookCollections() {
       setAllClippingCollections(data);
       setData(data);
 
-      const star = {};
-      const tag = {};
+      const star: any = {};
+      const tag: any = {};
       _.forEach(data, (item: CollectionDataType) => {
         if (star[item.star] == null) {
           star[item.star] = {};
@@ -91,8 +98,8 @@ export default function BookCollections() {
           star[item.star][item.uuid] = null;
         }
 
-        if (item.tag != null) {
-          let subjectsList = item.tag.split(';');
+        if (item.tags != null) {
+          let subjectsList = item.tags.split(';');
           subjectsList.forEach((subject) => {
             if (tag[subject] == null) {
               tag[subject] = {};
@@ -110,13 +117,13 @@ export default function BookCollections() {
       setClassifiedInfo(allInfo);
 
       switch (selectedType) {
-        case FilterType.All:
+        case filterTypeMessages[FilterType.All]:
           setSelectedSubType([]);
           break;
-        case FilterType.Star:
+        case filterTypeMessages[FilterType.Star]:
           setSelectedSubType(Object.keys(allInfo.Star));
           break;
-        case FilterType.Tags:
+        case filterTypeMessages[FilterType.Tags]:
           setSelectedSubType(Object.keys(allInfo.Tags));
           break;
       }
@@ -129,7 +136,9 @@ export default function BookCollections() {
     fetchClippingCollections();
   }, []);
 
-  const handleCreate = () => {
+  const handleCreate = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     let name = formData['name'];
     let description = formData['description'];
     let tag = formData['tag'];
@@ -163,6 +172,8 @@ export default function BookCollections() {
     createBookCollection(name, 'clipping', description, preHandleSubjects(tag), star, cover).then(
       () => {
         fetchClippingCollections();
+
+        handleClose();
       },
     );
     return true;
@@ -176,14 +187,14 @@ export default function BookCollections() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setSelectedType(FilterType.All);
+              setSelectedType(filterTypeMessages[FilterType.All]);
               setSelectedSubType([]);
 
               setData(allClippingCollections);
             }}
             style={{ paddingLeft: 13 }}
           >
-            未分类
+            <FormattedMessage id="pages.books.uncategorized" />
           </a>
         </Menu.Item>
         <Menu.Item key="star" icon={<StarOutlined />}>
@@ -191,12 +202,12 @@ export default function BookCollections() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setSelectedType(FilterType.Star);
+              setSelectedType(filterTypeMessages[FilterType.Star]);
               setSelectedSubType(Object.keys(classifiedInfo.Star));
             }}
             style={{ paddingLeft: 13 }}
           >
-            评分
+            <FormattedMessage id="pages.books.rating" />
           </a>
         </Menu.Item>
         <Menu.Item key="tag" icon={<TagsOutlined />}>
@@ -204,12 +215,12 @@ export default function BookCollections() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setSelectedType(FilterType.Tags);
+              setSelectedType(filterTypeMessages[FilterType.Tags]);
               setSelectedSubType(Object.keys(classifiedInfo.Tags));
             }}
             style={{ paddingLeft: 13 }}
           >
-            标签
+            <FormattedMessage id="pages.books.labels" />
           </a>
         </Menu.Item>
       </Menu>
@@ -228,7 +239,7 @@ export default function BookCollections() {
     let filteredBooks;
     let o = {};
     switch (selectedType) {
-      case FilterType.Star:
+      case filterTypeMessages[FilterType.Star]:
         o = allInfo.Star[selectedKeyword];
         if (o == null) {
           o = {};
@@ -241,7 +252,7 @@ export default function BookCollections() {
         });
         setData(filteredBooks);
         break;
-      case FilterType.Tags:
+      case filterTypeMessages[FilterType.Tags]:
         o = allInfo.Tags[selectedKeyword];
         if (o == null) {
           o = {};
@@ -286,6 +297,7 @@ export default function BookCollections() {
             {selectedSubType.map((item, index) => (
               <ContextMenu
                 key={index}
+                MenuInfo={[]}
                 Content={
                   <ListItem
                     style={{ padding: 0 }}
@@ -324,171 +336,122 @@ export default function BookCollections() {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle id="alert-dialog-title">{'创建摘抄集合'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {<FormattedMessage id="pages.highlight.create_collection" />}
+        </DialogTitle>
         <DialogContent style={{ margin: '0 auto' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              '& .MuiTextField-root': { width: '25ch' },
-            }}
-          >
-            <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                名称<span color="red">*</span>:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 45 }}>
+          <form onSubmit={handleCreate}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+              }}
+            >
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.books.book.create_book_collection.name" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
+                </Typography>
                 <Input
-                  id="standard-adornment-weight"
-                  aria-describedby="standard-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
+                  id="name"
+                  value={formData.name}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     setFormData({ ...formData, name: event.target.value });
                   }}
+                  style={{ marginTop: -5 }}
                 />
-                <FormHelperText id="standard-weight-helper-text">不能为空</FormHelperText>
-              </div>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                描述:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 45 }}>
+              </FormControl>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.books.book.create_book_collection.description" />:
+                </Typography>
                 <Input
-                  id="standard-adornment-weight"
-                  aria-describedby="standard-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
+                  id="description"
+                  value={formData.age}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     setFormData({
                       ...formData,
                       description: event.target.value,
                     });
                   }}
+                  style={{ marginTop: -5 }}
                 />
-              </div>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                标签<span color="red">*</span>:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 45 }}>
+              </FormControl>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.books.book.create_book_collection.labels" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
+                </Typography>
                 <Input
-                  id="standard-adornment-weight"
-                  aria-describedby="standard-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
+                  id="tag"
+                  value={formData.age}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     setFormData({ ...formData, tag: event.target.value });
                   }}
+                  style={{ marginTop: -5 }}
                 />
-                <FormHelperText id="standard-weight-helper-text">
-                  多个标签分号相隔。不能为空
-                </FormHelperText>
-              </div>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                评分<span color="red">*</span>:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 45 }}>
+              </FormControl>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.books.book.create_book_collection.rating" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
+                </Typography>
                 <Input
-                  id="standard-adornment-weight"
-                  aria-describedby="standard-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
+                  id="star"
+                  value={formData.age}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     setFormData({ ...formData, star: event.target.value });
                   }}
+                  style={{ marginTop: -5 }}
                 />
-                <FormHelperText id="standard-weight-helper-text">
-                  整数,建议最高9分。不能为空
-                </FormHelperText>
-              </div>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                封面<span color="red">*</span>:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 45 }}>
-                <Dropzone
-                  onDrop={async (acceptedFiles) => {
-                    let base64Str = await toBase64(acceptedFiles[0]);
-                    setFormData({ ...formData, cover: base64Str });
-                  }}
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <section>
-                      <div {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        {formData.cover == null ? (
-                          <Button variant="contained">上传</Button>
-                        ) : (
-                          <Chip
-                            label="封面"
-                            onDelete={() => {
-                              setFormData({
-                                ...formData,
-                                cover: null,
-                              });
-                            }}
-                            deleteIcon={<DeleteIcon />}
-                            variant="outlined"
-                          />
-                        )}
-                      </div>
-                    </section>
+              </FormControl>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.books.book.create_book_collection.cover" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Dropzone
+                    onDrop={async (acceptedFiles) => {
+                      let base64Str = await toBase64(acceptedFiles[0]);
+                      setFormData({ ...formData, cover: base64Str });
+                    }}
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <IconButton color="primary" aria-label="upload picture" component="span">
+                            <CloudUploadIcon />
+                          </IconButton>
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                  {formData.cover && (
+                    <Chip
+                      label={
+                        <FormattedMessage id="pages.books.book.create_book_collection.cover" />
+                      }
+                      onDelete={() => {
+                        setFormData({
+                          ...formData,
+                          cover: null,
+                        });
+                      }}
+                      deleteIcon={<DeleteIcon />}
+                      variant="outlined"
+                    />
                   )}
-                </Dropzone>
-                <FormHelperText id="standard-weight-helper-text">不能为空</FormHelperText>
-              </div>
-            </FormControl>
-          </Box>
+                </Box>
+              </FormControl>
+              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, ml: 1 }}>
+                <FormattedMessage id="pages.books.book.create_book_collection.commit" />
+              </Button>
+            </Box>
+          </form>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>取消</Button>
-          <Button
-            onClick={() => {
-              let ok = handleCreate();
-              if (ok) {
-                handleClose();
-              }
-            }}
-            autoFocus
-          >
-            确认
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

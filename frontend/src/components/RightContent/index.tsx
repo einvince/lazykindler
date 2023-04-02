@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from '@mui/material';
 import toast, { Toaster } from 'react-hot-toast';
+import { FormattedMessage, useIntl } from 'umi';
 
 import { SelectLang, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
@@ -31,15 +32,20 @@ const GlobalHeaderRight: React.FC = () => {
   const [deleteType, setDeleteType] = useState<number>(0);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
+  const intl = useIntl();
+
   const handleCloseDeleteDialog = () => {
     setDeleteDialog(false);
   };
 
   const onUploadFiles = () => {
     uploadBooks().then((count: number) => {
-      let message = `成功上传 ${count}本 书籍!`;
+      let message = intl.formatMessage(
+        { id: 'pages.menu.action.list.upload.result' },
+        { n: count },
+      );
       if (Number(count) === 0) {
-        message = '未发现需要上传的新书籍!';
+        message = intl.formatMessage({ id: 'pages.menu.action.list.upload.no_new_books' });
       }
       notify(message);
     });
@@ -47,13 +53,18 @@ const GlobalHeaderRight: React.FC = () => {
 
   const onDeleteAllTmpBooks = () => {
     deleteAllTmpBooks().then(() => {
-      toast('成功删除所有临时书籍!');
+      toast(intl.formatMessage({ id: 'pages.menu.action.list.delete.delete_all_tmp_books' }));
     });
   };
 
   const onDownloadAllBooks = () => {
     downloadAllBooks().then(() => {
-      toast('已成功下载所有书籍，请到下载目录查看新建目录 lazykindler');
+      toast(
+        intl.formatMessage(
+          { id: 'pages.menu.action.list.download.result.info' },
+          { directory: 'lazykindler' },
+        ),
+      );
     });
   };
 
@@ -95,13 +106,11 @@ const GlobalHeaderRight: React.FC = () => {
       label: (
         <Popover
           placement="leftBottom"
-          content={
-            '平台将递归扫描 ~/Download、~/下载、~/Desktop、~/桌面等目录下受支持的电子书文件。相同文件不会重复上传'
-          }
-          title="说明"
+          content={<FormattedMessage id="pages.menu.action.list.upload.info" />}
+          title={<FormattedMessage id="pages.menu.action.hint" />}
         >
           <a target="_blank" rel="noopener noreferrer" onClick={onUploadFiles}>
-            上传文件
+            <FormattedMessage id="pages.menu.action.list.upload" />
           </a>
         </Popover>
       ),
@@ -111,13 +120,11 @@ const GlobalHeaderRight: React.FC = () => {
       label: (
         <Popover
           placement="leftBottom"
-          content={
-            '所有书籍会被自动下载到 ~/Documents/lazykindler 或者 ~/文稿/lazykindler。已经存在的书籍不会被重复下载'
-          }
-          title="说明"
+          content={<FormattedMessage id="pages.menu.action.list.download.info" />}
+          title={<FormattedMessage id="pages.menu.action.hint" />}
         >
           <a target="_blank" rel="noopener noreferrer" onClick={onDownloadAllBooks}>
-            下载所有书籍
+            <FormattedMessage id="pages.menu.action.list.download_all_books" />
           </a>
         </Popover>
       ),
@@ -133,7 +140,7 @@ const GlobalHeaderRight: React.FC = () => {
             setDeleteType(1);
           }}
         >
-          删除所有书籍
+          <FormattedMessage id="pages.menu.action.list.delete_all_books" />
         </a>
       ),
     },
@@ -148,7 +155,7 @@ const GlobalHeaderRight: React.FC = () => {
             setDeleteType(2);
           }}
         >
-          删除所有临时书籍
+          <FormattedMessage id="pages.menu.action.list.delete_all_temporary_books" />
         </a>
       ),
     },
@@ -163,7 +170,7 @@ const GlobalHeaderRight: React.FC = () => {
             setDeleteType(3);
           }}
         >
-          删除摘抄
+          <FormattedMessage id="pages.menu.action.list.delete_highlights" />
         </a>
       ),
     },
@@ -178,7 +185,7 @@ const GlobalHeaderRight: React.FC = () => {
             setDeleteType(4);
           }}
         >
-          删除所有数据
+          <FormattedMessage id="pages.menu.action.list.delete_all_data" />
         </a>
       ),
     },
@@ -190,7 +197,7 @@ const GlobalHeaderRight: React.FC = () => {
         <Dropdown menu={{ items }}>
           <a onClick={(e) => e.preventDefault()}>
             <Space>
-              操作
+              <FormattedMessage id="pages.books.collection.action" />
               <DownOutlined />
             </Space>
           </a>
@@ -208,9 +215,13 @@ const GlobalHeaderRight: React.FC = () => {
           aria-describedby="alert-dialog-description"
           fullWidth
         >
-          <DialogTitle id="alert-dialog-title">警告</DialogTitle>
+          <DialogTitle id="alert-dialog-title">
+            <FormattedMessage id="pages.warning" />
+          </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">确定删除吗</DialogContentText>
+            <DialogContentText id="alert-dialog-description">
+              <FormattedMessage id="pages.menu.action.list.delete.warning" />
+            </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button
@@ -219,7 +230,7 @@ const GlobalHeaderRight: React.FC = () => {
               }}
               autoFocus
             >
-              取消
+              <FormattedMessage id="pages.cancel" />
             </Button>
             <Button
               onClick={() => {
@@ -238,7 +249,7 @@ const GlobalHeaderRight: React.FC = () => {
                 }
               }}
             >
-              确定
+              <FormattedMessage id="pages.ok" />
             </Button>
           </DialogActions>
         </Dialog>

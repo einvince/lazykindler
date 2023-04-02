@@ -16,6 +16,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { Dropdown, Input, Layout, Menu as AntMenu } from 'antd';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
+import { useIntl, FormattedMessage } from 'umi';
 
 import type { BookMetaDataType, CollectionDataType } from '../../data';
 import BookCardList from '../components/BookCardList';
@@ -60,12 +61,20 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 enum FilterType {
-  All = '未分类',
-  Star = '评分',
-  Tags = '标签',
-  Author = '作者',
-  Publisher = '出版社',
+  All,
+  Star,
+  Tags,
+  Author,
+  Publisher,
 }
+
+const filterTypeMessages = {
+  [FilterType.All]: <FormattedMessage id="pages.books.uncategorized" />,
+  [FilterType.Star]: <FormattedMessage id="pages.books.rating" />,
+  [FilterType.Tags]: <FormattedMessage id="pages.books.labels" />,
+  [FilterType.Author]: <FormattedMessage id="pages.books.authors" />,
+  [FilterType.Publisher]: <FormattedMessage id="pages.books.publisher" />,
+};
 
 type SubHeaerType = {
   Star: Object;
@@ -81,12 +90,14 @@ type BooksProps = {
 const Books: FC<BooksProps> = (props: BooksProps) => {
   const { storeType } = props;
 
+  const intl = useIntl();
+
   const [sortTypeValue, setSortTypeValue] = useState<number>(2);
   const [allBooksMeta, setAllBooksMeta] = useState<BookMetaDataType[]>([]);
   const [data, setData] = useState<BookMetaDataType[]>([]);
 
   // 评分或者作者等等大类
-  const [firstLevelType, setFirstLevelType] = useState<string>(FilterType.All);
+  const [firstLevelType, setFirstLevelType] = useState<any>(filterTypeMessages[FilterType.All]);
   // 评分或者书签下面的列表
   const [secondLevelMenuList, setSecondLevelMenuList] = useState<string[]>([]);
 
@@ -123,7 +134,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          书籍排序方式
+          <FormattedMessage id="pages.books.book_sorting" />
         </Button>
         <StyledMenu
           id="demo-customized-menu"
@@ -143,7 +154,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             }}
             disableRipple
           >
-            {'大小 (小->大)'}
+            <FormattedMessage id="pages.books.book_sorting.size.ascending" />
           </MenuItem>
           <MenuItem
             selected={sortTypeValue == 2}
@@ -154,18 +165,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             }}
             disableRipple
           >
-            {'大小 (大->小)'}
-          </MenuItem>
-          <MenuItem
-            selected={sortTypeValue == 3}
-            onClick={() => {
-              handleClose();
-              fetchBooks(3);
-              setSortTypeValue(3);
-            }}
-            disableRipple
-          >
-            {'导入时间 (新->旧)'}
+            <FormattedMessage id="pages.books.book_sorting.size.descending" />
           </MenuItem>
           <MenuItem
             selected={sortTypeValue == 4}
@@ -176,18 +176,18 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             }}
             disableRipple
           >
-            {'导入时间 (旧->新)'}
+            <FormattedMessage id="pages.books.book_sorting.import.ascending" />
           </MenuItem>
           <MenuItem
-            selected={sortTypeValue == 5}
+            selected={sortTypeValue == 3}
             onClick={() => {
               handleClose();
-              fetchBooks(5);
-              setSortTypeValue(5);
+              fetchBooks(3);
+              setSortTypeValue(3);
             }}
             disableRipple
           >
-            {'评分 (高->低)'}
+            <FormattedMessage id="pages.books.book_sorting.import.descending" />
           </MenuItem>
           <MenuItem
             selected={sortTypeValue == 6}
@@ -198,7 +198,18 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             }}
             disableRipple
           >
-            {'评分 (低->高)'}
+            <FormattedMessage id="pages.books.book_sorting.rating.ascending" />
+          </MenuItem>
+          <MenuItem
+            selected={sortTypeValue == 5}
+            onClick={() => {
+              handleClose();
+              fetchBooks(5);
+              setSortTypeValue(5);
+            }}
+            disableRipple
+          >
+            <FormattedMessage id="pages.books.book_sorting.rating.descending" />
           </MenuItem>
           <MenuItem
             selected={sortTypeValue == 7}
@@ -209,7 +220,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             }}
             disableRipple
           >
-            {'作者'}
+            <FormattedMessage id="pages.books.book_sorting.author" />
           </MenuItem>
           <MenuItem
             selected={sortTypeValue == 8}
@@ -220,7 +231,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             }}
             disableRipple
           >
-            {'出版社'}
+            <FormattedMessage id="pages.books.book_sorting.publisher" />
           </MenuItem>
         </StyledMenu>
       </div>
@@ -281,8 +292,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
 
         if (item.tags != null) {
           item.tags.split(';').forEach((subject) => {
-            if (subject == "") {
-              return
+            if (subject == '') {
+              return;
             }
             if (tag[subject] == null) {
               tag[subject] = {};
@@ -331,19 +342,19 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
       setClassifiedInfo(allInfo);
 
       switch (firstLevelType) {
-        case FilterType.All:
+        case filterTypeMessages[FilterType.All]:
           setSecondLevelMenuList([]);
           break;
-        case FilterType.Star:
+        case filterTypeMessages[FilterType.Star]:
           setSecondLevelMenuList(Object.keys(allInfo.Star));
           break;
-        case FilterType.Tags:
+        case filterTypeMessages[FilterType.Tags]:
           setSecondLevelMenuList(Object.keys(allInfo.Tags));
           break;
-        case FilterType.Author:
+        case filterTypeMessages[FilterType.Author]:
           setSecondLevelMenuList(Object.keys(allInfo.Author));
           break;
-        case FilterType.Publisher:
+        case filterTypeMessages[FilterType.Publisher]:
           setSecondLevelMenuList(Object.keys(allInfo.Publisher));
           break;
       }
@@ -368,10 +379,10 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
     let filteredBooks;
     let o = {};
     switch (firstLevelType) {
-      case FilterType.All:
+      case filterTypeMessages[FilterType.All]:
         filteredBooks = allBooksMetaList;
         break;
-      case FilterType.Star:
+      case filterTypeMessages[FilterType.Star]:
         o = allInfo.Star[selectedKeyword];
         if (o == null) {
           o = {};
@@ -384,7 +395,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         });
         setData(filteredBooks);
         break;
-      case FilterType.Tags:
+      case filterTypeMessages[FilterType.Tags]:
         o = allInfo.Tags[selectedKeyword];
         if (o == null) {
           o = {};
@@ -397,7 +408,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         });
         setData(filteredBooks);
         break;
-      case FilterType.Author:
+      case filterTypeMessages[FilterType.Author]:
         o = allInfo.Author[selectedKeyword];
         if (o == null) {
           o = {};
@@ -410,7 +421,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         });
         setData(filteredBooks);
         break;
-      case FilterType.Publisher:
+      case filterTypeMessages[FilterType.Publisher]:
         o = allInfo.Publisher[selectedKeyword];
         if (o == null) {
           o = {};
@@ -429,20 +440,20 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
 
   const headerDropMenu = () => {
     return (
-      <AntMenu style={{ width: '9vw' }}>
+      <AntMenu>
         <AntMenu.Item key="all" icon={<DatabaseOutlined />}>
           <a
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.All);
+              setFirstLevelType(filterTypeMessages[FilterType.All]);
               setSecondLevelMenuList([]);
 
               setData(allBooksMeta);
             }}
             style={{ paddingLeft: 13 }}
           >
-            未分类
+            <FormattedMessage id="pages.books.uncategorized" />
           </a>
         </AntMenu.Item>
         <AntMenu.Item key="star" icon={<StarOutlined />}>
@@ -450,12 +461,12 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Star);
+              setFirstLevelType(filterTypeMessages[FilterType.Star]);
               setSecondLevelMenuList(Object.keys(classifiedInfo.Star));
             }}
             style={{ paddingLeft: 13 }}
           >
-            评分
+            <FormattedMessage id="pages.books.rating" />
           </a>
         </AntMenu.Item>
         <AntMenu.Item key="tag" icon={<TagsOutlined />}>
@@ -463,12 +474,12 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Tags);
+              setFirstLevelType(filterTypeMessages[FilterType.Tags]);
               setSecondLevelMenuList(Object.keys(classifiedInfo.Tags));
             }}
             style={{ paddingLeft: 13 }}
           >
-            标签
+            <FormattedMessage id="pages.books.labels" />
           </a>
         </AntMenu.Item>
         <AntMenu.Item key="author" icon={<UserOutlined />}>
@@ -476,12 +487,12 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Author);
+              setFirstLevelType(filterTypeMessages[FilterType.Author]);
               setSecondLevelMenuList(Object.keys(classifiedInfo.Author));
             }}
             style={{ paddingLeft: 13 }}
           >
-            作者
+            <FormattedMessage id="pages.books.authors" />
           </a>
         </AntMenu.Item>
         <AntMenu.Item key="publisher" icon={<BankOutlined />}>
@@ -489,12 +500,12 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Publisher);
+              setFirstLevelType(filterTypeMessages[FilterType.Publisher]);
               setSecondLevelMenuList(Object.keys(classifiedInfo.Publisher));
             }}
             style={{ paddingLeft: 13 }}
           >
-            出版社
+            <FormattedMessage id="pages.books.publisher" />
           </a>
         </AntMenu.Item>
       </AntMenu>
@@ -503,7 +514,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
 
   const MenuHeader = () => {
     switch (firstLevelType) {
-      case FilterType.All:
+      case filterTypeMessages[FilterType.All]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -515,8 +526,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
-      case FilterType.Author:
+      case filterTypeMessages[FilterType.Author]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -528,9 +538,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
 
-      case FilterType.Publisher:
+      case filterTypeMessages[FilterType.Publisher]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -542,9 +551,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
 
-      case FilterType.Star:
+      case filterTypeMessages[FilterType.Star]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -556,9 +564,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
 
-      case FilterType.Tags:
+      case filterTypeMessages[FilterType.Tags]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -570,10 +577,8 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
       default:
         return null;
-        break;
     }
   };
 
@@ -601,7 +606,7 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
         <Sider style={{ backgroundColor: 'initial', paddingLeft: 0, position: 'fixed' }}>
           <Input
             style={{ marginBottom: 10, marginLeft: -11, height: 45 }}
-            placeholder="搜索"
+            placeholder={intl.formatMessage({ id: 'pages.books.search' })}
             onBlur={onSearchChange}
           />
 

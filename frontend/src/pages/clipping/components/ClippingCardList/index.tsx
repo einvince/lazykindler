@@ -1,7 +1,10 @@
 import { ClippingDataType } from '@/pages/data';
 import { addHighlight, deleteClipping, deleteHighlight, updateClipping } from '@/services';
 import { handleClippingContent } from '@/util';
-import Button from '@mui/material/Button';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import MoreTimeIcon from '@mui/icons-material/MoreTime';
+import { Box, Button, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -14,6 +17,7 @@ import { useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { v4 as uuidv4 } from 'uuid';
 
+import { FormattedMessage, useIntl } from 'umi';
 import ChangeInfo from '../../../book_list/components/ChangeInfoDialog';
 import ChangeClippingColl from './ChangeClippingColl';
 import ClippingDialog from './ClippingDialog';
@@ -42,14 +46,14 @@ const initialHighlightInfo = {
 const initialClippingDialogInfo = {
   uuid: '',
   open: false,
-  // handleClose
   clippingContent: '',
-  // highlights: [],
   book_name: '',
 };
 
 const ClippingCardList = (props: ClippingCardListProps) => {
   const { data, fetchClippings } = props;
+
+  const intl = useIntl();
 
   const [dialogInfo, setDialogInfo] = useState<any>(initialDialogInfo);
   const [changeClippingCollInfo, setChangeClippingCollInfo] = useState<any>({
@@ -136,7 +140,10 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                     placement="top"
                     arrow
                   >
-                    <Button>每页数目{pageNumberSize}</Button>
+                    <Button>
+                      <FormattedMessage id="pages.items_per_page" />
+                      {pageNumberSize}
+                    </Button>
                   </Dropdown>
                 </>
               );
@@ -163,7 +170,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                       });
                     }}
                   >
-                    集合
+                    <FormattedMessage id="pages.books.book.action.collection" />
                   </Button>
                   <Divider orientation="vertical" flexItem />
                   <SubMenu
@@ -172,16 +179,14 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                       zIndex: 10,
                       color: 'dodgerblue',
                       width: '50%',
-                      // textAlign: 'center',
                     }}
-                    // icon={<SettingOutlined />}
-                    title="操作"
+                    title={<FormattedMessage id="pages.books.book.action" />}
                   >
                     <Menu.Item
                       key="1"
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改评分',
+                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_rating' }),
                           oldValue: item.star,
                           allowEmptyStr: false,
                           handleOK: (newValue: any) => {
@@ -193,17 +198,17 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                         });
                       }}
                     >
-                      修改评分
+                      <FormattedMessage id="pages.books.book.action.edit_rating" />
                     </Menu.Item>
                     <Menu.Item
                       key="2"
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改标签',
-                          oldValue: item.tag,
+                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_tags' }),
+                          oldValue: item.tags,
                           allowEmptyStr: true,
                           handleOK: (newValue: any) => {
-                            updateClipping(item.uuid, 'tag', newValue).then(() => {
+                            updateClipping(item.uuid, 'tags', newValue).then(() => {
                               fetchClippings();
                             });
                           },
@@ -211,7 +216,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                         });
                       }}
                     >
-                      修改标签
+                      <FormattedMessage id="pages.books.book.action.edit_tags" />
                     </Menu.Item>
                     <Menu.Item
                       key="3"
@@ -223,13 +228,13 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                         });
                       }}
                     >
-                      修改集合
+                      <FormattedMessage id="pages.books.book.action.edit_collection" />
                     </Menu.Item>
                     <Menu.Item
                       key="4"
                       onClick={() => {
                         setDialogInfo({
-                          title: '修改作者',
+                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_author' }),
                           oldValue: item.author,
                           allowEmptyStr: true,
                           handleOK: (newValue: any) => {
@@ -241,7 +246,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                         });
                       }}
                     >
-                      修改作者
+                      <FormattedMessage id="pages.books.book.action.edit_author" />
                     </Menu.Item>
                     <Menu.Item
                       key="6"
@@ -249,7 +254,9 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                         handleClickOpen(item.uuid);
                       }}
                     >
-                      <span style={{ color: 'red' }}>删除</span>
+                      <span style={{ color: 'red' }}>
+                        <FormattedMessage id="pages.books.book.action.delete" />
+                      </span>
                     </Menu.Item>
                   </SubMenu>
                 </Menu>,
@@ -259,16 +266,24 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                 title={<a>{item.book_name}</a>}
                 description={
                   <div>
-                    作者:
-                    <span style={{ paddingLeft: 5 }}>{item.author}</span>
-                    <br />
-                    时间:
-                    <span style={{ paddingLeft: 5 }}>
-                      {moment.unix(~~item.addDate).format('YYYY-MM-DD HH:mm:ss')}
-                    </span>
-                    <br />
-                    标签:
-                    <span style={{ paddingLeft: 5 }}>{item.tags}</span>
+                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                      <AccountCircleIcon style={{ height: 20 }} />
+                      <Typography variant="body2" style={{ paddingTop: 1.2, marginLeft: -18 }}>
+                        {item.author == null ? '' : item.author}
+                      </Typography>
+                    </Box>
+                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                      <MoreTimeIcon style={{ height: 20 }} />
+                      <Typography variant="body2" style={{ paddingTop: 1.2, marginLeft: -18 }}>
+                        {moment.unix(~~item.addDate).format('YYYY-MM-DD HH:mm:ss')}
+                      </Typography>
+                    </Box>
+                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                      <LocalOfferIcon style={{ height: 20 }} />
+                      <Typography variant="body2" style={{ paddingTop: 1.2, marginLeft: -18 }}>
+                        {item.tags == null ? '' : item.tags}
+                      </Typography>
+                    </Box>
                   </div>
                 }
               />
@@ -340,12 +355,18 @@ const ClippingCardList = (props: ClippingCardListProps) => {
             aria-describedby="alert-dialog-description"
             fullWidth
           >
-            <DialogTitle id="alert-dialog-title">警告</DialogTitle>
+            <DialogTitle id="alert-dialog-title">
+              <FormattedMessage id="pages.warning" />
+            </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description">确定删除摘抄吗？</DialogContentText>
+              <DialogContentText id="alert-dialog-description">
+                <FormattedMessage id="pages.highlight.action.delete.info" />
+              </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose}>取消</Button>
+              <Button onClick={handleClose}>
+                <FormattedMessage id="pages.cancel" />
+              </Button>
               <Button
                 onClick={() => {
                   handleClose();
@@ -355,7 +376,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                 }}
                 autoFocus
               >
-                确定
+                <FormattedMessage id="pages.ok" />
               </Button>
             </DialogActions>
           </Dialog>
@@ -371,11 +392,12 @@ const ClippingCardList = (props: ClippingCardListProps) => {
             aria-describedby="alert-dialog-description"
             fullWidth
           >
-            <DialogTitle id="alert-dialog-title">高亮操作</DialogTitle>
+            <DialogTitle id="alert-dialog-title">
+              <FormattedMessage id="pages.highlight.action.highlight" />
+            </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                请选择要进行的操作! (要删除高亮部分，请完整选择某一高亮部分。否则 删除高亮
-                操作不会成功执行)
+                <FormattedMessage id="pages.highlight.action.highlight.info" />
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -384,7 +406,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                   setHighlightInfo(initialHighlightInfo);
                 }}
               >
-                取消
+                <FormattedMessage id="pages.cancel" />
               </Button>
               <Button
                 onClick={() => {
@@ -394,7 +416,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                   });
                 }}
               >
-                删除高亮
+                <FormattedMessage id="pages.highlight.action.highlight.delete" />
               </Button>
               <Button
                 onClick={() => {
@@ -405,7 +427,7 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                 }}
                 autoFocus
               >
-                确定
+                <FormattedMessage id="pages.ok" />
               </Button>
             </DialogActions>
           </Dialog>

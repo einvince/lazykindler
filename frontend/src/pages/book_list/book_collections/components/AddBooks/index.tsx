@@ -17,6 +17,7 @@ import { Table } from 'antd';
 import _ from 'lodash';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 const RedditTextField = styled((props: TextFieldProps) => (
   <TextField InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>} {...props} />
@@ -47,17 +48,17 @@ type AddBooksProps = {
 
 const columns = [
   {
-    title: '名称',
+    title: <FormattedMessage id="pages.books.collection.action.column.title" />,
     dataIndex: 'name',
     width: '40%',
   },
   {
-    title: '作者',
+    title: <FormattedMessage id="pages.books.collection.action.column.author" />,
     dataIndex: 'author',
     width: '40%',
   },
   {
-    title: '大小',
+    title: <FormattedMessage id="pages.books.collection.action.column.size" />,
     dataIndex: 'size',
     render: (size: any) => {
       return prettyBytes(size);
@@ -77,6 +78,8 @@ export default function AddBooks(props: AddBooksProps) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
 
   const [collInfo, setCollInfo] = useState<any>({});
+
+  const intl = useIntl();
 
   const fetchAllBooks = () => {
     if (book_type === 'coll') {
@@ -180,12 +183,15 @@ export default function AddBooks(props: AddBooksProps) {
         maxWidth="lg"
       >
         <DialogTitle id="alert-dialog-title">
-          {book_type === 'tmp' ? '添加临时书籍' : '添加正式书籍'}
+          {book_type === 'tmp' ? (
+            <FormattedMessage id="pages.books.collection.action.add_books_to_storage.add_temporary_books" />
+          ) : (
+            <FormattedMessage id="pages.books.collection.action.add_books_to_storage.add_permanent_books" />
+          )}
         </DialogTitle>
-        <DialogContent style={{ height: "73vh" }}>
+        <DialogContent style={{ height: '73vh' }}>
           <RedditTextField
-            label="搜索书名或作者"
-            // defaultValue="react-reddit"
+            label={intl.formatMessage({ id: 'pages.books.search' })}
             id="reddit-input"
             variant="filled"
             style={{
@@ -206,17 +212,16 @@ export default function AddBooks(props: AddBooksProps) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleOnClose}>取消</Button>
           <Button
             onClick={() => {
               handleOnOk();
             }}
             autoFocus
           >
-            应用
+            <FormattedMessage id="pages.books.collection.action.add_books_to_storage.apply" />
           </Button>
           <Button onClick={handleOnClose} autoFocus>
-            关闭
+            <FormattedMessage id="pages.books.collection.action.add_books_to_storage.close" />
           </Button>
         </DialogActions>
       </Dialog>

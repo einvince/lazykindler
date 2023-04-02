@@ -14,9 +14,12 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 import Notify from '../../components/Notify';
 
 const AddVocab = () => {
+  const intl = useIntl();
+
   const [bookList, setBookList] = useState<any[]>([]);
   const [selectedBook, setSelectedBook] = useState<string>('');
 
@@ -38,14 +41,16 @@ const AddVocab = () => {
       const response: any = await upsertWordAndUsage(selectedBook, word, usage, translatedUsage);
       if (response.status === 200) {
         setNotificationColor('#4caf50');
-        setNotificationMessage('提交成功');
+        setNotificationMessage(
+          intl.formatMessage({ id: 'pages.vocabulary.save_translate.success' }),
+        );
 
         handleReset();
       }
     } catch (error: any) {
       if (error.status !== 200) {
         setNotificationColor('tomato');
-        setNotificationMessage('出现错误');
+        setNotificationMessage(intl.formatMessage({ id: 'pages.vocabulary.save_translate.fail' }));
       }
     }
   };
@@ -79,13 +84,13 @@ const AddVocab = () => {
             <form onSubmit={handleSubmit}>
               <Box display="flex" flexDirection="column" gap={2}>
                 <TextField
-                  label="生词"
+                  label={<FormattedMessage id="pages.vocabulary.vocabulary" />}
                   value={word}
                   onChange={(e) => setWord(e.target.value)}
                   inputProps={{ style: { height: '10vh' } }}
                 />
                 <TextField
-                  label="用例"
+                  label={<FormattedMessage id="pages.vocabulary.usage" />}
                   value={usage}
                   onChange={(e) => setUsage(e.target.value)}
                   multiline
@@ -94,7 +99,7 @@ const AddVocab = () => {
                   inputProps={{ style: { height: '30vh' } }}
                 />
                 <TextField
-                  label="翻译"
+                  label={<FormattedMessage id="pages.vocabulary.translate" />}
                   value={translatedUsage}
                   onChange={(e) => setTranslatedUsage(e.target.value)}
                   multiline
@@ -111,7 +116,7 @@ const AddVocab = () => {
                       width: 100,
                     }}
                   >
-                    清空
+                    <FormattedMessage id="pages.vocabulary.create.clear" />
                   </Button>
                   <Button
                     type="submit"
@@ -121,7 +126,7 @@ const AddVocab = () => {
                       width: 100,
                     }}
                   >
-                    提交
+                    <FormattedMessage id="pages.vocabulary.create.commit" />
                   </Button>
                 </Box>
               </Box>
@@ -142,7 +147,7 @@ const AddVocab = () => {
             subheader={
               <>
                 <ListSubheader component="h6" sx={{ textAlign: 'center' }}>
-                  书籍列表
+                  <FormattedMessage id="pages.vocabulary.list.book_list" />
                 </ListSubheader>
               </>
             }

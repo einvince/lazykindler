@@ -11,6 +11,8 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 
+import { useIntl } from 'umi';
+
 import BookCardList from '../../../components/BookCardList';
 
 const RedditTextField = styled((props: TextFieldProps) => (
@@ -41,6 +43,8 @@ type CollectionBooksProps = {
 
 export default function CollectionBooks(props: CollectionBooksProps) {
   const { open, handleClose, collection_uuid } = props;
+
+  const intl = useIntl();
 
   // allBooksMeta 用于保留所有数据
   const [allBooksMeta, setAllBooksMeta] = useState<BookMetaDataType[]>([]);
@@ -104,8 +108,8 @@ export default function CollectionBooks(props: CollectionBooksProps) {
     setData(
       _.filter(allBooksMeta, (item: BookMetaDataType) => {
         return (
-            (item.name != null && item.name.includes(keyword)) ||
-            (item.author != null && item.author.includes(keyword))
+          (item.name != null && item.name.includes(keyword)) ||
+          (item.author != null && item.author.includes(keyword))
         );
       }),
     );
@@ -125,7 +129,7 @@ export default function CollectionBooks(props: CollectionBooksProps) {
         <DialogTitle id="alert-dialog-title">{collectionInfo.name}</DialogTitle>
         <DialogContent>
           <RedditTextField
-            label="搜索书名或作者"
+            label={intl.formatMessage({ id: 'pages.books.search' })}
             id="reddit-input"
             variant="filled"
             style={{

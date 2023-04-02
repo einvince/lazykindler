@@ -10,6 +10,7 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { alpha, styled } from '@mui/material/styles';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import ClippingCardList from '../../../components/ClippingCardList';
 
@@ -128,7 +129,7 @@ export default function CollectionClippings(props: CollectionClippingsProps) {
                 <DialogTitle id="alert-dialog-title">{collectionInfo.name}</DialogTitle>
                 <DialogContent>
                     <RedditTextField
-                        label="搜索书名、作者、摘抄"
+                        label={<FormattedMessage id="pages.books.search" />}
                         id="reddit-input"
                         variant="filled"
                         style={{

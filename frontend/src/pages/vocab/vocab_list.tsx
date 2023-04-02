@@ -21,9 +21,12 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 import Notify from '../../components/Notify';
 
 const VocabList = () => {
+  const intl = useIntl();
+
   const [bookList, setBookList] = useState<any[]>([]);
   const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
   const [wordList, setWordList] = useState([]);
@@ -220,15 +223,19 @@ const VocabList = () => {
             subheader={
               <>
                 <ListSubheader component="h6" sx={{ textAlign: 'center' }}>
-                  书籍列表
+                  <FormattedMessage id="pages.vocabulary.list.book_list" />
                 </ListSubheader>
                 <ButtonGroup
                   sx={{ display: 'flex', justifyContent: 'center', marginBottom: 1 }}
                   variant="outlined"
                   size="small"
                 >
-                  <Button onClick={selectAllBooks}>全选</Button>
-                  <Button onClick={resetBooks}>重置</Button>
+                  <Button onClick={selectAllBooks}>
+                    <FormattedMessage id="pages.vocabulary.select_all" />
+                  </Button>
+                  <Button onClick={resetBooks}>
+                    <FormattedMessage id="pages.vocabulary.reset" />
+                  </Button>
                 </ButtonGroup>
               </>
             }
@@ -264,15 +271,19 @@ const VocabList = () => {
             subheader={
               <>
                 <ListSubheader component="h6" sx={{ textAlign: 'center' }}>
-                  单词列表
+                  <FormattedMessage id="pages.vocabulary.list.vocabulary_list" />
                 </ListSubheader>
                 <ButtonGroup
                   sx={{ display: 'flex', justifyContent: 'center', marginBottom: 1 }}
                   variant="outlined"
                   size="small"
                 >
-                  <Button onClick={selectAllWords}>全选</Button>
-                  <Button onClick={resetWords}>重置</Button>
+                  <Button onClick={selectAllWords}>
+                    <FormattedMessage id="pages.vocabulary.select_all" />
+                  </Button>
+                  <Button onClick={resetWords}>
+                    <FormattedMessage id="pages.vocabulary.reset" />
+                  </Button>
                 </ButtonGroup>
               </>
             }
@@ -302,7 +313,7 @@ const VocabList = () => {
             style={{ height: '86vh', overflow: 'auto' }}
             subheader={
               <ListSubheader component="h6" sx={{ textAlign: 'center' }}>
-                用法
+                <FormattedMessage id="pages.vocabulary.list.usage_list" />
               </ListSubheader>
             }
             component="nav"
@@ -314,7 +325,10 @@ const VocabList = () => {
                     <ListItemText
                       primary={
                         <Typography component="span" style={{ color: 'tomato' }}>
-                          <strong>用法</strong>:{' '}
+                          <strong>
+                            <FormattedMessage id="pages.vocabulary.usage" />
+                          </strong>
+                          :{' '}
                         </Typography>
                       }
                       secondary={
@@ -332,7 +346,10 @@ const VocabList = () => {
                     <Grid container alignItems="center">
                       <Grid item>
                         <Typography component="span" style={{ color: '#ee8e70' }}>
-                          <strong>翻译</strong>:{' '}
+                          <strong>
+                            <FormattedMessage id="pages.vocabulary.translate" />
+                          </strong>
+                          :{' '}
                         </Typography>
                       </Grid>
                       <Grid item xs>
@@ -352,13 +369,21 @@ const VocabList = () => {
                               ).then(
                                 () => {
                                   setNotificationColor('#4caf50');
-                                  setNotificationMessage('提交成功');
+                                  setNotificationMessage(
+                                    intl.formatMessage({
+                                      id: 'pages.vocabulary.save_translate.success',
+                                    }),
+                                  );
 
                                   setTranslatedUsage('');
                                 },
                                 () => {
                                   setNotificationColor('tomato');
-                                  setNotificationMessage('出现错误');
+                                  setNotificationMessage(
+                                    intl.formatMessage({
+                                      id: 'pages.vocabulary.save_translate.fail',
+                                    }),
+                                  );
 
                                   setTranslatedUsage('');
                                 },
@@ -377,8 +402,9 @@ const VocabList = () => {
                             }}
                             onClick={() => handleEditClick(index)}
                           >
-                            {usageItem.translated_usage ||
-                              '点击此处以添加翻译, 添加完毕后移开指针自动保存'}
+                            {usageItem.translated_usage || (
+                              <FormattedMessage id="pages.vocabulary.save_translate.info" />
+                            )}
                           </Typography>
                         )}
                       </Grid>
@@ -389,7 +415,10 @@ const VocabList = () => {
                     <ListItemText
                       primary={
                         <Typography component="span" style={{ color: '#cf8f2f' }}>
-                          <strong>书名</strong>:{' '}
+                          <strong>
+                            <FormattedMessage id="pages.vocabulary.book_name" />
+                          </strong>
+                          :{' '}
                         </Typography>
                       }
                       secondary={<Typography component="span">{usageItem.book}</Typography>}
@@ -399,7 +428,10 @@ const VocabList = () => {
                     <ListItemText
                       primary={
                         <Typography component="span" style={{ color: '#498977' }}>
-                          <strong>时间</strong>:{' '}
+                          <strong>
+                            <FormattedMessage id="pages.vocabulary.timestamp" />
+                          </strong>
+                          :{' '}
                         </Typography>
                       }
                       secondary={

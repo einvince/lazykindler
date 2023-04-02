@@ -4,8 +4,8 @@ import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
-
 import Tabs from '@mui/material/Tabs';
+import { FormattedMessage } from 'umi';
 
 import { useState } from 'react';
 
@@ -36,14 +36,14 @@ const VocabComponent = () => {
               style={{ padding: 10 }}
               icon={<FormatListBulletedIcon />}
               iconPosition="start"
-              label="生词列表"
+              label={<FormattedMessage id="pages.vocabulary.list" />}
               value="1"
             />
             <Tab
               style={{ padding: 10 }}
               icon={<DataSaverOnIcon />}
               iconPosition="start"
-              label="新建生词"
+              label={<FormattedMessage id="pages.vocabulary.add" />}
               value="2"
             />
           </Tabs>

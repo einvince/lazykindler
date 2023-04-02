@@ -21,7 +21,6 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  FormHelperText,
   List,
   ListItem,
   ListItemButton,
@@ -33,6 +32,7 @@ import TextField from '@mui/material/TextField';
 import { Dropdown, Input, Layout, Menu as AntMenu } from 'antd';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import ContextMenu from '../../book_list/components/ContextMenu';
 import type { ClippingCollectionDataType, ClippingDataType } from '../../data';
@@ -41,12 +41,20 @@ import ClippingCardList from '../components/ClippingCardList';
 const { Sider, Content } = Layout;
 
 enum FilterType {
-  All = '未分类',
-  Star = '评分',
-  Tags = '标签',
-  Author = '作者',
-  Book = '书名',
+  All,
+  Star,
+  Tags,
+  Author,
+  Book,
 }
+
+const filterTypeMessages = {
+  [FilterType.All]: <FormattedMessage id="pages.books.uncategorized" />,
+  [FilterType.Star]: <FormattedMessage id="pages.books.rating" />,
+  [FilterType.Tags]: <FormattedMessage id="pages.books.labels" />,
+  [FilterType.Author]: <FormattedMessage id="pages.books.authors" />,
+  [FilterType.Book]: <FormattedMessage id="pages.books.book" />,
+};
 
 type SubHeaerType = {
   Star: Object;
@@ -65,7 +73,7 @@ const Clippings: FC = () => {
   const [updateClippingValue, setUpdateClippingValue] = useState<string>('');
 
   // 评分或者作者等等大类
-  const [firstLevelType, setFirstLevelType] = useState<string>(FilterType.All);
+  const [firstLevelType, setFirstLevelType] = useState<any>(filterTypeMessages[FilterType.All]);
   // 评分或者书签下面的列表
   const [secondLevelMenuList, setSecondLevelMenuList] = useState<string[]>([]);
 
@@ -78,6 +86,7 @@ const Clippings: FC = () => {
     Author: {},
     Book: {},
   });
+  const intl = useIntl();
 
   const [formData, setFormData] = useState<any>({});
 
@@ -85,10 +94,14 @@ const Clippings: FC = () => {
 
   const handleClickOpenForCreateClipping = () => {
     setOpenForCreateClipping(true);
+
+    setFormData({});
   };
 
   const handleCloseForCreateClipping = () => {
     setOpenForCreateClipping(false);
+
+    setFormData({});
   };
 
   const fetchClippings = () => {
@@ -170,19 +183,19 @@ const Clippings: FC = () => {
       setClassifiedInfo(allInfo);
 
       switch (firstLevelType) {
-        case FilterType.All:
+        case filterTypeMessages[FilterType.All]:
           setSecondLevelMenuList([]);
           break;
-        case FilterType.Star:
+        case filterTypeMessages[FilterType.Star]:
           setSecondLevelMenuList(Object.keys(allInfo.Star));
           break;
-        case FilterType.Tags:
+        case filterTypeMessages[FilterType.Tags]:
           setSecondLevelMenuList(Object.keys(allInfo.Tags));
           break;
-        case FilterType.Author:
+        case filterTypeMessages[FilterType.Author]:
           setSecondLevelMenuList(Object.keys(allInfo.Author));
           break;
-        case FilterType.Book:
+        case filterTypeMessages[FilterType.Book]:
           setSecondLevelMenuList(Object.keys(allInfo.Book));
           break;
       }
@@ -207,10 +220,10 @@ const Clippings: FC = () => {
     let filteredClippings;
     let o = {};
     switch (firstLevelType) {
-      case FilterType.All:
+      case filterTypeMessages[FilterType.All]:
         filteredClippings = allClippingsList;
         break;
-      case FilterType.Star:
+      case filterTypeMessages[FilterType.Star]:
         o = allInfo.Star[selectedKeyword];
         if (o == null) {
           o = {};
@@ -223,7 +236,7 @@ const Clippings: FC = () => {
         });
         setData(filteredClippings);
         break;
-      case FilterType.Tags:
+      case filterTypeMessages[FilterType.Tags]:
         o = allInfo.Tags[selectedKeyword];
         if (o == null) {
           o = {};
@@ -236,7 +249,7 @@ const Clippings: FC = () => {
         });
         setData(filteredClippings);
         break;
-      case FilterType.Author:
+      case filterTypeMessages[FilterType.Author]:
         o = allInfo.Author[selectedKeyword];
         if (o == null) {
           o = {};
@@ -250,7 +263,7 @@ const Clippings: FC = () => {
         setData(filteredClippings);
         break;
 
-      case FilterType.Book:
+      case filterTypeMessages[FilterType.Book]:
         o = allInfo.Book[selectedKeyword];
         if (o == null) {
           o = {};
@@ -269,20 +282,20 @@ const Clippings: FC = () => {
 
   const headerDropMenu = () => {
     return (
-      <AntMenu style={{ width: '9vw' }}>
+      <AntMenu>
         <AntMenu.Item key="all" icon={<DatabaseOutlined />}>
           <a
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.All);
+              setFirstLevelType(filterTypeMessages[FilterType.All]);
               setSecondLevelMenuList([]);
 
               setData(allClippings);
             }}
             style={{ paddingLeft: 13 }}
           >
-            未分类
+            <FormattedMessage id="pages.books.uncategorized" />
           </a>
         </AntMenu.Item>
         <AntMenu.Item key="star" icon={<StarOutlined />}>
@@ -290,12 +303,12 @@ const Clippings: FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Star);
+              setFirstLevelType(filterTypeMessages[FilterType.Star]);
               setSecondLevelMenuList(Object.keys(classifiedInfo.Star));
             }}
             style={{ paddingLeft: 13 }}
           >
-            评分
+            <FormattedMessage id="pages.books.rating" />
           </a>
         </AntMenu.Item>
         <AntMenu.Item key="tag" icon={<TagsOutlined />}>
@@ -303,12 +316,12 @@ const Clippings: FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Tags);
+              setFirstLevelType(filterTypeMessages[FilterType.Tags]);
               setSecondLevelMenuList(Object.keys(classifiedInfo.Tags));
             }}
             style={{ paddingLeft: 13 }}
           >
-            标签
+            <FormattedMessage id="pages.books.labels" />
           </a>
         </AntMenu.Item>
         <AntMenu.Item key="author" icon={<UserOutlined />}>
@@ -316,12 +329,12 @@ const Clippings: FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Author);
+              setFirstLevelType(filterTypeMessages[FilterType.Author]);
               setSecondLevelMenuList(Object.keys(classifiedInfo.Author));
             }}
             style={{ paddingLeft: 13 }}
           >
-            作者
+            <FormattedMessage id="pages.books.authors" />
           </a>
         </AntMenu.Item>
         <AntMenu.Item key="book" icon={<BookOutlined />}>
@@ -329,12 +342,12 @@ const Clippings: FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              setFirstLevelType(FilterType.Book);
+              setFirstLevelType(filterTypeMessages[FilterType.Book]);
               setSecondLevelMenuList(Object.keys(classifiedInfo.Book));
             }}
             style={{ paddingLeft: 13 }}
           >
-            书名
+            <FormattedMessage id="pages.books.book" />
           </a>
         </AntMenu.Item>
       </AntMenu>
@@ -343,7 +356,7 @@ const Clippings: FC = () => {
 
   const MenuHeader = () => {
     switch (firstLevelType) {
-      case FilterType.All:
+      case filterTypeMessages[FilterType.All]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -355,8 +368,7 @@ const Clippings: FC = () => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
-      case FilterType.Author:
+      case filterTypeMessages[FilterType.Author]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -368,9 +380,8 @@ const Clippings: FC = () => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
 
-      case FilterType.Book:
+      case filterTypeMessages[FilterType.Book]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -382,9 +393,8 @@ const Clippings: FC = () => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
 
-      case FilterType.Star:
+      case filterTypeMessages[FilterType.Star]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -396,9 +406,8 @@ const Clippings: FC = () => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
 
-      case FilterType.Tags:
+      case filterTypeMessages[FilterType.Tags]:
         return (
           <ListSubheader>
             <Dropdown overlay={headerDropMenu}>
@@ -410,10 +419,8 @@ const Clippings: FC = () => {
             </Dropdown>
           </ListSubheader>
         );
-        break;
       default:
         return null;
-        break;
     }
   };
 
@@ -435,24 +442,30 @@ const Clippings: FC = () => {
     );
   };
 
-  const handleCreateClipping = () => {
-    let book_name = formData['book_name'];
-    let author = formData['author'];
-    let clip_content = formData['clip_content'];
+  const handleCreateClipping = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    if (book_name == null || author == null || clip_content == null) {
-      return false;
+    if (formData.book_name == null || formData.book_name.trim() === '') {
+      alert(intl.formatMessage({ id: 'pages.highlight.create.book_name.required' }));
+      return;
     }
-    book_name = book_name.trim();
-    author = author.trim();
-    clip_content = clip_content.trim();
+    if (formData.author == null || formData.author.trim() === '') {
+      alert(intl.formatMessage({ id: 'pages.highlight.create.author.required' }));
+      return;
+    }
+    if (formData.clip_content == null || formData.clip_content.trim() === '') {
+      alert(intl.formatMessage({ id: 'pages.highlight.create.highlight.required' }));
+      return;
+    }
 
-    if (book_name == '' || author == '' || clip_content == '') {
-      return false;
-    }
+    let book_name = formData['book_name'].trim();
+    let author = formData['author'].trim();
+    let clip_content = formData['clip_content'].trim();
 
     createClipping(book_name, author, clip_content).then(() => {
       fetchClippings();
+
+      handleCloseForCreateClipping();
     });
     return true;
   };
@@ -461,11 +474,11 @@ const Clippings: FC = () => {
     <>
       <Layout>
         <Sider
-          style={{ backgroundColor: 'initial', width: 200, paddingLeft: 0, position: 'fixed' }}
+          style={{ backgroundColor: 'initial', paddingLeft: 0, position: 'fixed' }}
         >
           <Input
             style={{ marginBottom: 10, marginLeft: -11, height: 45 }}
-            placeholder="搜索"
+            placeholder={intl.formatMessage({ id: 'pages.books.search' })}
             onBlur={onSearchChange}
           />
           <Button
@@ -477,12 +490,12 @@ const Clippings: FC = () => {
             style={{ marginLeft: -13 }}
             onClick={handleClickOpenForCreateClipping}
           >
-            添加笔记
+            <FormattedMessage id="pages.highlight.create" />
           </Button>
           <List
             sx={{
               bgcolor: 'background.paper',
-              width: 200,
+              // width: 200,
               height: '100vh',
               marginLeft: -1.5,
               overflow: 'auto',
@@ -588,110 +601,69 @@ const Clippings: FC = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth
-        maxWidth="sm"
+        maxWidth="md"
       >
-        <DialogTitle id="alert-dialog-title">{'创建书籍集合'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="pages.highlight.create" />
+        </DialogTitle>
         <DialogContent style={{ margin: '0 auto', height: '55vh' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              '& .MuiTextField-root': { width: '45ch' },
-            }}
-          >
-            <FormControl variant="standard" sx={{ m: 3, mt: 5, width: '45ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                书名<span color="red">*</span>:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 55 }}>
+          <form onSubmit={handleCreateClipping}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+              }}
+            >
+              <FormControl sx={{ m: 1, mt: 3, width: '50ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.highlight.create.book_name" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
+                </Typography>
                 <Input
-                  id="standard-adornment-weight"
-                  aria-describedby="standard-weight-helper-text"
-                  // inputProps={{
-                  //   'aria-label': 'weight',
-                  // }}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  id="name"
+                  onBlur={(event: any) => {
                     setFormData({ ...formData, book_name: event.target.value });
                   }}
-                  style={{ width: '190%' }}
+                  style={{ marginTop: -5 }}
                 />
-                <FormHelperText id="standard-weight-helper-text">不能为空</FormHelperText>
-              </div>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 3, mt: 5, width: '45ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                作者:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 55 }}>
-                <Input
-                  id="standard-adornment-weight"
-                  aria-describedby="standard-weight-helper-text"
-                  // inputProps={{
-                  //   'aria-label': 'weight',
-                  // }}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setFormData({
-                      ...formData,
-                      author: event.target.value,
-                    });
-                  }}
-                  style={{ width: '190%' }}
-                />
-                <FormHelperText id="standard-weight-helper-text">不能为空</FormHelperText>
-              </div>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 3, mt: 5, width: '45ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                内容<span color="red">*</span>:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 55 }}>
+              </FormControl>
+              <FormControl sx={{ m: 1, mt: 3, width: '50ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.highlight.create.author" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
+                </Typography>
                 <TextField
-                  label="笔记"
                   multiline
                   rows={4}
                   variant="outlined"
-                  style={{ width: '157%' }}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setFormData({
-                      ...formData,
-                      clip_content: event.target.value,
-                    });
+                  style={{ width: '100%' }}
+                  onBlur={(event: any) => {
+                    setFormData({ ...formData, author: event.target.value });
                   }}
                 />
-                <FormHelperText id="standard-weight-helper-text">不能为空</FormHelperText>
-              </div>
-            </FormControl>
-          </Box>
+              </FormControl>
+              <FormControl sx={{ m: 1, mt: 3, width: '50ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.highlight.create.highlight" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
+                </Typography>
+                <TextField
+                  multiline
+                  rows={4}
+                  variant="outlined"
+                  style={{ width: '100%' }}
+                  onBlur={(event: any) => {
+                    setFormData({ ...formData, clip_content: event.target.value });
+                  }}
+                />
+              </FormControl>
+              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, ml: 1 }}>
+                <FormattedMessage id="pages.books.book.create_book_collection.commit" />
+              </Button>
+            </Box>
+          </form>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseForCreateClipping}>取消</Button>
-          <Button
-            onClick={() => {
-              let ok = handleCreateClipping();
-              if (ok) {
-                handleCloseForCreateClipping();
-              }
-            }}
-            autoFocus
-          >
-            确认
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

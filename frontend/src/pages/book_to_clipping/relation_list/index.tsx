@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { FormattedMessage } from 'umi';
 import ReaderDialog from '../../../components/Reader';
 
 const initialDialogInfoForReadBook = {
@@ -19,7 +20,7 @@ const App: React.FC = () => {
 
   const columns: any = [
     {
-      title: '书名',
+      title: <FormattedMessage id="pages.book_to_highlight.book_name" />,
       dataIndex: 'book_meta_name',
       key: 'book_meta_name',
       align: 'center',
@@ -42,7 +43,7 @@ const App: React.FC = () => {
       },
     },
     {
-      title: '笔记书名',
+      title: <FormattedMessage id="pages.book_to_highlight.highlight_book_name" />,
       dataIndex: 'clipping_book_name',
       align: 'center',
       width: '30%',
@@ -52,13 +53,13 @@ const App: React.FC = () => {
       },
     },
     {
-      title: '笔记数',
+      title: <FormattedMessage id="pages.book_to_highlight.highlight_Counts" />,
       dataIndex: 'clipping_count',
       align: 'center',
       key: 'clipping_count',
     },
     {
-      title: '状态',
+      title: <FormattedMessage id="pages.book_to_highlight.status" />,
       dataIndex: 'status',
       key: 'status',
       align: 'center',
@@ -67,7 +68,7 @@ const App: React.FC = () => {
       },
     },
     {
-      title: 'Action',
+      title: <FormattedMessage id="pages.book_to_highlight.action" />,
       key: 'action',
       align: 'center',
       width: '18%',
@@ -87,14 +88,14 @@ const App: React.FC = () => {
                 updateBookClippingData(record, 'save');
               }}
             >
-              保存
+              <FormattedMessage id="pages.book_to_highlight.action.save" />
             </Button>
             <Button
               onClick={() => {
                 updateBookClippingData(record, 'delete');
               }}
             >
-              删除
+              <FormattedMessage id="pages.book_to_highlight.action.delete" />
             </Button>
           </ButtonGroup>
         </div>
@@ -108,7 +109,7 @@ const App: React.FC = () => {
                 updateBookClippingData(record, 'delete');
               }}
             >
-              删除
+              <FormattedMessage id="pages.book_to_highlight.action.delete" />
             </Button>
           </ButtonGroup>
         </div>
@@ -122,7 +123,7 @@ const App: React.FC = () => {
                 updateBookClippingData(record, 'save');
               }}
             >
-              保存
+              <FormattedMessage id="pages.book_to_highlight.action.save" />
             </Button>
           </ButtonGroup>
         </div>
@@ -142,11 +143,23 @@ const App: React.FC = () => {
 
   const getStatusText = (status: number) => {
     if (status == 0) {
-      return <a>待确认</a>;
+      return (
+        <a>
+          <FormattedMessage id="pages.book_to_highlight.status.pending" />
+        </a>
+      );
     } else if (status == 1) {
-      return <a>已保存</a>;
+      return (
+        <a>
+          <FormattedMessage id="pages.book_to_highlight.status.saved" />
+        </a>
+      );
     } else if (status == 2) {
-      return <a>已删除</a>;
+      return (
+        <a>
+          <FormattedMessage id="pages.book_to_highlight.status.deleted" />
+        </a>
+      );
     } else {
       return '';
     }

@@ -9,6 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import { Checkbox, Col, Row } from 'antd';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { useEffect, useState } from 'react';
+import { FormattedMessage } from 'umi';
 
 import { CollectionDataType } from '../../book_collections/data';
 
@@ -54,7 +55,9 @@ export default function ChangeBookColl(props: ChangeBookCollProps) {
         // fullWidth
         maxWidth="md"
       >
-        <DialogTitle id="alert-dialog-title">修改集合</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="pages.books.book.action.edit_collection" />
+        </DialogTitle>
         <DialogContent>
           <FormControl sx={{ m: 6, width: 620 }}>
             <Checkbox.Group style={{ width: '100%' }} value={selectedCollUUIDs} onChange={onChange}>
@@ -74,7 +77,9 @@ export default function ChangeBookColl(props: ChangeBookCollProps) {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>取消</Button>
+          <Button onClick={handleClose}>
+            <FormattedMessage id="pages.cancel" />
+          </Button>
           <Button
             onClick={() => {
               handleClose();
@@ -84,7 +89,7 @@ export default function ChangeBookColl(props: ChangeBookCollProps) {
             }}
             autoFocus
           >
-            确定
+            <FormattedMessage id="pages.ok" />
           </Button>
         </DialogActions>
       </Dialog>
