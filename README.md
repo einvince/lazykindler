@@ -2,11 +2,13 @@
 *[简体中文](README-zh.md) ∙ [繁體中文](README-zh-Hant.md)∙ [Русский](README-ru.md)∙ [Português](README-pt.md)∙ [한국어](README-ko.md)∙ [日本語](README-ja.md)∙ [Bahasa Indonesia](README-id.md)∙ [Français](README-fr.md)∙ [Deutsch](README-de.md)
 
 
+# Lazy Kindler
+<br>
+
 <!-- ![cooltext400798739959192](https://user-images.githubusercontent.com/16133390/147348820-9db84863-9431-4e67-814c-f1e1ddde8372.png) -->
 
 <img src="./header.svg" width="800" height="400" alt="Click to see the source">
 
-# Lazy Kindler
 
 # ✨ Features
 
