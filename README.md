@@ -1,180 +1,182 @@
+🌍
+*[简体中文](README-zh.md) 
+
+
 <!-- ![cooltext400798739959192](https://user-images.githubusercontent.com/16133390/147348820-9db84863-9431-4e67-814c-f1e1ddde8372.png) -->
 
 <img src="./header.svg" width="800" height="400" alt="Click to see the source">
 
 # Lazy Kindler
 
+# ✨ Features
 
-# ✨ 特性
+- 🌈 Import books and display the book list efficiently.
+- 💅 Create collections, such as a collection of sci-fi novels or martial arts novels.
+- 🚀 Multi-dimensional display, show book list by title, author, rating, collection, tags, etc.
+- 🛡 Search for books using any keyword, such as title, author, or publisher.
+- 📦 Download books, either through right-click context menu or by downloading all books managed by the platform.
+- 🛡 Book reading, the platform supports a book reading feature.
+- 📦 Backup function, the platform uses `sqlite3` for the database and stores all books in a designated directory, making it easy to backup.
+- 🎻 Import highlighted notes automatically when connecting the computer to `kindle`.
+- 📣 Import highlighted notes from the `静读天下apk` (Jing Du Tian Xia) on Android devices.
+- 🎺 Highlighted notes, supports `secondary highlighting` and `secondary highlighting deletion` for imported notes.
+- 🥁 Add comments to highlighted notes.
+- 🎻 Create collections for highlighted notes and manage them categorically.
+- 🚀 Kindle Vocabulary Builder, the platform supports importing books, words, and examples from the kindle vocabulary builder.
 
-- 🌈 书籍导入，并以高效的方式展示书籍列表。
-- 💅 创建合集，比如科幻小说集合、武侠小说集合。
-- 🚀 多维度展示，可以从书名、作者、评分、集合、标签等多维度展示书籍列表。
-- 🛡 搜索书籍，可以从书名、作者、出版社等任何一个关键词搜索相关书籍。
-- 📦 下载书籍，可以右键菜单下载书籍，也可以下载平台管理的所有书籍。
-- 🛡 书籍阅读，平台支持书籍阅读功能。
-- 📦 备份功能，平台数据库采用了 `sqlite3`，并且所有书籍都放在了指定目录，十分适合备份。
-- 🎻 高亮笔记，电脑连接 `kindle` 后，平台可以自动导入高亮笔记。
-- 📣 高亮笔记，安卓平台支持导入 `静读天下apk` 导出的笔记文件。
-- 🎺 高亮笔记，支持对导入平台的高亮笔记做`二次高亮`、`二次高亮删除`。
-- 🥁 高亮笔记，平台支持对高亮笔记添加评论。
-- 🎻 高亮笔记，可以创建集合并对高亮笔记进行分类管理。
-- 🚀 kindle生词本，"生词本"是kindle的一个功能, 平台支持导入kindle生词本中的书籍、单词和用例。
+# Supported Platforms
 
-# 支持的平台
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Currently only adapted for the `mac` platform, there may be unknown errors when running on the `windows` platform.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目前只适配了 `mac` 平台，在 `windows` 平台运行会有未知错误。
+# Supported eBook Formats
 
-# 支持的电子书类型
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mobi and azw3. Other types of eBooks will be automatically ignored during import.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mobi 和 azw3。其他类型的电子书在导入时会自动被忽略。
+# Problem Solved
 
-# 解决的问题
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从网上下载了**数千本**电子书以后，如何高效的管理这些电子书？
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After downloading **thousands** of eBooks from the internet, how do you efficiently manage them?
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;各种电子书的质量参差不齐，有普通作家写的，也有世界大文豪写的。种类也很多，有科幻类、言情类、玄幻类型等等。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The quality of various eBooks varies greatly, some written by ordinary authors and others by world-renowned writers. There are also many different genres, such as sci-fi, romance, fantasy, and more.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果每次找书都在一个包含了几千本书的目录里查找，想想都脑壳疼。因此有必要对这些电子书使用恰当的方式管理起来，方便我们使用特定的偏好在一个小范围里查找电子书，从而快速找到希望寻找的书籍，避免浪费过多查找时间。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If you have to search for a book in a directory containing thousands of books each time, it's headache-inducing. Therefore, it's necessary to manage these eBooks in an appropriate way, allowing us to search for books within a smaller range based on specific preferences, quickly find the desired book, and avoid wasting too much time on searching.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`lazykindler`因此横空出世。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`lazykindler` is born for this purpose.
 
-# 功能介绍
+# Feature Introduction
 
-## 1. 书籍导入
+## 1. Book Import
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击`上传文件`按钮，平台将递归扫描 `~/Download`、`~/下载`、`~/Desktop`、`~/桌面` 等目录下受支持的电子书文件。相同文件不会重复上传。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Click the `Upload File` button, and the platform will recursively scan supported eBook files in directories like `~/Download`, `~/下载`, `~/Desktop`, `~/桌面`, etc. Duplicate files will not be uploaded again.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目前仅支持导入 `mobi` 和 `azw3` 格式的电子书, 平台不提供电子书格式转换功能。其实要找指定格式的电子书很容易，我一般在这个网站找电子书 http://www.fast8.com 。 这个网站的好处是书籍全，同时下载时提供了多种格式选择，直接下载指定格式的书籍即可。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Currently, only `mobi` and `azw3` formats are supported for import, and the platform does not provide an eBook format conversion feature. It's easy to find eBooks in specific formats; I usually find them on this website: http://www.fast8.com. The advantage of this site is that it offers a wide selection of books, and multiple format options are available when downloading. Simply download the books in the desired format.
 
-## 2. 给书籍添加元数据
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以对书籍执行 修改评分、标签、集合、作者、出版社、封面 等操作。需要注意的是这些操作并不会真正去修改书籍文件本身，而是在数据库添加记录。
+## 2. Add Metadata to Books
 
-## 3. 书籍信息解析
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can modify the book's rating, tags, collection, author, publisher, and cover. Note that these operations will not actually modify the book file itself but will add records to the database.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;导入电子书以后，平台会自动从电子书文件里提取数据用于信息展示和书籍管理。
+## 3. Book Information Parsing
 
-## 4. 集合
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After importing eBooks, the platform will automatically extract data from the eBook files for information display and book management.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以创建书籍的集合，比如 `科幻小书集合`、`奇幻小说集合`、`言情小说集合`等等，并给集合添加自己喜欢的有代表性的封面，可以给集合`打分`、`添加标签`。每个集合都可以从书库中选择并添加书籍，还可以对集合进行打分、添加标签、添加封面等等操作。当我们有了多个集合，以后可以直接从这些集合中寻找书籍。
+## 4. Collections
 
-## 5. 展示
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can create collections of books, such as `Science Fiction Collection`, `Fantasy Novel Collection`, `Romance Novel Collection`, and so on. Add representative covers to the collections you like, and you can `rate` and `add tags` to the collections. Each collection can have books selected and added from the library, and you can also rate, add tags, and add covers to the collections. Once you have multiple collections, you can search for books directly from these collections in the future.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为了支持从不同维度展示书籍，我们可以给书籍`打分`和`添加标签`，还可以`修改作者`以及`修改出版社`，书籍可以从`评分`、`标签`、`作者`、`出版社`等不同维度进行展示。另外还可以`修改书籍封面`。
+## 5. Display
 
-## 6. 下载
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To support displaying books from different dimensions, you can `rate` and `add tags` to books, as well as `modify authors` and `modify publishers`. Books can be displayed from various dimensions such as `rating`, `tags`, `author`, and `publisher`. Additionally, you can `modify the book cover`.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;平台里的书籍都可以在书籍卡片的`操作`里点击`下载`，然后书籍会被下载并存放到用户主目录的 `下载` 或者 `Download`。在平台首页点击`下载所有书籍`会把书籍下载到用户主目录的`文稿` 或者 `Documents`下的 `lazykindler`目录。多次点击`下载所有书籍`并不会重复下载已经存在的书籍。
+## 6. Download
 
-## 7. 阅读
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Books in the platform can be downloaded by clicking the `Download` button in the `Operation` section of the book card. The downloaded books will be saved in the user's home directory under `Download` or `下载`. Clicking `Download All Books` on the homepage will download all books to the `Documents` or `文稿` folder under the `lazykindler` directory in the user's home directory. Clicking `Download All Books` multiple times will not re-download existing books.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;平台提供了阅读书籍的基本功能。目前我没有找到使用 `reactjs` 实现的阅读`mobi`和`azw3`这两种格式电子书的库，因此在第一次点击`阅读书籍`的按钮时，平台会把这两种格式转换为 `epub`格式，使用的工具是 `/Applications/calibre.app/Contents/MacOS/ebook-convert`，因此使用平台时要求电脑要安装 `calibre`，否则阅读书籍功能将无法正常工作。只有在第一次点击`阅读书籍`时涉及格式转换，此时页面可能出现短暂的无法响应的问题，这是正常的，等待时间和电子书大小相关，一般都很快，后面再次打开就快了。转换后的书籍被存放到了平台主目录下的 `backend/data`。
+## 7. Reading
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The platform provides basic functions for reading books. Currently, I have not found a library to implement reading `mobi` and `azw3` formats using `reactjs`. Therefore, when clicking the `Read Book` button for the first time, the platform will convert these two formats to `epub` format. The tool used for conversion is `/Applications/calibre.app/Contents/MacOS/ebook-convert`, so the computer needs to have `calibre` installed to use the book reading function properly. The conversion is only required the first time you click `Read Book`. The page may become unresponsive for a short period, which is normal. The waiting time depends on the size of the e-book, but it's usually fast. Converted books are stored in the `backend/data` directory of the main platform.
 <br />
 
-## 8. 处理流程
+## 8. Processing Workflow
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在 `书籍 -> 书库` 页面下展示的书籍属于正式存储的书籍，刚导入的书籍会被展示在 `书籍 -> 临时` 页面。(除了页面上位置的区分，正式的和临时的书籍在后台没有多大区别)。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The books displayed on the `Books -> Library` page are officially stored books, while newly imported books are displayed on the `Books -> Temporary` page. (Other than the difference in page locations, there is not much difference between official and temporary books in the backend).
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`临时`书籍被添加到任意集合以后，会从`书籍 -> 临时` 转移到 `书籍 -> 书库` 。这样做的目的是**区分正式存储的书籍和临时导入的书籍。正式存储的书籍经过了筛选，删掉了不喜欢的书籍，并且进行了分类，而临时导入的书籍一般五花八门。**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After a `temporary` book is added to any collection, it will be moved from `Books -> Temporary` to `Books -> Library`. The purpose of this is to **distinguish between officially stored books and temporarily imported books. Officially stored books have been filtered, unwanted books removed, and categorized, while temporarily imported books tend to be diverse.**
 
-## 9. 备份
+## 9. Backup
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数据库采用的是 `sqlite3`，位置是 `backend/lazykindler.db`。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The database used is `sqlite3`, located at `backend/lazykindler.db`.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;初次启动平台时，会自动创建并初始化该数据库文件。该文件包含了平台除书籍外的其余所有数据信息。往平台导入的书籍被复制到了 `backend/data` 目录下。需要注意的是，为了方便平台内部操作，`backend/data` 目录下的书籍名后面都被添加了 书籍的`md5`值。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the platform is first launched, the database file will be automatically created and initialized. This file contains all data information in the platform except for the books. Imported books are copied to the `backend/data` directory. Note that for easier internal platform operation, the book names in the `backend/data` directory are appended with the book's `md5` value.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果要对平台里所有书籍以及数据进行备份，只需要保存 `backend/lazykindler.db` 和 `backend/data` ，下次在其他地方启动服务前，把`backend/lazykindler.db` 和 `backend/data` 复制到对应位置即可。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To back up all books and data in the platform, simply save `backend/lazykindler.db` and `backend/data`. To start the service in another location next time, copy `backend/lazykindler.db` and `backend/data` to the corresponding positions.
 
-## 10. 导入 kindle 高亮笔记
+## 10. Import Kindle highlights
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这个功能目前只支持 mac 平台。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This feature is currently only supported on the Mac platform.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;平台会自动检测 `kindle` 是否连接，`kindle` 连接电脑后，平台会把 `kindle` 的 `My Clippings.txt` 导入到系统，用于统一管理和多维度展示。当 `kindle` 的 `My Clippings.txt` 文件发生变化，平台会自动导入 `My Clippings.txt` 里新增的部分，旧的数据不会重复导入。用户只要在在电脑连接`kindle`后刷新一下页面就可以看到新增内容了。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The platform will automatically detect whether the `kindle` is connected. When the `kindle` is connected to the computer, the platform will import the `My Clippings.txt` file from the `kindle` for unified management and multi-dimensional display. When the `kindle`'s `My Clippings.txt` file changes, the platform will automatically import the newly added content in `My Clippings.txt`, and the old data will not be imported repeatedly. Users can see the newly added content by refreshing the page after connecting the `kindle` to the computer.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;需要指出的是，`kindle` 会把用户添加的高亮笔记处理成一坨没有换行的文字，即使这是多个段落的内容。`layerkindler` 通过巧妙的方式，在导入 `kindle` 的 `My Clippings.txt`文件时，自动识别并进行了换行处理，如下所示。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It should be noted that the `kindle` processes the user-added highlight notes into a chunk of text without line breaks, even if it is the content of multiple paragraphs. `lazykindler` cleverly recognizes and processes line breaks when importing the `kindle`'s `My Clippings.txt` file, as shown below.
 
 <img src="https://user-images.githubusercontent.com/16133390/210229975-4e7145e7-5d91-4aff-85ff-f5550fd7fe2c.png" width="66%">
 
+## 11. Perform secondary highlighting on highlighted notes
 
-## 11. 对高亮笔记进行二次高亮操作
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高亮笔记是我们在读书时对有感触的文字进行高亮操作后记录下来的部分文字或者相关段落，往往是因为其中一句话或者一个词对我们有某种触动。当我们把高亮笔记导入平台后，在后期整理时，有必要对当时引起你共鸣的句或词进行高亮操作，方便高亮显示引起你共鸣那一小段文字。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Highlighted notes are part of the text or related paragraphs that we highlight and record when reading a book, often because a sentence or a word in it has a certain impact on us. After importing the highlighted notes into the platform, it is necessary to highlight the sentences or words that resonated with you at that time during the subsequent sorting process, making it easier to highlight and display that small section of text that resonated with you.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用 `lazykindler`，你可以很轻易的做二次高亮操作。只要选中相关文字，接着在自动弹出的对话框里点击`确定`即可。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Using `lazykindler`, you can easily perform secondary highlighting. Just select the relevant text and click `OK` in the automatically popped-up dialog box.
 
 <img src="https://user-images.githubusercontent.com/16133390/210230077-c9a4532b-aafc-4ba2-a163-cd151c98d831.png" width="66%">
 
-## 12. 对高亮笔记添加评论
+## 12. Add comments to highlighted notes
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以记录一下引起你共鸣的这段文字的一些想法。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can record some thoughts about the text that resonated with you.
 
 <img width="1379" alt="Xnip2023-02-05_15-19-18" src="https://user-images.githubusercontent.com/16133390/216806787-4b76a541-608d-4e8e-9d8e-2651bf7842ef.png">
 
+## 13. Import highlights from Jingdu Tianxia apk
 
-## 13. 导入 静读天下 apk 高亮笔记
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`静读天下apk`是一个安卓平台较为流行的阅读器，目前我在海信阅读器上使用这款软件看书，该软件也支持添加高亮笔记。于是我对该软件高亮笔记的导入也做了支持。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Jingdu Tianxia apk` is a popular reader on the Android platform. I currently use this software to read books on Hisense e-reader, and the software also supports adding highlighted notes. So I added support for importing highlighted notes from this software.
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从`静读天下apk`导出的高亮笔记文件的格式是`.mrexpt`。将该文件放在`~/Download`、`~/下载`、`~/Desktop`、`~/桌面` 等任何一个目录下，平台可以自动完成导入操作。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The format of the highlighted notes file exported from `Jingdu Tianxia apk` is `.mrexpt`. Place this file in any directory such as `~/Download`, `~/下载`, `~/Desktop`, `~/桌面`, etc., and the platform can automatically complete the import operation.
 
+## 14. Import Kindle Vocabulary Builder
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vocabulary Builder is a feature in Kindle that records words or phrases looked up while reading a book. This method can be used to read English original books and record words, which can be used for learning and reviewing these words later. The platform supports importing these vocabularies.
 
-## 14. 导入 kindle 生词本
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生词本是kindle中的一个功能，用于记录阅读书籍过程查询过的字或者词，通过这种方式阅读英文原版书籍记录单词，后续可以用来学习和复习这些单词。平台支持导入这些生词。
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在支持导入这些生词的基础上，平台提供了良好的界面用于展示这些信息，还可以手动创建生词和用例，同时可以给用例增加翻译。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Based on importing these vocabularies, the platform provides a good interface for displaying this information, and you can manually create vocabulary and examples, as well as add translations to examples.
 
 <img width="1322" alt="Xnip2023-03-31_23-23-41" src="https://user-images.githubusercontent.com/16133390/229163528-952ee43f-bf31-43a7-b39b-98d637e584da.png">
 <img width="1320" alt="Xnip2023-03-31_23-23-57" src="https://user-images.githubusercontent.com/16133390/229163550-8c321a41-7df4-41af-9bd0-fd765e113a1f.png">
 
+# System Requirements
 
-# 运行环境要求
-
-`python 3.10.4` 
+`python 3.10.4`
 
 `nodejs v19.6.0`
 
 `Calibre`
 
-其他版本未经测试
+Other versions are untested
 
-# 启动服务
+# Start the Service
 
-## 安装依赖
+## Install Dependencies
 
-1. 在 `backend` 目录执行
+1. Execute in `backend` directory
+
 ```
 pip3 install -r requirements.txt
 ```
-2. 如果需要使用 `chatgpt` 功能，请在 `backend/config.ini` 中配置 `chatgpt` 的 key。OpenAi 官网生成key的地址是 `https://platform.openai.com/account/api-keys`。
 
-3. 在 `frontend` 目录执行
+2. If you need to use the `chatgpt` feature, please configure the `chatgpt` key in `backend/config.ini`. The address to generate the key on the OpenAi official website is `https://platform.openai.com/account/api-keys`.
+
+3. Execute in `frontend` directory
 
 ```
 yarn install
 ```
 
-## 启动服务
+## Start the Service
 
 ```
 ./start.sh
 ```
 
-然后浏览器访问 http://localhost:8000
+Then visit http://localhost:8000 in your browser
 
-## 停止服务
+## Stop the Service
 
 ```
 ./stop.sh
 ```
 
-## 注意
+## Note
 
-平台仅为个人设计，没有登陆注册等功能。
+The platform is designed for individuals and does not have features like login and registration.
 
-# 平台展示
+# Platform Showcase
 
-下面是我本地自己上传了书籍并配置了集合后的截图
+Below are screenshots of my local setup after uploading books and configuring collections
 
 <img width="1418" alt="1" src="https://user-images.githubusercontent.com/16133390/216806475-97ee4960-40cc-4649-b414-0687724bb6ad.png">
 <br />
@@ -191,10 +193,10 @@ yarn install
 
 <br />
 
-# 其他
+# Other
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用于 `kindle` 的相关工具最有名的应该是 `calibre`，但是这个软件的功能偏向于 "编辑"，对于电子书的多维度展示做的相对简陋，因此打算自己写一个贴合实际需求的专门用来管理电子书的工具。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The most famous tool for `kindle` should be `calibre`, but the functionality of this software is more focused on "editing", and the multi-dimensional display of ebooks is relatively simple. Therefore, I plan to write a tool specifically for managing ebooks that meets practical needs.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目前正在抽空开发，如果您也喜欢看电子书，并且对管理电子书有功能建议，不妨提一下 issue。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Currently, I am developing this tool in my spare time. If you also like reading ebooks and have suggestions for ebook management features, feel free to raise an issue.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有任何使用上的问题或者功能需求，请联系作者，邮箱: wupengcn301@gmail.com，微信: leowucn。谢谢
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If you have any issues or feature requests, please contact the author, email: wupengcn301@gmail.com, WeChat: leowucn. Thank you.
