@@ -72,6 +72,7 @@ def delete_all_colls_hard():
         delete_colls_with_items(coll["uuid"])
         common.delete_cover(coll["uuid"])
         db.run_sql(f"delete from coll where uuid='{coll['uuid']}';")
+    common.clean_sqlite_sequence()
     return "success"
 
 

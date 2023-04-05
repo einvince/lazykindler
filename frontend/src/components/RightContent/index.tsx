@@ -3,6 +3,7 @@ import {
   deleteAllClipping,
   deleteAllCollections,
   deleteAllTmpBooks,
+  deleteAllVocabRelatedData,
   downloadAllBooks,
   uploadBooks,
 } from '@/services';
@@ -246,6 +247,7 @@ const GlobalHeaderRight: React.FC = () => {
                   deleteAllBooks();
                   deleteAllClipping();
                   deleteAllCollections();
+                  deleteAllVocabRelatedData()
                 }
               }}
             >

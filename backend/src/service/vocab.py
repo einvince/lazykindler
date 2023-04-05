@@ -7,7 +7,7 @@ from flask import jsonify
 import json
 
 from ..database.database import db
-from ..helper import vocab
+from ..helper import vocab, common
 
 
 # vocab_path = "/Users/wupeng/Documents/vocab.db"
@@ -121,6 +121,12 @@ def upsert_word_and_usage(book_key, word, usage, translated_usage):
             word,
         )
     vocab.upsert_vocab_words_usage_if_need(book_key, word, usage, translated_usage)
+    return "success"
+
+
+def delete_all_vocab_related_data():
+    vocab.delete_all_vocab_related_data()
+    common.clean_sqlite_sequence()
     return "success"
 
 

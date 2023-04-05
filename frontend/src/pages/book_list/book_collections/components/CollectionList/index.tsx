@@ -1,4 +1,3 @@
-import { CollectionDataType } from '@/pages/data';
 import {
   deleteCollectionWithBooks,
   deleteCollectionWithoutBooks,
@@ -8,10 +7,12 @@ import {
 import { countChOfStr, preHandleSubjects, toBase64 } from '@/util';
 import { SettingOutlined } from '@ant-design/icons';
 import ArchiveIcon from '@mui/icons-material/Archive';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import StarIcon from '@mui/icons-material/Star';
+import Masonry from '@mui/lab/Masonry';
 import {
   Box,
   Button,
@@ -22,21 +23,40 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
+  IconButton,
   Typography,
 } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import { Card, List as AntList, Menu } from 'antd';
-import { useState } from 'react';
+import type { MenuProps } from 'antd';
+import { Card, Menu } from 'antd';
+import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 
+import { CollectionDataType } from '@/pages/data';
 import ChangeInfo from '../../../components/ChangeInfoDialog';
 import Cover from '../../../components/Cover';
 import AddBooks from '../AddBooks';
 import CollectionBooks from '../CollectionBooks';
 
-const { SubMenu } = Menu;
+type MenuItem = Required<MenuProps>['items'][number];
+
+function getItem(
+  label: React.ReactNode,
+  key?: React.Key | null,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  theme?: 'light' | 'dark',
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    theme,
+  } as MenuItem;
+}
 
 type BookCardListProps = {
   data: any;
@@ -91,24 +111,23 @@ export default function BookCardList(props: BookCardListProps) {
   // 0 初始值
   // 1 删除集合时不删除书籍
   // 2 删除集合时删除书籍
-  const handleClickOpen = (uuid: string, deleteType: number) => {
+  const handleClickOpenForDeleteBook = (uuid: string, deleteType: number) => {
     setDeleteBookInfo({ uuid, deleteType });
     setOpenDeleteBook(true);
   };
 
-  const handleClose = () => {
+  const handleCloseForDeleteBook = () => {
     setOpenDeleteBook(false);
-    setDialogInfo(initialDialogInfo);
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialogForChangeValue = () => {
     setDialogInfo(initialDialogInfo);
   };
 
   const handleEditCollCover = () => {
     let cover = formData['cover'];
 
-    if (cover == null || cover.trim() == '') {
+    if (cover === undefined || cover.trim() === '') {
       return false;
     }
 
@@ -120,262 +139,216 @@ export default function BookCardList(props: BookCardListProps) {
     return true;
   };
 
+  const actionMenuList = [
+    getItem(<FormattedMessage id="pages.books.collection.action" />, 'sub4', <SettingOutlined />, [
+      getItem(
+        <FormattedMessage id="pages.books.collection.action.add_books_to_storage" />,
+        'add_books_to_storage',
+      ),
+      getItem(
+        <FormattedMessage id="pages.books.collection.action.add_books_to_tmp_storage" />,
+        'add_books_to_tmp_storage',
+      ),
+      getItem(<FormattedMessage id="pages.books.collection.action.edit_title" />, 'edit_title'),
+      getItem(<FormattedMessage id="pages.books.collection.action.edit_rating" />, 'edit_rating'),
+      getItem(<FormattedMessage id="pages.books.collection.action.edit_tags" />, 'edit_tags'),
+      getItem(<FormattedMessage id="pages.books.collection.action.edit_cover" />, 'edit_cover'),
+      getItem(
+        <span style={{ color: 'red' }}>
+          <FormattedMessage id="pages.books.collection.action.remove_but_keep_book" />
+        </span>,
+        'remove_but_keep_book',
+      ),
+      getItem(
+        <span style={{ color: 'red' }}>
+          <FormattedMessage id="pages.books.collection.action.remove_and_remove_book" />
+        </span>,
+        'remove_and_remove_book',
+      ),
+    ]),
+  ];
+
+  const onClickActionMenu = (key: string, item: CollectionDataType) => {
+    switch (key) {
+      case 'add_books_to_storage':
+        setUUID2(uuidv4());
+        setAddBooksInfo({
+          open: true,
+          collection_uuid: item.uuid,
+          book_type: 'no_tmp',
+        });
+        break;
+      case 'add_books_to_tmp_storage':
+        setUUID2(uuidv4());
+        setAddBooksInfo({
+          open: true,
+          collection_uuid: item.uuid,
+          book_type: 'tmp',
+        });
+        break;
+      case 'edit_title':
+        setDialogInfo({
+          title: intl.formatMessage({
+            id: 'pages.books.collection.action.edit_title',
+          }),
+          oldValue: item.name,
+          allowEmptyStr: false,
+          handleOK: (newValue: any) => {
+            updateCollection(item.uuid, 'name', newValue).then(() => {
+              fetchBookCollections();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_rating':
+        setDialogInfo({
+          title: intl.formatMessage({
+            id: 'pages.books.collection.action.edit_rating',
+          }),
+          oldValue: item.star,
+          allowEmptyStr: false,
+          handleOK: (newValue: any) => {
+            updateCollection(item.uuid, 'star', newValue).then(() => {
+              fetchBookCollections();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_tags':
+        setDialogInfo({
+          title: intl.formatMessage({
+            id: 'pages.books.collection.action.edit_tags',
+          }),
+          oldValue: item.tags,
+          allowEmptyStr: false,
+          handleOK: (newValue: any) => {
+            updateCollection(item.uuid, 'tags', preHandleSubjects(newValue)).then(() => {
+              fetchBookCollections();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_cover':
+        handleOpenForEditCover();
+        setUUIDForEditCover(item.uuid);
+        break;
+      case 'remove_but_keep_book':
+        handleClickOpenForDeleteBook(item.uuid, 1);
+        break;
+      case 'remove_and_remove_book':
+        handleClickOpenForDeleteBook(item.uuid, 2);
+        break;
+    }
+  };
+
   return (
     <div>
-      <AntList
-        rowKey="id"
-        grid={{
-          gutter: 20,
-          xs: 1,
-          sm: 1,
-          md: 2,
-          lg: 3,
-          xl: 4,
-          xxl: 5,
-        }}
-        pagination={{
-          position: 'top',
-          defaultPageSize: 40,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 10 },
-        }}
-        dataSource={data}
-        renderItem={(item: CollectionDataType) => (
-          <AntList.Item>
-            <Card
-              hoverable
-              style={{ width: 200 }}
-              cover={<Cover uuid={item.uuid} />}
-              actions={[
-                <Menu mode="vertical" key={'1'} selectable={false}>
-                  <SubMenu
-                    key="sub4"
-                    icon={<SettingOutlined />}
-                    title={<FormattedMessage id="pages.books.collection.action" />}
-                  >
-                    {/* <Menu.Item
-                      key="1"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        setUUID2(uuidv4());
-                        setAddBooksInfo({
-                          open: true,
-                          collection_uuid: item.uuid,
-                          book_type: 'coll',
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.collection.action.manage_books" />
-                    </Menu.Item> */}
-                    <Menu.Item
-                      key="2"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        setUUID2(uuidv4());
-                        setAddBooksInfo({
-                          open: true,
-                          collection_uuid: item.uuid,
-                          book_type: 'no_tmp',
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.collection.action.add_books_to_storage" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="3"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        setUUID2(uuidv4());
-                        setAddBooksInfo({
-                          open: true,
-                          collection_uuid: item.uuid,
-                          book_type: 'tmp',
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.collection.action.add_books_to_tmp_storage" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="4"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        setDialogInfo({
-                          title: intl.formatMessage({
-                            id: 'pages.books.collection.action.edit_title',
-                          }),
-                          oldValue: item.name,
-                          allowEmptyStr: false,
-                          handleOK: (newValue: any) => {
-                            updateCollection(item.uuid, 'name', newValue).then(() => {
-                              fetchBookCollections();
-                            });
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.collection.action.edit_title" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="5"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        setDialogInfo({
-                          title: intl.formatMessage({
-                            id: 'pages.books.collection.action.edit_rating',
-                          }),
-                          oldValue: item.star,
-                          allowEmptyStr: false,
-                          handleOK: (newValue: any) => {
-                            updateCollection(item.uuid, 'star', newValue).then(() => {
-                              fetchBookCollections();
-                            });
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.collection.action.edit_rating" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="6"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        setDialogInfo({
-                          title: intl.formatMessage({
-                            id: 'pages.books.collection.action.edit_tags',
-                          }),
-                          oldValue: item.tags,
-                          allowEmptyStr: false,
-                          handleOK: (newValue: any) => {
-                            updateCollection(item.uuid, 'tags', preHandleSubjects(newValue)).then(
-                              () => {
-                                fetchBookCollections();
-                              },
-                            );
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.collection.action.edit_tags" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="7"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        handleOpenForEditCover();
-                        setUUIDForEditCover(item.uuid);
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.collection.action.edit_cover" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="8"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        handleClickOpen(item.uuid, 1);
-                      }}
-                    >
-                      <span style={{ color: 'red' }}>
-                        <FormattedMessage id="pages.books.collection.action.remove_but_keep_book" />
-                      </span>
-                    </Menu.Item>
-                    <Menu.Item
-                      key="9"
-                      style={{ width: 280 }}
-                      onClick={() => {
-                        handleClickOpen(item.uuid, 2);
-                      }}
-                    >
-                      <span style={{ color: 'red' }}>
-                        <FormattedMessage id="pages.books.collection.action.remove_and_remove_book" />
-                      </span>
-                    </Menu.Item>
-                  </SubMenu>
-                </Menu>,
-              ]}
-              bodyStyle={{
-                paddingTop: 8,
-                paddingLeft: 4,
-                paddingRight: 4,
-                paddingBottom: 8,
-              }}
-            >
-              <Card.Meta
-                title={
-                  <div
-                    style={{
-                      maxHeight: '30vh',
-                      overflow: 'auto',
-                      marginTop: 5,
-                      textAlign: 'center',
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      display="block"
-                      style={{
-                        wordBreak: 'break-all',
-                        whiteSpace: 'break-spaces',
-                        fontSize: 13,
-                      }}
-                      gutterBottom
-                    >
-                      {item.name}
-                    </Typography>
-                  </div>
-                }
-                description={
-                  <div
-                    style={{ maxHeight: 150, overflow: 'auto' }}
-                    onClick={() => {
-                      setUUID1(uuidv4());
-                      setCheckCollctionBooks({
-                        open: true,
-                        collection_uuid: item.uuid,
-                      });
-                    }}
-                  >
-                    <Divider style={{ marginBottom: 10 }} />
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <StarIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.star}
-                      </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <FormatListNumberedIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {countChOfStr(item.item_uuids, ';')} 本书
-                      </Typography>
-                    </Box>
+      <Box sx={{ width: '100%' }}>
+        <Masonry style={{ width: '100%' }} columns={4} spacing={3}>
+          {data.map((item: CollectionDataType) => {
+            return (
+              <Card
+                key={uuidv4()}
+                hoverable
+                cover={<Cover uuid={item.uuid} />}
+                actions={[
+                  <Menu
+                    onClick={({ key, domEvent }) => {
+                      domEvent.preventDefault();
 
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <ArchiveIcon style={{ height: 16 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.tags}
+                      onClickActionMenu(key, item);
+                    }}
+                    items={actionMenuList}
+                    mode="vertical"
+                    key={'1'}
+                    selectable={false}
+                  ></Menu>,
+                ]}
+                bodyStyle={{
+                  paddingTop: 8,
+                  paddingLeft: 4,
+                  paddingRight: 4,
+                  paddingBottom: 8,
+                }}
+              >
+                <Card.Meta
+                  title={
+                    <div
+                      style={{
+                        maxHeight: '30vh',
+                        overflow: 'auto',
+                        marginTop: 5,
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        display="block"
+                        style={{
+                          wordBreak: 'break-all',
+                          whiteSpace: 'break-spaces',
+                          fontSize: 13,
+                        }}
+                        gutterBottom
+                      >
+                        {item.name}
                       </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <DateRangeIcon style={{ height: 16 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.create_time.split(' ')[0]}
-                      </Typography>
-                    </Box>
-                  </div>
-                }
-              />
-            </Card>
-          </AntList.Item>
-        )}
-      />
+                    </div>
+                  }
+                  description={
+                    <div
+                      style={{ maxHeight: 150, overflow: 'auto' }}
+                      onClick={() => {
+                        setUUID1(uuidv4());
+                        setCheckCollctionBooks({
+                          open: true,
+                          collection_uuid: item.uuid,
+                        });
+                      }}
+                    >
+                      <Divider style={{ marginBottom: 10 }} />
+                      <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                        <StarIcon style={{ height: 20 }} />
+                        <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                          {item.star}
+                        </Typography>
+                      </Box>
+                      <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                        <FormatListNumberedIcon style={{ height: 20 }} />
+                        <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                          {countChOfStr(item.item_uuids, ';')} 本书
+                        </Typography>
+                      </Box>
+
+                      <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                        <ArchiveIcon style={{ height: 16 }} />
+                        <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                          {item.tags}
+                        </Typography>
+                      </Box>
+                      <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                        <DateRangeIcon style={{ height: 16 }} />
+                        <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                          {item.create_time.split(' ')[0]}
+                        </Typography>
+                      </Box>
+                    </div>
+                  }
+                />
+              </Card>
+            );
+          })}
+        </Masonry>
+      </Box>
 
       <ChangeInfo
         title={dialogInfo['title']}
         oldValue={dialogInfo['oldValue']}
         allowEmptyStr={dialogInfo['allowEmptyStr']}
-        handleClose={handleCloseDialog}
+        handleClose={handleCloseDialogForChangeValue}
         handleOK={dialogInfo['handleOK']}
         open={dialogInfo['open']}
       />
@@ -383,7 +356,7 @@ export default function BookCardList(props: BookCardListProps) {
       <div>
         <Dialog
           open={openDeleteBook}
-          onClose={handleClose}
+          onClose={handleCloseForDeleteBook}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           fullWidth
@@ -393,7 +366,7 @@ export default function BookCardList(props: BookCardListProps) {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {deleteBookInfo.deleteType == 1 ? (
+              {deleteBookInfo.deleteType === 1 ? (
                 <FormattedMessage id="pages.books.collection.action.delete_without_books" />
               ) : (
                 <FormattedMessage id="pages.books.collection.action.delete_with_books" />
@@ -401,13 +374,13 @@ export default function BookCardList(props: BookCardListProps) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>
+            <Button onClick={handleCloseForDeleteBook}>
               <FormattedMessage id="pages.cancel" />
             </Button>
             <Button
               onClick={() => {
-                handleClose();
-                if (deleteBookInfo.deleteType == 1) {
+                handleCloseForDeleteBook();
+                if (deleteBookInfo.deleteType === 1) {
                   deleteCollectionWithoutBooks(deleteBookInfo.uuid).then(() => {
                     fetchBookCollections();
                   });
@@ -427,7 +400,7 @@ export default function BookCardList(props: BookCardListProps) {
 
       <Dialog
         open={openForEditCover}
-        onClose={handleClose}
+        onClose={handleCloseForEditCover}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth
@@ -439,7 +412,7 @@ export default function BookCardList(props: BookCardListProps) {
         <DialogContent style={{ margin: '0 auto' }}>
           <form
             onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-              // event.preventDefault();
+              event.preventDefault();
 
               let ok = handleEditCollCover();
               if (ok) {
@@ -454,16 +427,12 @@ export default function BookCardList(props: BookCardListProps) {
                 '& .MuiTextField-root': { width: '25ch' },
               }}
             >
-              <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-                <Typography
-                  style={{ position: 'relative', paddingTop: 5 }}
-                  variant="subtitle1"
-                  gutterBottom
-                  component="div"
-                >
-                  <FormattedMessage id="pages.books.book.create_book_collection.cover" />:
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  <FormattedMessage id="pages.books.book.create_book_collection.cover" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
                 </Typography>
-                <div style={{ position: 'absolute', paddingLeft: 45 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Dropzone
                     onDrop={async (acceptedFiles) => {
                       let base64Str = await toBase64(acceptedFiles[0]);
@@ -474,28 +443,29 @@ export default function BookCardList(props: BookCardListProps) {
                       <section>
                         <div {...getRootProps()}>
                           <input {...getInputProps()} />
-                          {formData.cover == null ? (
-                            <Button variant="contained">上传</Button>
-                          ) : (
-                            <Chip
-                              label={
-                                <FormattedMessage id="pages.books.book.create_book_collection.cover" />
-                              }
-                              onDelete={() => {
-                                setFormData({
-                                  ...formData,
-                                  cover: null,
-                                });
-                              }}
-                              deleteIcon={<DeleteIcon />}
-                              variant="outlined"
-                            />
-                          )}
+                          <IconButton color="primary" aria-label="upload picture" component="span">
+                            <CloudUploadIcon />
+                          </IconButton>
                         </div>
                       </section>
                     )}
                   </Dropzone>
-                </div>
+                  {formData.cover && (
+                    <Chip
+                      label={
+                        <FormattedMessage id="pages.books.book.create_book_collection.cover" />
+                      }
+                      onDelete={() => {
+                        setFormData({
+                          ...formData,
+                          cover: null,
+                        });
+                      }}
+                      deleteIcon={<DeleteIcon />}
+                      variant="outlined"
+                    />
+                  )}
+                </Box>
               </FormControl>
               <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, ml: 1 }}>
                 <FormattedMessage id="pages.books.book.create_book_collection.commit" />

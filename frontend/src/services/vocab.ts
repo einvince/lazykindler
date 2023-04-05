@@ -23,3 +23,8 @@ export const upsertWordAndUsage = (book_key: string, word: string, usage: string
     translated_usage
   });
 };
+
+// 删除所有数据
+export const deleteAllVocabRelatedData = () => {
+  return axiosInstance.delete(`/api/vocab/delete/all`)
+};

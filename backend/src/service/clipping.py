@@ -130,7 +130,7 @@ def update_by_keyword(keyword, new_value, old_value):
 
 
 def delete_all_clipping():
-    all_clippings = clipping.get_all_clippings()
+    all_clippings = clipping.get_all_clippings_for_delete()
     for item in all_clippings:
         coll_uuids = convert_str_to_list(item["coll_uuids"])
         for coll_uuid in coll_uuids:

@@ -27,6 +27,10 @@ def get_all_clippings():
     return db.query("select * from clipping where deleted is null;")
 
 
+def get_all_clippings_for_delete():
+    return db.query("select * from clipping;")
+
+
 def get_clippings_by_book_name(book_name):
     book_name = book_name.replace("'", "")
     return db.query(f"select * from clipping where book_name='{book_name}' and deleted is null;")

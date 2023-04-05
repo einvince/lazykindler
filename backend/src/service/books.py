@@ -216,6 +216,7 @@ def delete_all_tmp_books():
     books = get_all_tmp_books()
     for book in books:
         delete_book(book["uuid"])
+    clean_sqlite_sequence()
     return "success"
 
 

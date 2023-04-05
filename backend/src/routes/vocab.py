@@ -28,3 +28,7 @@ def upsert_word_and_usage():
     usage = content['usage']
     translated_usage = content['translated_usage']
     return vocab.upsert_word_and_usage(book_key, word, usage, translated_usage)
+
+
+def delete_all_vocab_related_data():
+    return vocab.delete_all_vocab_related_data()

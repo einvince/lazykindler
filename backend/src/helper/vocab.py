@@ -59,3 +59,8 @@ def get_vocab_word_by_word(book_key, word):
 
 def get_word_usage_list(book_key, word):
     return db.query(f"select * from vocab_words_usage where book_key='{book_key}' and word='{word}';")
+
+def delete_all_vocab_related_data():
+    db.run_sql("delete from vocab_related_books")
+    db.run_sql("delete from vocab_words")
+    db.run_sql("delete from vocab_words_usage")

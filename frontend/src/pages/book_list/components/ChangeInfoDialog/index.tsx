@@ -42,6 +42,7 @@ export default function ChangeInfo(prop: ChangeInfoProp) {
         open={open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onClose={handleClose}
         fullWidth
         maxWidth="sm"
       >

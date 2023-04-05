@@ -22,30 +22,45 @@ def get_clipping_by_uuid(uuid):
 
 
 def clean_sqlite_sequence():
-    data = db.query("select * from book_meta")
-    if data is not None and len(data) == 0:
+    data = db.query("select count(*) as count from book_meta")
+    if data[0]['count'] == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'book_meta'")
 
-    data = db.query("select *  from tmp_book;")
-    if data is not None and len(data) == 0:
+    data = db.query("select count(*) as count  from tmp_book;")
+    if data[0]['count'] == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'tmp_book'")
 
-    data = db.query("select * from cover")
-    if data is not None and len(data) == 0:
+    data = db.query("select count(*) as count from cover")
+    if data[0]['count'] == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'cover'")
 
-    data = db.query("select * from coll")
-    if data is not None and len(data) == 0:
+    data = db.query("select count(*) as count from coll")
+    if data[0]['count'] == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'coll'")
 
-    data = db.query("select * from clipping")
-    if data is not None and len(data) == 0:
+    data = db.query("select count(*) as count from clipping")
+    if data[0]['count'] == 0:
         db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'clipping'")
 
-    data = db.query("select * from book_to_clipping_book")
-    if data is not None and len(data) == 0:
-        db.run_sql(
-            "DELETE FROM sqlite_sequence WHERE name = 'book_to_clipping_book'")
+    data = db.query("select count(*) as count from book_to_clipping_book")
+    if data[0]['count'] == 0:
+        db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'book_to_clipping_book'")
+    
+    data = db.query("select count(*) as count from comment")
+    if data[0]['count'] == 0:
+        db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'comment'")
+
+    data = db.query("select count(*) as count from vocab_related_books")
+    if data[0]['count'] == 0:
+        db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'vocab_related_books'")
+
+    data = db.query("select count(*) as count from vocab_words")
+    if data[0]['count'] == 0:
+        db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'vocab_words'")
+
+    data = db.query("select count(*) as count from vocab_words_usage")
+    if data[0]['count'] == 0:
+        db.run_sql("DELETE FROM sqlite_sequence WHERE name = 'vocab_words_usage'")
 
 
 def delete_cover(uuid):
