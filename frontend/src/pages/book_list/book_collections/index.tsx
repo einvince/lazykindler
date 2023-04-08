@@ -1,9 +1,11 @@
-import {createBookCollection, getAllCollections} from '@/services';
-import {preHandleSubjects, toBase64} from '@/util';
-import {Favorite as FavoriteIcon, Menu as MenuIcon, Settings as SettingsIcon,} from '@mui/icons-material';
+import { createBookCollection, getAllCollections } from '@/services';
+import { preHandleSubjects, toBase64 } from '@/util';
 import AddIcon from '@mui/icons-material/Add';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import LabelIcon from '@mui/icons-material/Label';
+import StarsIcon from '@mui/icons-material/Stars';
 import {
   Box,
   Button,
@@ -28,11 +30,11 @@ import {
 import Dropzone from 'react-dropzone';
 
 import _ from 'lodash';
-import React, {useEffect, useState} from 'react';
-import {FormattedMessage, useIntl} from 'umi';
+import React, { useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'umi';
 
 import BookCardList from './components/CollectionList';
-import {CollectionDataType} from './data';
+import { CollectionDataType } from './data';
 
 type MenuItemType = {
   label: React.ReactNode;
@@ -46,9 +48,9 @@ enum FilterType {
 }
 
 const filterTypeMessages = {
-  [FilterType.All]: <FormattedMessage id="pages.books.uncategorized"/>,
-  [FilterType.Star]: <FormattedMessage id="pages.books.rating"/>,
-  [FilterType.Tags]: <FormattedMessage id="pages.books.labels"/>,
+  [FilterType.All]: <FormattedMessage id="pages.books.uncategorized" />,
+  [FilterType.Star]: <FormattedMessage id="pages.books.rating" />,
+  [FilterType.Tags]: <FormattedMessage id="pages.books.labels" />,
 };
 
 type SubHeaerType = {
@@ -75,9 +77,12 @@ export default function BookCollections() {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuItems: MenuItemType[] = [
-    {label: intl.formatMessage({id: 'pages.books.uncategorized'}), icon: <FavoriteIcon/>},
-    {label: intl.formatMessage({id: 'pages.books.rating'}), icon: <SettingsIcon/>},
-    {label: intl.formatMessage({id: 'pages.books.labels'}), icon: <SettingsIcon/>},
+    {
+      label: intl.formatMessage({ id: 'pages.books.uncategorized' }),
+      icon: <FormatAlignJustifyIcon />,
+    },
+    { label: intl.formatMessage({ id: 'pages.books.rating' }), icon: <StarsIcon /> },
+    { label: intl.formatMessage({ id: 'pages.books.labels' }), icon: <LabelIcon /> },
   ];
   const [selectedDropDownMenuItem, setSelectedDropDownMenuItem] = useState<MenuItemType>(
     menuItems[0],
@@ -96,17 +101,17 @@ export default function BookCollections() {
     handleCloseDropDownMenu();
 
     switch (item.label) {
-      case intl.formatMessage({id: 'pages.books.uncategorized'}):
+      case intl.formatMessage({ id: 'pages.books.uncategorized' }):
         setSelectedType(filterTypeMessages[FilterType.All]);
         setSelectedSubType([]);
 
         setData(allBookCollections);
         break;
-      case intl.formatMessage({id: 'pages.books.rating'}):
+      case intl.formatMessage({ id: 'pages.books.rating' }):
         setSelectedType(filterTypeMessages[FilterType.Star]);
         setSelectedSubType(Object.keys(classifiedInfo.Star));
         break;
-      case intl.formatMessage({id: 'pages.books.labels'}):
+      case intl.formatMessage({ id: 'pages.books.labels' }):
         setSelectedType(filterTypeMessages[FilterType.Tags]);
         setSelectedSubType(Object.keys(classifiedInfo.Tags));
         break;
@@ -187,19 +192,19 @@ export default function BookCollections() {
     event.preventDefault();
 
     if (formData.name == null || formData.name.trim() === '') {
-      alert(intl.formatMessage({id: 'pages.books.book.create_book_collection.alert.title'}));
+      alert(intl.formatMessage({ id: 'pages.books.book.create_book_collection.alert.title' }));
       return;
     }
     if (formData.tag == null || formData.tag.trim() === '') {
-      alert(intl.formatMessage({id: 'pages.books.book.create_book_collection.alert.title'}));
+      alert(intl.formatMessage({ id: 'pages.books.book.create_book_collection.alert.title' }));
       return;
     }
     if (formData.star == null || formData.star.trim() === '') {
-      alert(intl.formatMessage({id: 'pages.books.book.create_book_collection.alert.title'}));
+      alert(intl.formatMessage({ id: 'pages.books.book.create_book_collection.alert.title' }));
       return;
     }
     if (formData.cover == null || formData.cover.trim() === '') {
-      alert(intl.formatMessage({id: 'pages.books.book.create_book_collection.alert.title'}));
+      alert(intl.formatMessage({ id: 'pages.books.book.create_book_collection.alert.title' }));
       return;
     }
 
@@ -289,16 +294,15 @@ export default function BookCollections() {
   return (
     <>
       <div>
-        <div style={{width: '23%',  position: 'relative'}}>
-          <Paper style={{height: '88vh'}}>
+        <div style={{ width: '23%', position: 'relative' }}>
+          <Paper style={{ height: '88vh' }}>
             <List>
               <ListSubheader>
                 <div>
                   <Button
-                    style={{width: '80%', fontSize: '80%'}}
+                    style={{ width: '80%', fontSize: '80%' }}
                     variant="contained"
-                    startIcon={<MenuIcon/>}
-                    endIcon={selectedDropDownMenuItem.icon}
+                    startIcon={selectedDropDownMenuItem.icon}
                     onClick={handleClickDropDownMenu}
                   >
                     {selectedDropDownMenuItem.label}
@@ -310,40 +314,42 @@ export default function BookCollections() {
                     onClick={(e) => e.preventDefault()}
                   >
                     {menuItems.map((item, index) => (
-                      <MenuItem key={index} onClick={(e) => {
-                        e.preventDefault()
-                        handleMenuItemClick(item)
-                      }
-                      }>
+                      <MenuItem
+                        key={index}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleMenuItemClick(item);
+                        }}
+                      >
                         <ListItemIcon>{item.icon}</ListItemIcon>
-                        <ListItemText primary={item.label}/>
+                        <ListItemText primary={item.label} />
                       </MenuItem>
                     ))}
                   </MaterialMenu>
 
                   <IconButton
-                    style={{left: 5}}
+                    style={{ left: 5 }}
                     color="primary"
                     aria-label="add to shopping cart"
                     onClick={handleClickOpen}
                   >
-                    <AddIcon/>
+                    <AddIcon />
                   </IconButton>
                 </div>
               </ListSubheader>
               {selectedSubType.map((item, index) => (
                 <ListItem
-                  style={{padding: 0}}
+                  style={{ padding: 0 }}
                   key={index}
                   onClick={() => {
                     filterData(null, item);
                   }}
                 >
                   <ListItemButton
-                    style={{paddingLeft: 10, paddingRight: 10}}
+                    style={{ paddingLeft: 10, paddingRight: 10 }}
                     selected={item === selectedItemName}
                   >
-                    <ListItemText primary={`${index + 1}. ${item}`}/>
+                    <ListItemText primary={`${index + 1}. ${item}`} />
                   </ListItemButton>
                 </ListItem>
               ))}
@@ -352,7 +358,7 @@ export default function BookCollections() {
         </div>
         <div
           style={{
-            width: "75%",
+            width: '75%',
             position: 'absolute',
             top: 20,
             left: '24vw',
@@ -361,7 +367,7 @@ export default function BookCollections() {
             overflowY: 'auto',
           }}
         >
-          <BookCardList data={data} fetchBookCollections={fetchBookCollections}/>
+          <BookCardList data={data} fetchBookCollections={fetchBookCollections} />
         </div>
       </div>
 
@@ -374,9 +380,9 @@ export default function BookCollections() {
         maxWidth="sm"
       >
         <DialogTitle id="alert-dialog-title">
-          {<FormattedMessage id="pages.books.book.create_book_collection"/>}
+          {<FormattedMessage id="pages.books.book.create_book_collection" />}
         </DialogTitle>
-        <DialogContent style={{margin: '0 auto'}}>
+        <DialogContent style={{ margin: '0 auto' }}>
           <form onSubmit={handleCreate}>
             <Box
               sx={{
@@ -385,25 +391,25 @@ export default function BookCollections() {
                 alignItems: 'flex-start',
               }}
             >
-              <FormControl sx={{m: 1, mt: 3, width: '25ch'}}>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
                 <Typography variant="subtitle1" gutterBottom component="div">
-                  <FormattedMessage id="pages.books.book.create_book_collection.name"/>
-                  <span style={{color: 'red', paddingLeft: 5}}>*</span>:
+                  <FormattedMessage id="pages.books.book.create_book_collection.name" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
                 </Typography>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    event.preventDefault()
-                    
-                    setFormData({...formData, name: event.target.value});
+                    event.preventDefault();
+
+                    setFormData({ ...formData, name: event.target.value });
                   }}
-                  style={{marginTop: -5}}
+                  style={{ marginTop: -5 }}
                 />
               </FormControl>
-              <FormControl sx={{m: 1, mt: 3, width: '25ch'}}>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
                 <Typography variant="subtitle1" gutterBottom component="div">
-                  <FormattedMessage id="pages.books.book.create_book_collection.description"/>:
+                  <FormattedMessage id="pages.books.book.create_book_collection.description" />:
                 </Typography>
                 <Input
                   id="description"
@@ -414,55 +420,55 @@ export default function BookCollections() {
                       description: event.target.value,
                     });
                   }}
-                  style={{marginTop: -5}}
+                  style={{ marginTop: -5 }}
                 />
               </FormControl>
-              <FormControl sx={{m: 1, mt: 3, width: '25ch'}}>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
                 <Typography variant="subtitle1" gutterBottom component="div">
-                  <FormattedMessage id="pages.books.book.create_book_collection.labels"/>
-                  <span style={{color: 'red', paddingLeft: 5}}>*</span>:
+                  <FormattedMessage id="pages.books.book.create_book_collection.labels" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
                 </Typography>
                 <Input
                   id="tag"
                   value={formData.age}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setFormData({...formData, tag: event.target.value});
+                    setFormData({ ...formData, tag: event.target.value });
                   }}
-                  style={{marginTop: -5}}
+                  style={{ marginTop: -5 }}
                 />
               </FormControl>
-              <FormControl sx={{m: 1, mt: 3, width: '25ch'}}>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
                 <Typography variant="subtitle1" gutterBottom component="div">
-                  <FormattedMessage id="pages.books.book.create_book_collection.rating"/>
-                  <span style={{color: 'red', paddingLeft: 5}}>*</span>:
+                  <FormattedMessage id="pages.books.book.create_book_collection.rating" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
                 </Typography>
                 <Input
                   id="star"
                   value={formData.age}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setFormData({...formData, star: event.target.value});
+                    setFormData({ ...formData, star: event.target.value });
                   }}
-                  style={{marginTop: -5}}
+                  style={{ marginTop: -5 }}
                 />
               </FormControl>
-              <FormControl sx={{m: 1, mt: 3, width: '25ch'}}>
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
                 <Typography variant="subtitle1" gutterBottom component="div">
-                  <FormattedMessage id="pages.books.book.create_book_collection.cover"/>
-                  <span style={{color: 'red', paddingLeft: 5}}>*</span>:
+                  <FormattedMessage id="pages.books.book.create_book_collection.cover" />
+                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
                 </Typography>
-                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Dropzone
                     onDrop={async (acceptedFiles) => {
                       let base64Str = await toBase64(acceptedFiles[0]);
-                      setFormData({...formData, cover: base64Str});
+                      setFormData({ ...formData, cover: base64Str });
                     }}
                   >
-                    {({getRootProps, getInputProps}) => (
+                    {({ getRootProps, getInputProps }) => (
                       <section>
                         <div {...getRootProps()}>
                           <input {...getInputProps()} />
                           <IconButton color="primary" aria-label="upload picture" component="span">
-                            <CloudUploadIcon/>
+                            <CloudUploadIcon />
                           </IconButton>
                         </div>
                       </section>
@@ -471,7 +477,7 @@ export default function BookCollections() {
                   {formData.cover && (
                     <Chip
                       label={
-                        <FormattedMessage id="pages.books.book.create_book_collection.cover"/>
+                        <FormattedMessage id="pages.books.book.create_book_collection.cover" />
                       }
                       onDelete={() => {
                         setFormData({
@@ -479,14 +485,14 @@ export default function BookCollections() {
                           cover: null,
                         });
                       }}
-                      deleteIcon={<DeleteIcon/>}
+                      deleteIcon={<DeleteIcon />}
                       variant="outlined"
                     />
                   )}
                 </Box>
               </FormControl>
-              <Button type="submit" variant="contained" color="primary" sx={{mt: 2, ml: 1}}>
-                <FormattedMessage id="pages.books.book.create_book_collection.commit"/>
+              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, ml: 1 }}>
+                <FormattedMessage id="pages.books.book.create_book_collection.commit" />
               </Button>
             </Box>
           </form>
