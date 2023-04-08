@@ -247,11 +247,11 @@ export default function BookCardList(props: BookCardListProps) {
   return (
     <div>
       <Box sx={{ width: '100%' }}>
-        <Masonry style={{ width: '100%' }} columns={4} spacing={3}>
+        <Masonry style={{ width: '100%'}} columns={4} spacing={3}>
           {data.map((item: CollectionDataType) => {
             return (
               <Card
-                key={uuidv4()}
+                key={item.uuid}
                 hoverable
                 cover={<Cover uuid={item.uuid} />}
                 actions={[
@@ -267,12 +267,6 @@ export default function BookCardList(props: BookCardListProps) {
                     selectable={false}
                   ></Menu>,
                 ]}
-                bodyStyle={{
-                  paddingTop: 8,
-                  paddingLeft: 4,
-                  paddingRight: 4,
-                  paddingBottom: 8,
-                }}
               >
                 <Card.Meta
                   title={

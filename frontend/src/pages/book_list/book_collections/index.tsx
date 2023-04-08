@@ -289,7 +289,7 @@ export default function BookCollections() {
   return (
     <>
       <div>
-        <div style={{width: '23%', height: '86vh', position: 'relative'}}>
+        <div style={{width: '23%',  position: 'relative'}}>
           <Paper style={{height: '88vh'}}>
             <List>
               <ListSubheader>
