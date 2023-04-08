@@ -349,7 +349,10 @@ export default function BookCollections() {
                     style={{ paddingLeft: 10, paddingRight: 10 }}
                     selected={item === selectedItemName}
                   >
-                    <ListItemText primary={`${index + 1}. ${item}`} />
+                    <ListItemText
+                      primary={`${index + 1}. ${item}`}
+                      style={{ wordBreak: 'break-all' }}
+                    />
                   </ListItemButton>
                 </ListItem>
               ))}

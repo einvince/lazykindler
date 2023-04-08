@@ -247,7 +247,7 @@ export default function BookCardList(props: BookCardListProps) {
   return (
     <div>
       <Box sx={{ width: '100%' }}>
-        <Masonry style={{ width: '100%'}} columns={4} spacing={3}>
+        <Masonry style={{ width: '100%' }} columns={4} spacing={3}>
           {data.map((item: CollectionDataType) => {
             return (
               <Card
@@ -319,7 +319,10 @@ export default function BookCardList(props: BookCardListProps) {
 
                       <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                         <ArchiveIcon style={{ height: 16 }} />
-                        <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                        <Typography
+                          variant="body2"
+                          style={{ paddingTop: 1.2, paddingLeft: 15, wordBreak: 'break-all' }}
+                        >
                           {item.tags}
                         </Typography>
                       </Box>
