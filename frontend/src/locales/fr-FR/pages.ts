@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': 'Note requise',
   'pages.books.book.create_book_collection.alert.cover': 'Couverture requise',
 
+  'pages.books.book.action.edit_title': 'Modifier le titre',
+
+  'pages.books.book_sorting.author.ascending': 'Auteurs - Croissant',
+  'pages.books.book_sorting.author.descending': 'Auteurs - Décroissant',
+  'pages.books.book_sorting.publisher.ascending': 'Éditeur - Croissant',
+  'pages.books.book_sorting.publisher.descending': 'Éditeur - Décroissant',
+  'pages.books.collection.action.delete_with_clippings':
+    'Supprimer la collection supprimera également les livres. Êtes-vous sûr de vouloir supprimer cette collection ?',
+  'pages.books.collection.action.delete_without_clippings':
+    'Supprimer la collection conservera les livres. Êtes-vous sûr de vouloir supprimer cette collection ?',
+
   'pages.books.collection.action': 'Action',
   'pages.books.collection.action.add_books_to_storage': 'Ajouter des Livres au Stockage Permanent',
   'pages.books.collection.action.add_books_to_tmp_storage':
@@ -50,7 +61,7 @@ export default {
   'pages.books.collection.action.column.size': 'Taille',
 
   'pages.books.book.action': 'Action',
-  'pages.books.book.action.collection': 'Coll',
+  'pages.books.book.action.collection': 'Edit Collection',
   'pages.books.book.action.read': 'Lire',
   'pages.books.book.action.edit_rating': 'Modifier la note',
   'pages.books.book.action.edit_tags': 'Modifier les étiquettes',

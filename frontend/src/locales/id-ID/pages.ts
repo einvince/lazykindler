@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': 'Penilaian Diperlukan',
   'pages.books.book.create_book_collection.alert.cover': 'Sampul Diperlukan',
 
+  'pages.books.book.action.edit_title': 'Sunting Judul',
+
+  'pages.books.book_sorting.author.ascending': 'Pengarang - Menaik',
+  'pages.books.book_sorting.author.descending': 'Pengarang - Menurun',
+  'pages.books.book_sorting.publisher.ascending': 'Penerbit - Menaik',
+  'pages.books.book_sorting.publisher.descending': 'Penerbit - Menurun',
+  'pages.books.collection.action.delete_with_clippings':
+    'Menghapus koleksi akan menghapus buku juga. Anda yakin ingin menghapus koleksi ini?',
+  'pages.books.collection.action.delete_without_clippings':
+    'Menghapus koleksi akan menyimpan buku. Anda yakin ingin menghapus koleksi ini?',
+
   'pages.books.collection.action': 'Aksi',
   'pages.books.collection.action.add_books_to_storage': 'Tambahkan Buku ke Penyimpanan Permanen',
   'pages.books.collection.action.add_books_to_tmp_storage':

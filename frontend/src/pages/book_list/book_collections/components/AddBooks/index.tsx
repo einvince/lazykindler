@@ -44,6 +44,7 @@ type AddBooksProps = {
   handleClose: any;
   book_type: string;
   collection_uuid: string;
+  fetchBookCollections: any;
 };
 
 const columns = [
@@ -70,7 +71,7 @@ const columns = [
 ];
 
 export default function AddBooks(props: AddBooksProps) {
-  const { open, handleClose, collection_uuid, book_type } = props;
+  const { open, handleClose, collection_uuid, book_type, fetchBookCollections } = props;
   // allBooksMeta 用于保留所有数据
   const [allBooksMeta, setAllBooksMeta] = useState<BookMetaDataType[]>([]);
   // data 用于显示过滤后的数据
@@ -157,6 +158,8 @@ export default function AddBooks(props: AddBooksProps) {
   const handleOnOk = () => {
     addBookToCollection(collection_uuid, selectedRowKeys.join(';')).then(() => {
       fetchAllBooks();
+      handleClose();
+      fetchBookCollections();
     });
   };
 

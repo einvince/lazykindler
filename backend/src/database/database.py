@@ -294,4 +294,23 @@ class DB:
         self.conn.commit()
         cursor.close()
 
+    def insert_setting(self, key, value):
+        cursor = self.conn.cursor()
+        cursor.execute("begin")
+        try:
+            sql = """INSERT INTO setting (key, value) 
+                                        VALUES (?, ?) """
+            data_tuple = (
+                key,
+                value,
+            )
+            cursor.execute(sql, data_tuple)
+
+        except Exception as error:
+            self.conn.execute("rollback")
+            print("Failed to insert setting. ", error)
+
+        self.conn.commit()
+        cursor.close()
+
 db = DB()

@@ -12,7 +12,12 @@ import {
   TagsOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import DeleteIcon from '@mui/icons-material/Delete';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import LabelIcon from '@mui/icons-material/Label';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import SearchIcon from '@mui/icons-material/Search';
+import StarsIcon from '@mui/icons-material/Stars';
 import {
   Box,
   Button,
@@ -21,24 +26,27 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
   ListSubheader,
+  Menu as MaterialMenu,
+  MenuItem,
+  Paper,
+  TextField,
   Typography,
 } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import { Dropdown, Input, Layout, Menu as AntMenu } from 'antd';
+import { styled } from '@mui/material/styles';
+import { Dropdown, Input, Menu as AntMenu } from 'antd';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
-
-import ContextMenu from '../../book_list/components/ContextMenu';
-import type { ClippingCollectionDataType, ClippingDataType } from '../../data';
 import ClippingCardList from '../components/ClippingCardList';
 
-const { Sider, Content } = Layout;
+import type { ClippingCollectionDataType, ClippingDataType } from '../../data';
 
 enum FilterType {
   All,
@@ -55,6 +63,20 @@ const filterTypeMessages = {
   [FilterType.Author]: <FormattedMessage id="pages.books.authors" />,
   [FilterType.Book]: <FormattedMessage id="pages.books.book" />,
 };
+
+type MenuItemType = {
+  label: React.ReactNode;
+  icon: React.ReactElement;
+};
+
+const CustomTextField = styled(TextField)({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 50,
+    '& fieldset': {
+      borderRadius: 50,
+    },
+  },
+});
 
 type SubHeaerType = {
   Star: Object;
@@ -87,6 +109,61 @@ const Clippings: FC = () => {
     Book: {},
   });
   const intl = useIntl();
+
+  const [anchorElForTypeMenu, setAnchorElForTypeMen] = useState<null | HTMLElement>(null);
+
+  const menuItemsForTypeMenu: MenuItemType[] = [
+    {
+      label: intl.formatMessage({ id: 'pages.books.uncategorized' }),
+      icon: <FormatAlignJustifyIcon />,
+    },
+    { label: intl.formatMessage({ id: 'pages.books.rating' }), icon: <StarsIcon /> },
+    { label: intl.formatMessage({ id: 'pages.books.labels' }), icon: <LabelIcon /> },
+    { label: intl.formatMessage({ id: 'pages.books.authors' }), icon: <AccountCircleIcon /> },
+    { label: intl.formatMessage({ id: 'pages.books.book' }), icon: <LocalLibraryIcon /> },
+  ];
+
+  const handleMenuItemClick = (item: MenuItemType) => {
+    setSelectedDropDownMenuItem(item);
+    handleCloseDropDownMenu();
+
+    switch (item.label) {
+      case intl.formatMessage({ id: 'pages.books.uncategorized' }):
+        setFirstLevelType(filterTypeMessages[FilterType.All]);
+        setSecondLevelMenuList([]);
+
+        setData(allClippings);
+        break;
+      case intl.formatMessage({ id: 'pages.books.rating' }):
+        setFirstLevelType(filterTypeMessages[FilterType.Star]);
+        setSecondLevelMenuList(Object.keys(classifiedInfo.Star));
+        break;
+      case intl.formatMessage({ id: 'pages.books.labels' }):
+        setFirstLevelType(filterTypeMessages[FilterType.Tags]);
+        setSecondLevelMenuList(Object.keys(classifiedInfo.Tags));
+        break;
+      case intl.formatMessage({ id: 'pages.books.authors' }):
+        setFirstLevelType(filterTypeMessages[FilterType.Author]);
+        setSecondLevelMenuList(Object.keys(classifiedInfo.Author));
+        break;
+      case intl.formatMessage({ id: 'pages.books.book' }):
+        setFirstLevelType(filterTypeMessages[FilterType.Book]);
+        setSecondLevelMenuList(Object.keys(classifiedInfo.Book));
+        break;
+    }
+  };
+
+  const [selectedDropDownMenuItem, setSelectedDropDownMenuItem] = useState<MenuItemType>(
+    menuItemsForTypeMenu[0],
+  );
+
+  const handleClickDropDownMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElForTypeMen(event.currentTarget);
+  };
+
+  const handleCloseDropDownMenu = () => {
+    setAnchorElForTypeMen(null);
+  };
 
   const [formData, setFormData] = useState<any>({});
 
@@ -424,8 +501,7 @@ const Clippings: FC = () => {
     }
   };
 
-  const onSearchChange = (e: any) => {
-    const keyword = e.target.value;
+  const onSearchChange = (keyword: any) => {
     const list = filterData(null, selectedSecondLevel, allClippings);
     setData(
       _.filter(list, (item: ClippingDataType) => {
@@ -441,6 +517,10 @@ const Clippings: FC = () => {
       }),
     );
   };
+
+  const handleSearchChange = _.debounce((keyword: string) => {
+    onSearchChange(keyword);
+  }, 300); // 300ms 的延迟
 
   const handleCreateClipping = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -472,81 +552,120 @@ const Clippings: FC = () => {
 
   return (
     <>
-      <Layout>
-        <Sider
-          style={{ backgroundColor: 'initial', paddingLeft: 0, position: 'fixed' }}
-        >
-          <Input
-            style={{ marginBottom: 10, marginLeft: -11, height: 45 }}
-            placeholder={intl.formatMessage({ id: 'pages.books.search' })}
-            onBlur={onSearchChange}
-          />
-          <Button
-            id="demo-customized-button"
-            aria-haspopup="true"
-            variant="contained"
-            fullWidth
-            disableElevation
-            style={{ marginLeft: -13 }}
-            onClick={handleClickOpenForCreateClipping}
-          >
-            <FormattedMessage id="pages.highlight.create" />
-          </Button>
-          <List
-            sx={{
-              bgcolor: 'background.paper',
-              // width: 200,
-              height: '100vh',
-              marginLeft: -1.5,
-              overflow: 'auto',
-              '& ul': { padding: 0 },
-            }}
-            subheader={<li />}
-          >
-            {<MenuHeader />}
-            {secondLevelMenuList.map((item, index) => (
-              <ContextMenu
-                key={index}
-                Content={
-                  <ListItem
-                    style={{ padding: 0 }}
-                    onClick={() => {
-                      filterData(null, item, allClippings);
-                    }}
-                  >
-                    <ListItemButton
-                      style={{ paddingLeft: 10, paddingRight: 10 }}
-                      selected={item === selectedSecondLevel}
+      <div style={{ width: '23%', position: 'relative' }}>
+        <Paper style={{ height: '88vh', overflowY: 'auto' }}>
+          <List>
+            <ListSubheader>
+              <div>
+                <Button
+                  style={{ width: '100%', fontSize: '80%' }}
+                  variant="contained"
+                  startIcon={selectedDropDownMenuItem.icon}
+                  onClick={handleClickDropDownMenu}
+                >
+                  {selectedDropDownMenuItem.label}
+                </Button>
+                <MaterialMenu
+                  anchorEl={anchorElForTypeMenu}
+                  open={Boolean(anchorElForTypeMenu)}
+                  onClose={handleCloseDropDownMenu}
+                  onClick={(e) => e.preventDefault()}
+                >
+                  {menuItemsForTypeMenu.map((item, index) => (
+                    <MenuItem
+                      key={index}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleMenuItemClick(item);
+                      }}
                     >
-                      <ListItemText primary={`${index + 1}. ${item}`} />
-                    </ListItemButton>
-                  </ListItem>
-                }
-                MenuInfo={[
-                  {
-                    name: '修改值',
-                    handler: () => {
-                      setOpenDialogForUpdateClipping(true);
-                      setUpdateClippingValue(selectedSecondLevel);
-                    },
-                    prefixIcon: <DeleteIcon />,
-                  },
-                  {
-                    name: '复制名称',
-                    handler: () => {
-                      navigator.clipboard.writeText(selectedSecondLevel);
-                    },
-                    prefixIcon: <DeleteIcon />,
-                  },
-                ]}
-              />
+                      <ListItemIcon>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.label} />
+                    </MenuItem>
+                  ))}
+                </MaterialMenu>
+              </div>
+            </ListSubheader>
+            {secondLevelMenuList.map((item, index) => (
+              <ListItem
+                style={{ padding: 0 }}
+                key={index}
+                onClick={() => {
+                  filterData(null, item, allClippings);
+                }}
+              >
+                <ListItemButton
+                  style={{ paddingLeft: 10, paddingRight: 10 }}
+                  selected={item === selectedSecondLevel}
+                >
+                  <ListItemText
+                    primary={`${index + 1}. ${item}`}
+                    style={{ wordBreak: 'break-all' }}
+                  />
+                </ListItemButton>
+              </ListItem>
             ))}
           </List>
-        </Sider>
-        <Content style={{ marginLeft: 223 }}>
-          <ClippingCardList data={data} fetchClippings={fetchClippings} />
-        </Content>
-      </Layout>
+        </Paper>
+      </div>
+      <div>
+        <Box
+          component="form"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+          style={{
+            width: '75%',
+            position: 'absolute',
+            top: 20,
+            left: '24vw',
+            paddingLeft: 20,
+          }}
+        >
+          <CustomTextField
+            variant="outlined"
+            size="small"
+            placeholder={intl.formatMessage({ id: 'pages.books.search' })}
+            onChange={(e: any) => {
+              e.preventDefault();
+              handleSearchChange(e.target.value);
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton type="submit" size="small">
+                  <SearchIcon />
+                </IconButton>
+              ),
+            }}
+            sx={{ width: { xs: '90%', sm: '50%', md: '40%' } }}
+          />
+        </Box>
+        <div
+          style={{
+            width: '75%',
+            position: 'absolute',
+            top: 65,
+            left: '24vw',
+            paddingLeft: 20,
+            maxHeight: '83.2vh',
+            overflowY: 'auto',
+          }}
+        >
+          <ClippingCardList
+            data={data}
+            fetchClippings={fetchClippings}
+            tablePaginationStyle={{
+              position: 'fixed',
+              marginRight: 20,
+              bottom: 0,
+              right: 0,
+            }}
+          />
+        </div>
+      </div>
 
       <Dialog
         open={openDialogForUpdateClipping}

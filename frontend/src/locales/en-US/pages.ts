@@ -13,6 +13,7 @@ export default {
   'pages.books.search': 'Search',
   'pages.books.cover': 'Cover',
   'pages.books.book': 'Book',
+
   'pages.books.book_sorting': 'Book Sorting',
   'pages.books.book_sorting.size.ascending': 'Size - Ascending',
   'pages.books.book_sorting.size.descending': 'Size - Descending',
@@ -20,8 +21,11 @@ export default {
   'pages.books.book_sorting.import.descending': 'Import Time - Descending',
   'pages.books.book_sorting.rating.ascending': 'Rating - Ascending',
   'pages.books.book_sorting.rating.descending': 'Rating - Descending',
-  'pages.books.book_sorting.author': 'Authors',
-  'pages.books.book_sorting.publisher': 'Publisher',
+  'pages.books.book_sorting.author.ascending': 'Authors - Ascending',
+  'pages.books.book_sorting.author.descending': 'Authors - Descending',
+  'pages.books.book_sorting.publisher.ascending': 'Publisher - Ascending',
+  'pages.books.book_sorting.publisher.descending': 'Publisher - Descending',
+
   'pages.books.book.create_book_collection': 'Create Book Collection',
   'pages.books.book.create_book_collection.name': 'Name',
   'pages.books.book.create_book_collection.description': 'Description',
@@ -41,6 +45,7 @@ export default {
   'pages.books.collection.action.edit_rating': 'Edit Rating',
   'pages.books.collection.action.edit_tags': 'Edit Tags',
   'pages.books.collection.action.edit_cover': 'Edit Cover',
+  'pages.books.book.action.edit_title': 'Edit Title',
   'pages.books.collection.action.remove_but_keep_book': 'Remove (Keep Book)',
   'pages.books.collection.action.remove_and_remove_book': 'Delete (Remove Book)',
   'pages.books.collection.action.edit_cover.title': 'Edit Collection Cover',
@@ -49,7 +54,7 @@ export default {
   'pages.books.collection.action.column.size': 'Size',
 
   'pages.books.book.action': 'Action',
-  'pages.books.book.action.collection': 'Coll',
+  'pages.books.book.action.collection': 'Edit Collection',
   'pages.books.book.action.read': 'Read',
   'pages.books.book.action.edit_rating': 'Edit Rating',
   'pages.books.book.action.edit_tags': 'Edit Tags',
@@ -68,10 +73,19 @@ export default {
   'pages.books.collection.action.add_books_to_storage.add_temporary_books': 'Add Temporary Books',
   'pages.books.collection.action.add_books_to_storage.apply': 'Apply',
   'pages.books.collection.action.add_books_to_storage.close': 'Close',
-  'pages.books.collection.action.delete_with_books':
+  'pages.books.collection.action.delete_with_clippings':
     'Deleting the collection will also delete the books. Are you sure you want to delete this collection?',
-  'pages.books.collection.action.delete_without_books':
+  'pages.books.collection.action.delete_without_clippings':
     'Delete collection will keep the books. Are you sure you want to delete this collection?',
+
+
+  'pages.clipping.action.open': 'Open',
+  'pages.clipping.action.remove_but_keep_clipping': 'Remove (Keep Clipping)',
+  'pages.clipping.action.remove_and_remove_clipping': 'Delete (Remove Clipping)',
+  'pages.clipping.action.delete_with_books.info': 'Deleting the collection will also delete the clippings. Are you sure you want to delete this collection?',
+  'pages.clipping.action.delete_without_books.info': 'Delete collection will keep the clippings. Are you sure you want to delete this collection?',
+
+
 
   'pages.highlight.create_collection': 'Create Highlight Collection',
 
@@ -130,7 +144,6 @@ export default {
   'pages.vocabulary.list.vocabulary_list': 'Vocabulary List',
   'pages.vocabulary.list.usage_list': 'Usage List',
 
-
   'pages.menu.action.hint': 'Tips',
   'pages.menu.action.list.upload': 'Upload Books',
   'pages.menu.action.list.download_all_books': 'Download All Books',
@@ -139,10 +152,13 @@ export default {
   'pages.menu.action.list.delete_highlights': 'Delete Highlights',
   'pages.menu.action.list.delete_all_data': 'Delete All Data',
   'pages.menu.action.list.delete.warning': 'Are You Sure to Delete?',
-  'pages.menu.action.list.upload.info': 'The platform will recursively scan supported ebook files in directories such as ~/Download and ~/Desktop. Duplicate files will not be uploaded again.',
+  'pages.menu.action.list.upload.info':
+    'The platform will recursively scan supported ebook files in directories such as ~/Download and ~/Desktop. Duplicate files will not be uploaded again.',
   'pages.menu.action.list.upload.result': 'Successfully Uploaded {n} Books',
   'pages.menu.action.list.upload.no_new_books': 'No New Books Detected for Upload!',
   'pages.menu.action.list.delete.delete_all_tmp_books': 'Successfully Deleted All Temporary Books!',
-  'pages.menu.action.list.download.result.info': 'All books have been successfully downloaded. Please check the newly created "{directory}" directory in your "documents" folder.',
-  'pages.menu.action.list.download.info': 'All books will be automatically downloaded to ~/Documents/lazykindler. Existing books will not be downloaded again.',
+  'pages.menu.action.list.download.result.info':
+    'All books have been successfully downloaded. Please check the newly created "{directory}" directory in your "documents" folder.',
+  'pages.menu.action.list.download.info':
+    'All books will be automatically downloaded to ~/Documents/lazykindler. Existing books will not be downloaded again.',
 };

@@ -91,6 +91,5 @@ def delete_book_data_by_uuid(uuid):
         if target_md5 in filepath:
             try:
                 os.remove(filepath)
-                break
             except OSError:
                 break

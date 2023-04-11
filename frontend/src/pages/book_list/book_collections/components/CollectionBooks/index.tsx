@@ -1,39 +1,27 @@
 import { BookMetaDataType, CollectionDataType } from '@/pages/data';
 import { getBooksMetaByUUIDs, getMultipleCollections } from '@/services';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, DialogTitle, IconButton } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { OutlinedInputProps } from '@mui/material/OutlinedInput';
-import { alpha, styled } from '@mui/material/styles';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-
 import { useIntl } from 'umi';
 
 import BookCardList from '../../../components/BookCardList';
 
-const RedditTextField = styled((props: TextFieldProps) => (
-  <TextField InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>} {...props} />
-))(({ theme }) => ({
-  '& .MuiFilledInput-root': {
-    border: '1px solid #e2e2e1',
-    overflow: 'hidden',
-    borderRadius: 4,
-    backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
-    transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-    '&.Mui-focused': {
-      backgroundColor: 'transparent',
-      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
-      borderColor: theme.palette.primary.main,
+const CustomTextField = styled(TextField)({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 50,
+    '& fieldset': {
+      borderRadius: 50,
     },
   },
-}));
+});
 
 type CollectionBooksProps = {
   open: boolean;
@@ -99,6 +87,10 @@ export default function CollectionBooks(props: CollectionBooksProps) {
     });
   };
 
+  const handleSearchChange = _.debounce((keyword: string) => {
+    onSearchChange(keyword);
+  }, 300); // 300ms 的延迟
+
   useEffect(() => {
     fetchBooks();
   }, []);
@@ -128,24 +120,42 @@ export default function CollectionBooks(props: CollectionBooksProps) {
       >
         <DialogTitle id="alert-dialog-title">{collectionInfo.name}</DialogTitle>
         <DialogContent>
-          <RedditTextField
-            label={intl.formatMessage({ id: 'pages.books.search' })}
-            id="reddit-input"
-            variant="filled"
-            style={{
+          <Box
+            component="form"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               width: '100%',
-              marginTop: 11,
-              marginBottom: 20,
             }}
-            onBlur={onSearchChange}
-          />
-          <div style={{ maxHeight: '70vh', overflowY: 'auto', overflowX: 'hidden' }}>
-            <BookCardList data={data} fetchBooks={fetchBooks} />
+            style={{
+              width: '75%',
+              position: 'absolute',
+              top: 20,
+            }}
+          >
+            <CustomTextField
+              variant="outlined"
+              size="small"
+              placeholder={intl.formatMessage({ id: 'pages.books.search' })}
+              onChange={(e: any) => {
+                e.preventDefault();
+                handleSearchChange(e.target.value);
+              }}
+              InputProps={{
+                endAdornment: (
+                  <IconButton type="submit" size="small">
+                    <SearchIcon />
+                  </IconButton>
+                ),
+              }}
+              sx={{ width: { xs: '90%', sm: '50%', md: '40%' } }}
+            />
+          </Box>
+          <div style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+            <BookCardList data={data} fetchBooks={fetchBooks} tablePaginationStyle={{}} />
           </div>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>关闭</Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

@@ -1,64 +1,48 @@
-import { getBooksMeta, getMultipleCollections } from '@/services';
+import { getBooksMeta, getMultipleCollections, getSetting } from '@/services';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import HouseIcon from '@mui/icons-material/House';
+import LabelIcon from '@mui/icons-material/Label';
+import SearchIcon from '@mui/icons-material/Search';
+import StarsIcon from '@mui/icons-material/Stars';
 import {
-  BankOutlined,
-  DatabaseOutlined,
-  DownOutlined,
-  StarOutlined,
-  TagsOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { List, ListItem, ListItemButton, ListItemText, ListSubheader } from '@mui/material';
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  Menu as MaterialMenu,
+  MenuItem,
+  Paper,
+  TextField,
+  IconButton,
+} from '@mui/material';
 import Button from '@mui/material/Button';
-import Menu, { MenuProps } from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { alpha, styled } from '@mui/material/styles';
-import { Dropdown, Input, Layout, Menu as AntMenu } from 'antd';
+import { styled } from '@mui/material/styles';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-
+import { FormattedMessage, useIntl } from 'umi';
 import type { BookMetaDataType, CollectionDataType } from '../../data';
 import BookCardList from '../components/BookCardList';
+import BookSettingMenu from '../components/BookSettingMenu';
 
-const { Sider, Content } = Layout;
+type MenuItemType = {
+  label: React.ReactNode;
+  icon: React.ReactElement;
+};
 
-const StyledMenu = styled((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-))(({ theme }) => ({
-  '& .MuiPaper-root': {
-    borderRadius: 6,
-    marginTop: theme.spacing(1),
-    minWidth: 180,
-    color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-    boxShadow:
-      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-    '& .MuiMenu-list': {
-      padding: '4px 0',
-    },
-    '& .MuiMenuItem-root': {
-      '& .MuiSvgIcon-root': {
-        fontSize: 18,
-        color: theme.palette.text.secondary,
-        marginRight: theme.spacing(1.5),
-      },
-      '&:active': {
-        backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-      },
+const settingKeyBookSortType = 'book_sort_type';
+
+const CustomTextField = styled(TextField)({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 50,
+    '& fieldset': {
+      borderRadius: 50,
     },
   },
-}));
+});
 
 enum FilterType {
   All,
@@ -92,7 +76,31 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
 
   const intl = useIntl();
 
-  const [sortTypeValue, setSortTypeValue] = useState<number>(2);
+  const menuItemsForTypeMenu: MenuItemType[] = [
+    {
+      label: intl.formatMessage({ id: 'pages.books.uncategorized' }),
+      icon: <FormatAlignJustifyIcon />,
+    },
+    { label: intl.formatMessage({ id: 'pages.books.rating' }), icon: <StarsIcon /> },
+    { label: intl.formatMessage({ id: 'pages.books.labels' }), icon: <LabelIcon /> },
+    { label: intl.formatMessage({ id: 'pages.books.authors' }), icon: <AccountCircleIcon /> },
+    { label: intl.formatMessage({ id: 'pages.books.publisher' }), icon: <HouseIcon /> },
+  ];
+
+  const [anchorElForTypeMenu, setAnchorElForTypeMen] = useState<null | HTMLElement>(null);
+
+  const [selectedDropDownMenuItem, setSelectedDropDownMenuItem] = useState<MenuItemType>(
+    menuItemsForTypeMenu[0],
+  );
+
+  const handleClickDropDownMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElForTypeMen(event.currentTarget);
+  };
+
+  const handleCloseDropDownMenu = () => {
+    setAnchorElForTypeMen(null);
+  };
+
   const [allBooksMeta, setAllBooksMeta] = useState<BookMetaDataType[]>([]);
   const [data, setData] = useState<BookMetaDataType[]>([]);
 
@@ -111,260 +119,188 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
     Publisher: {},
   });
 
-  const CustomizedMenus = () => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+  const handleMenuItemClick = (item: MenuItemType) => {
+    setSelectedDropDownMenuItem(item);
+    handleCloseDropDownMenu();
 
-    return (
-      <div>
-        <Button
-          id="demo-customized-button"
-          aria-controls={open ? 'demo-customized-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-          variant="contained"
-          fullWidth
-          disableElevation
-          onClick={handleClick}
-          endIcon={<KeyboardArrowDownIcon />}
-        >
-          <FormattedMessage id="pages.books.book_sorting" />
-        </Button>
-        <StyledMenu
-          id="demo-customized-menu"
-          MenuListProps={{
-            'aria-labelledby': 'demo-customized-button',
-          }}
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-        >
-          <MenuItem
-            selected={sortTypeValue == 1}
-            onClick={() => {
-              handleClose();
-              fetchBooks(1);
-              setSortTypeValue(1);
-            }}
-            disableRipple
-          >
-            <FormattedMessage id="pages.books.book_sorting.size.ascending" />
-          </MenuItem>
-          <MenuItem
-            selected={sortTypeValue == 2}
-            onClick={() => {
-              handleClose();
-              fetchBooks(2);
-              setSortTypeValue(2);
-            }}
-            disableRipple
-          >
-            <FormattedMessage id="pages.books.book_sorting.size.descending" />
-          </MenuItem>
-          <MenuItem
-            selected={sortTypeValue == 4}
-            onClick={() => {
-              handleClose();
-              fetchBooks(4);
-              setSortTypeValue(4);
-            }}
-            disableRipple
-          >
-            <FormattedMessage id="pages.books.book_sorting.import.ascending" />
-          </MenuItem>
-          <MenuItem
-            selected={sortTypeValue == 3}
-            onClick={() => {
-              handleClose();
-              fetchBooks(3);
-              setSortTypeValue(3);
-            }}
-            disableRipple
-          >
-            <FormattedMessage id="pages.books.book_sorting.import.descending" />
-          </MenuItem>
-          <MenuItem
-            selected={sortTypeValue == 6}
-            onClick={() => {
-              handleClose();
-              fetchBooks(6);
-              setSortTypeValue(6);
-            }}
-            disableRipple
-          >
-            <FormattedMessage id="pages.books.book_sorting.rating.ascending" />
-          </MenuItem>
-          <MenuItem
-            selected={sortTypeValue == 5}
-            onClick={() => {
-              handleClose();
-              fetchBooks(5);
-              setSortTypeValue(5);
-            }}
-            disableRipple
-          >
-            <FormattedMessage id="pages.books.book_sorting.rating.descending" />
-          </MenuItem>
-          <MenuItem
-            selected={sortTypeValue == 7}
-            onClick={() => {
-              handleClose();
-              fetchBooks(7);
-              setSortTypeValue(7);
-            }}
-            disableRipple
-          >
-            <FormattedMessage id="pages.books.book_sorting.author" />
-          </MenuItem>
-          <MenuItem
-            selected={sortTypeValue == 8}
-            onClick={() => {
-              handleClose();
-              fetchBooks(8);
-              setSortTypeValue(8);
-            }}
-            disableRipple
-          >
-            <FormattedMessage id="pages.books.book_sorting.publisher" />
-          </MenuItem>
-        </StyledMenu>
-      </div>
+    switch (item.label) {
+      case intl.formatMessage({ id: 'pages.books.uncategorized' }):
+        setFirstLevelType(filterTypeMessages[FilterType.All]);
+        setSecondLevelMenuList([]);
+
+        setData(allBooksMeta);
+        break;
+      case intl.formatMessage({ id: 'pages.books.rating' }):
+        setFirstLevelType(filterTypeMessages[FilterType.Star]);
+        setSecondLevelMenuList(Object.keys(classifiedInfo.Star));
+        break;
+      case intl.formatMessage({ id: 'pages.books.labels' }):
+        setFirstLevelType(filterTypeMessages[FilterType.Tags]);
+        setSecondLevelMenuList(Object.keys(classifiedInfo.Tags));
+        break;
+      case intl.formatMessage({ id: 'pages.books.authors' }):
+        setFirstLevelType(filterTypeMessages[FilterType.Author]);
+        setSecondLevelMenuList(Object.keys(classifiedInfo.Author));
+        break;
+      case intl.formatMessage({ id: 'pages.books.publisher' }):
+        setFirstLevelType(filterTypeMessages[FilterType.Publisher]);
+        setSecondLevelMenuList(Object.keys(classifiedInfo.Publisher));
+        break;
+    }
+  };
+
+  const onSearchChange = (keyword: any) => {
+    const bookList = filterData(null, selectedSecondLevel, allBooksMeta);
+    setData(
+      _.filter(bookList, (item: BookMetaDataType) => {
+        if (
+          (item.name != null && item.name.includes(keyword)) ||
+          (item.author != null && item.author.includes(keyword)) ||
+          (item.publisher != null && item.publisher.includes(keyword)) ||
+          (item.tags != null && item.tags.includes(keyword))
+        ) {
+          return true;
+        }
+        return false;
+      }),
     );
   };
 
-  const fetchBooks = (sortTypeValue: number) => {
-    if (sortTypeValue == null) {
-      sortTypeValue = 3;
-    }
-    getBooksMeta(storeType, sortTypeValue).then((data) => {
-      if (data == null) {
-        data = [];
+  const handleSearchChange = _.debounce((keyword: string) => {
+    onSearchChange(keyword);
+  }, 300); // 300ms 的延迟
+
+  const fetchBooks = () => {
+    getSetting(settingKeyBookSortType).then((data) => {
+      let bookSortType = 0;
+      if (data.data != '') {
+        bookSortType = Number(data.data);
       }
 
-      let coll_uuids: any = [];
-      let bookCollsInfo: any = {};
-      _.forEach(data, (item: BookMetaDataType) => {
-        if (item.coll_uuids == null) {
-          return;
+      getBooksMeta(storeType, bookSortType).then((data) => {
+        if (data == null) {
+          data = [];
         }
-        coll_uuids = coll_uuids.concat(item.coll_uuids.split(';'));
-      });
-      coll_uuids = _.uniq(coll_uuids);
 
-      getMultipleCollections(coll_uuids).then((bookCollInfoList: CollectionDataType[]) => {
-        _.forEach(bookCollInfoList, (item: CollectionDataType) => {
-          bookCollsInfo[item.uuid] = item.name;
+        let coll_uuids: any = [];
+        let bookCollsInfo: any = {};
+        _.forEach(data, (item: BookMetaDataType) => {
+          if (item.coll_uuids == null) {
+            return;
+          }
+          coll_uuids = coll_uuids.concat(item.coll_uuids.split(';'));
+        });
+        coll_uuids = _.uniq(coll_uuids);
+
+        getMultipleCollections(coll_uuids).then((bookCollInfoList: CollectionDataType[]) => {
+          _.forEach(bookCollInfoList, (item: CollectionDataType) => {
+            bookCollsInfo[item.uuid] = item.name;
+          });
+
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].coll_uuids == null) {
+              continue;
+            }
+            let names: string[] = [];
+            _.forEach(data[i].coll_uuids.split(';'), (coll_uuid) => {
+              names.push(bookCollsInfo[coll_uuid]);
+            });
+            data[i].coll_names = names.join(';');
+          }
+
+          setData(data);
+          setAllBooksMeta(data);
         });
 
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].coll_uuids == null) {
-            continue;
+        const star: any = {};
+        const tag: any = {};
+        const authors: any = {};
+        const publisher: any = {};
+
+        _.forEach(data, (item: BookMetaDataType) => {
+          if (star[item.star] == null) {
+            star[item.star] = {};
           }
-          let names: string[] = [];
-          _.forEach(data[i].coll_uuids.split(';'), (coll_uuid) => {
-            names.push(bookCollsInfo[coll_uuid]);
-          });
-          data[i].coll_names = names.join(';');
-        }
+          if (item.star != null) {
+            star[item.star][item.uuid] = null;
+          }
 
-        setData(data);
-        setAllBooksMeta(data);
-      });
-
-      const star: any = {};
-      const tag: any = {};
-      const authors: any = {};
-      const publisher: any = {};
-
-      _.forEach(data, (item: BookMetaDataType) => {
-        if (star[item.star] == null) {
-          star[item.star] = {};
-        }
-        if (item.star != null) {
-          star[item.star][item.uuid] = null;
-        }
-
-        if (item.tags != null) {
-          item.tags.split(';').forEach((subject) => {
-            if (subject == '') {
-              return;
+          if (item.tags != null) {
+            item.tags.split(';').forEach((subject) => {
+              if (subject == '') {
+                return;
+              }
+              if (tag[subject] == null) {
+                tag[subject] = {};
+              }
+              tag[subject][item.uuid] = null;
+            });
+          } else {
+            if (tag['无标签'] == null) {
+              tag['无标签'] = {};
             }
-            if (tag[subject] == null) {
-              tag[subject] = {};
+            tag['无标签'][item.uuid] = null;
+          }
+
+          if (item.author == null) {
+            if (authors['无作者'] == null) {
+              authors['无作者'] = {};
             }
-            tag[subject][item.uuid] = null;
-          });
-        } else {
-          if (tag['无标签'] == null) {
-            tag['无标签'] = {};
+            authors['无作者'][item.uuid] = null;
+          } else {
+            if (authors[item.author] == null) {
+              authors[item.author] = {};
+            }
+            authors[item.author][item.uuid] = null;
           }
-          tag['无标签'][item.uuid] = null;
+
+          if (item.publisher == null) {
+            if (publisher['无出版社'] == null) {
+              publisher['无出版社'] = {};
+            }
+            publisher['无出版社'][item.uuid] = null;
+          } else {
+            if (publisher[item.publisher] == null) {
+              publisher[item.publisher] = {};
+            }
+            publisher[item.publisher][item.uuid] = null;
+          }
+        });
+
+        let allInfo = {
+          Star: star,
+          Tags: tag,
+          Author: authors,
+          Publisher: publisher,
+        };
+
+        setClassifiedInfo(allInfo);
+
+        switch (firstLevelType) {
+          case filterTypeMessages[FilterType.All]:
+            setSecondLevelMenuList([]);
+            break;
+          case filterTypeMessages[FilterType.Star]:
+            setSecondLevelMenuList(Object.keys(allInfo.Star));
+            break;
+          case filterTypeMessages[FilterType.Tags]:
+            setSecondLevelMenuList(Object.keys(allInfo.Tags));
+            break;
+          case filterTypeMessages[FilterType.Author]:
+            setSecondLevelMenuList(Object.keys(allInfo.Author));
+            break;
+          case filterTypeMessages[FilterType.Publisher]:
+            setSecondLevelMenuList(Object.keys(allInfo.Publisher));
+            break;
         }
 
-        if (item.author == null) {
-          if (authors['无作者'] == null) {
-            authors['无作者'] = {};
-          }
-          authors['无作者'][item.uuid] = null;
-        } else {
-          if (authors[item.author] == null) {
-            authors[item.author] = {};
-          }
-          authors[item.author][item.uuid] = null;
-        }
-
-        if (item.publisher == null) {
-          if (publisher['无出版社'] == null) {
-            publisher['无出版社'] = {};
-          }
-          publisher['无出版社'][item.uuid] = null;
-        } else {
-          if (publisher[item.publisher] == null) {
-            publisher[item.publisher] = {};
-          }
-          publisher[item.publisher][item.uuid] = null;
-        }
+        filterData(allInfo, selectedSecondLevel, data);
       });
-
-      let allInfo = {
-        Star: star,
-        Tags: tag,
-        Author: authors,
-        Publisher: publisher,
-      };
-
-      setClassifiedInfo(allInfo);
-
-      switch (firstLevelType) {
-        case filterTypeMessages[FilterType.All]:
-          setSecondLevelMenuList([]);
-          break;
-        case filterTypeMessages[FilterType.Star]:
-          setSecondLevelMenuList(Object.keys(allInfo.Star));
-          break;
-        case filterTypeMessages[FilterType.Tags]:
-          setSecondLevelMenuList(Object.keys(allInfo.Tags));
-          break;
-        case filterTypeMessages[FilterType.Author]:
-          setSecondLevelMenuList(Object.keys(allInfo.Author));
-          break;
-        case filterTypeMessages[FilterType.Publisher]:
-          setSecondLevelMenuList(Object.keys(allInfo.Publisher));
-          break;
-      }
-
-      filterData(allInfo, selectedSecondLevel, data);
     });
   };
 
   useEffect(() => {
-    fetchBooks(2);
+    fetchBooks();
   }, []);
 
   const filterData = (data: any, selectedKeyword: any, allBooksMetaList: BookMetaDataType[]) => {
@@ -438,196 +374,46 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
     return filteredBooks;
   };
 
-  const headerDropMenu = () => {
-    return (
-      <AntMenu>
-        <AntMenu.Item key="all" icon={<DatabaseOutlined />}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              setFirstLevelType(filterTypeMessages[FilterType.All]);
-              setSecondLevelMenuList([]);
-
-              setData(allBooksMeta);
-            }}
-            style={{ paddingLeft: 13 }}
-          >
-            <FormattedMessage id="pages.books.uncategorized" />
-          </a>
-        </AntMenu.Item>
-        <AntMenu.Item key="star" icon={<StarOutlined />}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              setFirstLevelType(filterTypeMessages[FilterType.Star]);
-              setSecondLevelMenuList(Object.keys(classifiedInfo.Star));
-            }}
-            style={{ paddingLeft: 13 }}
-          >
-            <FormattedMessage id="pages.books.rating" />
-          </a>
-        </AntMenu.Item>
-        <AntMenu.Item key="tag" icon={<TagsOutlined />}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              setFirstLevelType(filterTypeMessages[FilterType.Tags]);
-              setSecondLevelMenuList(Object.keys(classifiedInfo.Tags));
-            }}
-            style={{ paddingLeft: 13 }}
-          >
-            <FormattedMessage id="pages.books.labels" />
-          </a>
-        </AntMenu.Item>
-        <AntMenu.Item key="author" icon={<UserOutlined />}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              setFirstLevelType(filterTypeMessages[FilterType.Author]);
-              setSecondLevelMenuList(Object.keys(classifiedInfo.Author));
-            }}
-            style={{ paddingLeft: 13 }}
-          >
-            <FormattedMessage id="pages.books.authors" />
-          </a>
-        </AntMenu.Item>
-        <AntMenu.Item key="publisher" icon={<BankOutlined />}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              setFirstLevelType(filterTypeMessages[FilterType.Publisher]);
-              setSecondLevelMenuList(Object.keys(classifiedInfo.Publisher));
-            }}
-            style={{ paddingLeft: 13 }}
-          >
-            <FormattedMessage id="pages.books.publisher" />
-          </a>
-        </AntMenu.Item>
-      </AntMenu>
-    );
-  };
-
-  const MenuHeader = () => {
-    switch (firstLevelType) {
-      case filterTypeMessages[FilterType.All]:
-        return (
-          <ListSubheader>
-            <Dropdown overlay={headerDropMenu}>
-              <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                <DatabaseOutlined style={{ paddingRight: 13 }} />
-                {firstLevelType}
-                <DownOutlined style={{ paddingLeft: 13 }} />
-              </a>
-            </Dropdown>
-          </ListSubheader>
-        );
-      case filterTypeMessages[FilterType.Author]:
-        return (
-          <ListSubheader>
-            <Dropdown overlay={headerDropMenu}>
-              <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                <DatabaseOutlined style={{ paddingRight: 13 }} />
-                {firstLevelType}
-                <DownOutlined style={{ paddingLeft: 13 }} />
-              </a>
-            </Dropdown>
-          </ListSubheader>
-        );
-
-      case filterTypeMessages[FilterType.Publisher]:
-        return (
-          <ListSubheader>
-            <Dropdown overlay={headerDropMenu}>
-              <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                <BankOutlined style={{ paddingRight: 13 }} />
-                {firstLevelType}
-                <DownOutlined style={{ paddingLeft: 13 }} />
-              </a>
-            </Dropdown>
-          </ListSubheader>
-        );
-
-      case filterTypeMessages[FilterType.Star]:
-        return (
-          <ListSubheader>
-            <Dropdown overlay={headerDropMenu}>
-              <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                <StarOutlined style={{ paddingRight: 13 }} />
-                {firstLevelType}
-                <DownOutlined style={{ paddingLeft: 13 }} />
-              </a>
-            </Dropdown>
-          </ListSubheader>
-        );
-
-      case filterTypeMessages[FilterType.Tags]:
-        return (
-          <ListSubheader>
-            <Dropdown overlay={headerDropMenu}>
-              <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                <TagsOutlined style={{ paddingRight: 13 }} />
-                {firstLevelType}
-                <DownOutlined style={{ paddingLeft: 13 }} />
-              </a>
-            </Dropdown>
-          </ListSubheader>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const onSearchChange = (e: any) => {
-    const keyword = e.target.value;
-    const bookList = filterData(null, selectedSecondLevel, allBooksMeta);
-    setData(
-      _.filter(bookList, (item: BookMetaDataType) => {
-        if (
-          (item.name != null && item.name.includes(keyword)) ||
-          (item.author != null && item.author.includes(keyword)) ||
-          (item.publisher != null && item.publisher.includes(keyword)) ||
-          (item.tags != null && item.tags.includes(keyword))
-        ) {
-          return true;
-        }
-        return false;
-      }),
-    );
-  };
-
   return (
     <>
-      <Layout>
-        <Sider style={{ backgroundColor: 'initial', paddingLeft: 0, position: 'fixed' }}>
-          <Input
-            style={{ marginBottom: 10, marginLeft: -11, height: 45 }}
-            placeholder={intl.formatMessage({ id: 'pages.books.search' })}
-            onBlur={onSearchChange}
-          />
-
-          <List
-            sx={{
-              width: '100%',
-              bgcolor: 'background.paper',
-              height: '100vh',
-              marginLeft: -1.5,
-              overflow: 'auto',
-              '& ul': { padding: 0 },
-            }}
-            subheader={<li />}
-          >
-            {CustomizedMenus()}
-            {<MenuHeader />}
-
+      <div style={{ width: '23%', position: 'relative' }}>
+        <Paper style={{ height: '88vh', overflowY: 'auto' }}>
+          <List>
+            <ListSubheader>
+              <div>
+                <Button
+                  style={{ width: '100%', fontSize: '80%' }}
+                  variant="contained"
+                  startIcon={selectedDropDownMenuItem.icon}
+                  onClick={handleClickDropDownMenu}
+                >
+                  {selectedDropDownMenuItem.label}
+                </Button>
+                <MaterialMenu
+                  anchorEl={anchorElForTypeMenu}
+                  open={Boolean(anchorElForTypeMenu)}
+                  onClose={handleCloseDropDownMenu}
+                  onClick={(e) => e.preventDefault()}
+                >
+                  {menuItemsForTypeMenu.map((item, index) => (
+                    <MenuItem
+                      key={index}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleMenuItemClick(item);
+                      }}
+                    >
+                      <ListItemIcon>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.label} />
+                    </MenuItem>
+                  ))}
+                </MaterialMenu>
+              </div>
+            </ListSubheader>
             {secondLevelMenuList.map((item, index) => (
               <ListItem
-                key={index}
                 style={{ padding: 0 }}
+                key={index}
                 onClick={() => {
                   filterData(null, item, allBooksMeta);
                 }}
@@ -636,16 +422,75 @@ const Books: FC<BooksProps> = (props: BooksProps) => {
                   style={{ paddingLeft: 10, paddingRight: 10 }}
                   selected={item === selectedSecondLevel}
                 >
-                  <ListItemText primary={`${index + 1}. ${item}`} />
+                  <ListItemText
+                    primary={`${index + 1}. ${item}`}
+                    style={{ wordBreak: 'break-all' }}
+                  />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
-        </Sider>
-        <Content style={{ marginLeft: 210 }}>
-          <BookCardList data={data} fetchBooks={fetchBooks} />
-        </Content>
-      </Layout>
+        </Paper>
+      </div>
+      <div>
+        <Box
+          component="form"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+          style={{
+            width: '75%',
+            position: 'absolute',
+            top: 20,
+            left: '24vw',
+            paddingLeft: 20,
+          }}
+        >
+          <BookSettingMenu fetchBooks={fetchBooks} />
+          <CustomTextField
+            variant="outlined"
+            size="small"
+            placeholder={intl.formatMessage({ id: 'pages.books.search' })}
+            onChange={(e: any) => {
+              e.preventDefault();
+              handleSearchChange(e.target.value);
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton type="submit" size="small">
+                  <SearchIcon />
+                </IconButton>
+              ),
+            }}
+            sx={{ width: { xs: '90%', sm: '50%', md: '40%' } }}
+          />
+        </Box>
+        <div
+          style={{
+            width: '75%',
+            position: 'absolute',
+            top: 65,
+            left: '24vw',
+            paddingLeft: 20,
+            maxHeight: '83.5vh',
+            overflowY: 'auto',
+          }}
+        >
+          <BookCardList
+            data={data}
+            fetchBooks={fetchBooks}
+            tablePaginationStyle={{
+              position: 'fixed',
+              marginRight: 20,
+              bottom: 0,
+              right: 0,
+            }}
+          />
+        </div>
+      </div>
     </>
   );
 };

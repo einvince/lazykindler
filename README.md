@@ -150,9 +150,7 @@ Other versions are untested
 pip3 install -r requirements.txt
 ```
 
-2. If you need to use the `chatgpt` feature, please configure the `chatgpt` key in `backend/config.ini`. The address to generate the key on the OpenAi official website is `https://platform.openai.com/account/api-keys`.
-
-3. Execute in `frontend` directory
+2. Execute in `frontend` directory
 
 ```
 yarn install

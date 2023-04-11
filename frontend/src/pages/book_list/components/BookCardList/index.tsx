@@ -1,6 +1,6 @@
 import { deleteBook, downloadBook, updateBookCover, updateBookMeta } from '@/services';
-import { getAwnserFromChatgpt } from '@/services/chatgpt';
 import { humanFileSize, toBase64 } from '@/util';
+import { SettingOutlined } from '@ant-design/icons';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArchiveIcon from '@mui/icons-material/Archive';
@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import StarIcon from '@mui/icons-material/Star';
 import StraightenIcon from '@mui/icons-material/Straighten';
+import Masonry from '@mui/lab/Masonry';
 import {
   Box,
   Button,
@@ -21,10 +22,11 @@ import {
   FormControl,
   IconButton,
   Snackbar,
+  TablePagination,
   Typography,
 } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import { Card, Dropdown, List as AntList, Menu, Spin } from 'antd';
+import { Card, Menu } from 'antd';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'umi';
@@ -36,12 +38,30 @@ import ChangeInfo from '../ChangeInfoDialog';
 import Cover from '../Cover';
 import ChangeBookColl from './ChangeBookColl';
 
-const { SubMenu } = Menu;
+import type { MenuProps } from 'antd';
 
 type BookCardListProps = {
   data: any;
   fetchBooks: any;
+  tablePaginationStyle: any;
 };
+type MenuItem = Required<MenuProps>['items'][number];
+
+function getItem(
+  label: React.ReactNode,
+  key?: React.Key | null,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  theme?: 'light' | 'dark',
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    theme,
+  } as MenuItem;
+}
 
 const initialDialogInfo = {
   title: '',
@@ -57,7 +77,7 @@ const initialDialogInfoForReadBook = {
 };
 
 export default function BookCardList(props: BookCardListProps) {
-  const { data, fetchBooks } = props;
+  const { data, fetchBooks, tablePaginationStyle } = props;
 
   const intl = useIntl();
 
@@ -76,11 +96,20 @@ export default function BookCardList(props: BookCardListProps) {
   const [uuidForEditCover, setUUIDForEditCover] = useState<any>();
   const [openForEditCover, setOpenForEditCover] = useState(false);
 
-  const [bookRelatedInfo, setBookRelatedInfo] = useState<string>('');
-  const [openForBookRelatedInfo, setOpenForBookRelatedInfo] = useState(false);
-
   // 每页条目数
   const [pageNumberSize, setPageNumberSize] = useState(40);
+  const [page, setPage] = useState(0);
+
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setPageNumberSize(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const [snackBar, setSnackBar] = useState<any>({
     message: '',
@@ -99,12 +128,12 @@ export default function BookCardList(props: BookCardListProps) {
     setDialogInfo(initialDialogInfo);
   };
 
-  const handleClickOpen = (uuid: string) => {
+  const handleClickOpenForDeleteBook = (uuid: string) => {
     setDeleteBookUUID(uuid);
     setOpenDeleteBook(true);
   };
 
-  const handleClose = () => {
+  const handleCloseOpenForDeleteBook = () => {
     setOpenDeleteBook(false);
   };
 
@@ -121,367 +150,281 @@ export default function BookCardList(props: BookCardListProps) {
     return true;
   };
 
-  const get_book_related_info = (keyword_type: string, keyword: string) => {
-    getAwnserFromChatgpt(keyword_type, keyword).then((data) => {
-      setOpenForBookRelatedInfo(true);
-      setBookRelatedInfo(data.data);
-    });
+  const actionMenuList = [
+    getItem(<FormattedMessage id="pages.books.book.action.collection" />, 'collection'),
+    getItem(<FormattedMessage id="pages.books.book.action.read" />, 'read'),
+    getItem(<FormattedMessage id="pages.books.collection.action" />, 'sub4', <SettingOutlined />, [
+      getItem(<FormattedMessage id="pages.books.book.action.edit_title" />, 'edit_title'),
+      getItem(<FormattedMessage id="pages.books.book.action.edit_tags" />, 'edit_tags'),
+      getItem(<FormattedMessage id="pages.books.book.action.edit_collection" />, 'edit_collection'),
+      getItem(<FormattedMessage id="pages.books.book.action.edit_author" />, 'edit_author'),
+      getItem(<FormattedMessage id="pages.books.book.action.edit_publisher" />, 'edit_publisher'),
+      getItem(<FormattedMessage id="pages.books.book.action.edit_cover" />, 'edit_cover'),
+      getItem(<FormattedMessage id="pages.books.book.action.edit_rating" />, 'edit_rating'),
+      getItem(<FormattedMessage id="pages.books.book.action.read" />, 'read_book'),
+      getItem(<FormattedMessage id="pages.books.book.action.delete" />, 'delete'),
+    ]),
+  ];
+
+  const onClickActionMenu = (key: string, item: BookMetaDataType) => {
+    switch (key) {
+      case 'collection':
+      case 'edit_collection':
+        setUUID(uuidv4());
+        setChangeBookCollInfo({
+          item_uuid: item.uuid,
+          open: true,
+        });
+        break;
+      case 'read':
+      case 'read_book':
+        setOpenReadBook({
+          open: true,
+          book_uuid: item.uuid,
+          book_title: item.name,
+        });
+        break;
+      case 'edit_title':
+        setDialogInfo({
+          title: intl.formatMessage({ id: 'pages.books.book.action.edit_title' }),
+          oldValue: item.name,
+          allowEmptyStr: false,
+          handleOK: (newValue: any) => {
+            updateBookMeta(item.uuid, 'name', newValue).then(() => {
+              fetchBooks();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_tags':
+        setDialogInfo({
+          title: intl.formatMessage({ id: 'pages.books.book.action.edit_tags' }),
+          oldValue: item.tags,
+          allowEmptyStr: true,
+          handleOK: (newValue: any) => {
+            updateBookMeta(item.uuid, 'tags', newValue).then(() => {
+              fetchBooks();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_author':
+        setDialogInfo({
+          title: intl.formatMessage({ id: 'pages.books.book.action.edit_author' }),
+          oldValue: item.author,
+          allowEmptyStr: true,
+          handleOK: (newValue: any) => {
+            updateBookMeta(item.uuid, 'author', newValue).then(() => {
+              fetchBooks();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_rating':
+        setDialogInfo({
+          title: intl.formatMessage({ id: 'pages.books.book.action.edit_rating' }),
+          oldValue: item.star,
+          allowEmptyStr: false,
+          handleOK: (newValue: any) => {
+            updateBookMeta(item.uuid, 'star', newValue).then(() => {
+              fetchBooks();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_publisher':
+        setDialogInfo({
+          title: intl.formatMessage({
+            id: 'pages.books.book.action.edit_publisher',
+          }),
+          oldValue: item.publisher,
+          allowEmptyStr: true,
+          handleOK: (newValue: any) => {
+            updateBookMeta(item.uuid, 'publisher', newValue).then(() => {
+              fetchBooks();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_cover':
+        handleOpenForEditCover();
+        setUUIDForEditCover(item.uuid);
+        break;
+      case 'download':
+        downloadBook(item.uuid).then(() => {
+          setSnackBar({
+            message: intl.formatMessage({ id: 'pages.download_success' }),
+            open: true,
+          });
+        });
+        break;
+      case 'delete':
+        handleClickOpenForDeleteBook(item.uuid);
+        break;
+    }
   };
 
   return (
     <div>
-      <AntList
-        rowKey="id"
-        grid={{
-          gutter: 20,
-          xs: 1,
-          sm: 1,
-          md: 2,
-          lg: 3,
-          xl: 4,
-          xxl: 5,
-        }}
-        pagination={{
-          style: {
-            textAlign: 'center',
-            position: 'fixed',
-            bottom: '1.1vh',
-            right: 26,
-            backgroundColor: '#bfaaf9',
-          },
-          defaultPageSize: 40,
-          hideOnSinglePage: true,
-          selectComponentClass: (e: any) => {
-            return (
-              <>
-                <Dropdown
-                  menu={{
-                    items: [
-                      {
-                        key: '1',
-                        onClick: () => {
-                          e.onChange(20);
-                          setPageNumberSize(20);
-                        },
-                        label: 20,
-                      },
-                      {
-                        key: '2',
-                        onClick: () => {
-                          e.onChange(40);
-                          setPageNumberSize(40);
-                        },
-                        label: 40,
-                      },
-                      {
-                        key: '3',
-                        onClick: () => {
-                          e.onChange(60);
-                          setPageNumberSize(60);
-                        },
-                        label: 60,
-                      },
-                    ],
-                  }}
-                  placement="top"
-                  arrow
-                >
-                  <Button>
-                    <FormattedMessage id="pages.items_per_page" />
-                    {pageNumberSize}
-                  </Button>
-                </Dropdown>
-              </>
-            );
-          },
-        }}
-        dataSource={data}
-        renderItem={(item: BookMetaDataType) => (
-          <AntList.Item>
-            <Card
-              hoverable
-              style={{ width: 200 }}
-              cover={<Cover uuid={item.uuid} />}
-              actions={[
-                <Menu key={1} mode="horizontal" selectable={false}>
-                  <Button
-                    variant="text"
-                    style={{ width: '33%' }}
-                    onClick={() => {
-                      setUUID(uuidv4());
-                      setChangeBookCollInfo({
-                        item_uuid: item.uuid,
-                        open: true,
-                      });
-                    }}
-                  >
-                    <FormattedMessage id="pages.books.book.action.collection" />
-                  </Button>
-                  <Divider orientation="vertical" flexItem />
-                  <Button
-                    variant="text"
-                    style={{ width: '33%' }}
-                    onClick={() => {
-                      setOpenReadBook({
-                        open: true,
-                        book_uuid: item.uuid,
-                        book_title: item.name,
-                      });
-                    }}
-                  >
-                    <FormattedMessage id="pages.books.book.action.read" />
-                  </Button>
-                  <Divider orientation="vertical" flexItem />
-                  <SubMenu
-                    key="sub4"
-                    title={intl.formatMessage({ id: 'pages.books.book.action' })}
-                    style={{
-                      zIndex: 10,
-                      color: 'dodgerblue',
-                      width: '34%',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <Menu.Item
-                      key="1"
-                      onClick={() => {
-                        setDialogInfo({
-                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_rating' }),
-                          oldValue: item.star,
-                          allowEmptyStr: false,
-                          handleOK: (newValue: any) => {
-                            updateBookMeta(item.uuid, 'star', newValue).then(() => {
-                              fetchBooks();
-                            });
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.edit_rating" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="2"
-                      onClick={() => {
-                        setDialogInfo({
-                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_tags' }),
-                          oldValue: item.tags,
-                          allowEmptyStr: true,
-                          handleOK: (newValue: any) => {
-                            updateBookMeta(item.uuid, 'tags', newValue).then(() => {
-                              fetchBooks();
-                            });
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.edit_tags" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="3"
-                      onClick={() => {
-                        setUUID(uuidv4());
-                        setChangeBookCollInfo({
-                          item_uuid: item.uuid,
-                          open: true,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.edit_collection" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="4"
-                      onClick={() => {
-                        setDialogInfo({
-                          title: intl.formatMessage({ id: 'pages.books.book.action.edit_author' }),
-                          oldValue: item.author,
-                          allowEmptyStr: true,
-                          handleOK: (newValue: any) => {
-                            updateBookMeta(item.uuid, 'author', newValue).then(() => {
-                              fetchBooks();
-                            });
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.edit_author" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="5"
-                      onClick={() => {
-                        setDialogInfo({
-                          title: intl.formatMessage({
-                            id: 'pages.books.book.action.edit_publisher',
-                          }),
-                          oldValue: item.publisher,
-                          allowEmptyStr: true,
-                          handleOK: (newValue: any) => {
-                            updateBookMeta(item.uuid, 'publisher', newValue).then(() => {
-                              fetchBooks();
-                            });
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.edit_publisher" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="6"
-                      onClick={() => {
-                        handleOpenForEditCover();
-                        setUUIDForEditCover(item.uuid);
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.edit_cover" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="7"
-                      onClick={() => {
-                        downloadBook(item.uuid).then(() => {
-                          setSnackBar({
-                            message: intl.formatMessage({ id: 'pages.download_success' }),
-                            open: true,
-                          });
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.download" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="8"
-                      onClick={() => {
-                        setOpenReadBook({
-                          open: true,
-                          book_uuid: item.uuid,
-                          book_title: item.name,
-                        });
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.read" />
-                    </Menu.Item>
-                    {/* <Menu.Item
-                      key="9"
-                      onClick={() => {
-                        get_book_related_info('作者', item.author);
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.view_author_info" />
-                    </Menu.Item>
-                    <Menu.Item
-                      key="10"
-                      onClick={() => {
-                        setOpenForBookRelatedInfo(true);
-                        get_book_related_info('书名', item.name);
-                      }}
-                    >
-                      <FormattedMessage id="pages.books.book.action.view_book_info" />
-                    </Menu.Item> */}
-                    <Menu.Item
-                      key="11"
-                      onClick={() => {
-                        setOpenForBookRelatedInfo(true);
-                        handleClickOpen(item.uuid);
-                      }}
-                    >
-                      <span style={{ color: 'red' }}>
-                        <FormattedMessage id="pages.books.book.action.delete" />
-                      </span>
-                    </Menu.Item>
-                  </SubMenu>
-                </Menu>,
-              ]}
-              bodyStyle={{
-                paddingTop: 8,
-                paddingLeft: 4,
-                paddingRight: 4,
-                paddingBottom: 8,
-              }}
-            >
-              <Card.Meta
-                title={
-                  <div
-                    style={{
-                      maxHeight: '30vh',
-                      overflow: 'auto',
-                      marginTop: 5,
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      display="block"
-                      style={{
-                        wordBreak: 'break-all',
-                        whiteSpace: 'break-spaces',
-                        fontSize: 13,
-                      }}
-                      gutterBottom
-                    >
-                      {item.name}
-                    </Typography>
-                  </div>
-                }
-                description={
-                  <div
-                    style={{
-                      maxHeight: '40vh',
-                      overflow: 'auto',
-                      marginTop: 10,
-                    }}
-                  >
-                    <Divider style={{ marginBottom: 10 }} />
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <StarIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.star}
-                      </Typography>
-                    </Box>
+      <Box sx={{ width: '100%' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '70vh',
+          }}
+        >
+          <Box flexGrow={1}>
+            <Masonry style={{ width: '100%' }} columns={4} spacing={3}>
+              {data
+                .slice(page * pageNumberSize, (page + 1) * pageNumberSize)
+                .map((item: BookMetaDataType) => {
+                  return (
+                    <Card
+                      hoverable
+                      key={item.md5}
+                      cover={<Cover uuid={item.uuid} />}
+                      actions={[
+                        <Menu
+                          onClick={({ key, domEvent }) => {
+                            domEvent.preventDefault();
 
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <StraightenIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {humanFileSize(item.size, true)}
-                      </Typography>
-                    </Box>
+                            onClickActionMenu(key, item);
+                          }}
+                          items={actionMenuList}
+                          mode="vertical"
+                          key={'1'}
+                          selectable={false}
+                        ></Menu>,
+                      ]}
+                      bodyStyle={{
+                        paddingTop: 8,
+                        paddingLeft: 4,
+                        paddingRight: 4,
+                        paddingBottom: 8,
+                      }}
+                    >
+                      <Card.Meta
+                        title={
+                          <div
+                            style={{
+                              maxHeight: '30vh',
+                              overflow: 'auto',
+                              marginTop: 5,
+                            }}
+                          >
+                            <Typography
+                              variant="h6"
+                              display="block"
+                              style={{
+                                wordBreak: 'break-all',
+                                whiteSpace: 'break-spaces',
+                                fontSize: 13,
+                              }}
+                              gutterBottom
+                            >
+                              {item.name}
+                            </Typography>
+                          </div>
+                        }
+                        description={
+                          <div
+                            style={{
+                              maxHeight: '40vh',
+                              overflow: 'auto',
+                              marginTop: 10,
+                            }}
+                          >
+                            <Divider style={{ marginBottom: 10 }} />
+                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                              <StarIcon style={{ height: 20 }} />
+                              <Typography
+                                variant="body2"
+                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                              >
+                                {item.star}
+                              </Typography>
+                            </Box>
 
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <ArchiveIcon style={{ height: 16 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.coll_names == 'None' || item.coll_names == null
-                          ? ''
-                          : item.coll_names}
-                      </Typography>
-                    </Box>
+                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                              <StraightenIcon style={{ height: 20 }} />
+                              <Typography
+                                variant="body2"
+                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                              >
+                                {humanFileSize(item.size, true)}
+                              </Typography>
+                            </Box>
 
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <LocalOfferIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.tags == null ? '' : item.tags}
-                      </Typography>
-                    </Box>
+                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                              <ArchiveIcon style={{ height: 16 }} />
+                              <Typography
+                                variant="body2"
+                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                              >
+                                {item.coll_names == 'None' || item.coll_names == null
+                                  ? ''
+                                  : item.coll_names}
+                              </Typography>
+                            </Box>
 
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <AccountCircleIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.author == null ? '' : item.author}
-                      </Typography>
-                    </Box>
+                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                              <LocalOfferIcon style={{ height: 20 }} />
+                              <Typography
+                                variant="body2"
+                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                              >
+                                {item.tags == null ? '' : item.tags}
+                              </Typography>
+                            </Box>
 
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <AccountBalanceIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.publisher == null ? '' : item.publisher}
-                      </Typography>
-                    </Box>
-                  </div>
-                }
-              />
-            </Card>
-          </AntList.Item>
-        )}
-      />
+                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                              <AccountCircleIcon style={{ height: 20 }} />
+                              <Typography
+                                variant="body2"
+                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                              >
+                                {item.author == null ? '' : item.author}
+                              </Typography>
+                            </Box>
+
+                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                              <AccountBalanceIcon style={{ height: 20 }} />
+                              <Typography
+                                variant="body2"
+                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                              >
+                                {item.publisher == null ? '' : item.publisher}
+                              </Typography>
+                            </Box>
+                          </div>
+                        }
+                      />
+                    </Card>
+                  );
+                })}
+            </Masonry>
+          </Box>
+
+          <TablePagination
+            component="div"
+            count={data.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={pageNumberSize}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={<FormattedMessage id="pages.items_per_page" />}
+            rowsPerPageOptions={[40, 60, 80]}
+            style={tablePaginationStyle}
+          />
+        </Box>
+      </Box>
+
       <ChangeInfo
         title={dialogInfo['title']}
         oldValue={dialogInfo['oldValue']}
@@ -494,7 +437,7 @@ export default function BookCardList(props: BookCardListProps) {
       <div>
         <Dialog
           open={openDeleteBook}
-          onClose={handleClose}
+          onClose={handleCloseOpenForDeleteBook}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           fullWidth
@@ -508,12 +451,12 @@ export default function BookCardList(props: BookCardListProps) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>
+            <Button onClick={handleCloseOpenForDeleteBook}>
               <FormattedMessage id="pages.cancel" />
             </Button>
             <Button
               onClick={() => {
-                handleClose();
+                handleCloseOpenForDeleteBook();
                 deleteBook(deleteBookUUID).then(() => {
                   fetchBooks();
                 });
@@ -528,7 +471,7 @@ export default function BookCardList(props: BookCardListProps) {
 
       <Dialog
         open={openForEditCover}
-        onClose={handleClose}
+        onClose={handleCloseForEditCover}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth
@@ -633,30 +576,6 @@ export default function BookCardList(props: BookCardListProps) {
           setOpenReadBook(initialDialogInfoForReadBook);
         }}
       />
-
-      <div>
-        <Dialog
-          maxWidth="sm"
-          fullWidth
-          open={openForBookRelatedInfo}
-          onClose={() => {
-            setOpenForBookRelatedInfo(false);
-          }}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">简要信息</DialogTitle>
-          <DialogContent style={{ height: 300, overflow: 'auto' }}>
-            {bookRelatedInfo == '' ? (
-              <div>
-                <Spin size="large" style={{ display: 'block', margin: '90px auto' }} />
-              </div>
-            ) : (
-              <DialogContentText id="alert-dialog-description">{bookRelatedInfo}</DialogContentText>
-            )}
-          </DialogContent>
-        </Dialog>
-      </div>
     </div>
   );
 }

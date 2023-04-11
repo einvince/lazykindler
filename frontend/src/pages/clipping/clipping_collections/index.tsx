@@ -1,10 +1,12 @@
 import { CollectionDataType } from '@/pages/data';
 import { createBookCollection, getAllCollections } from '@/services';
-import { preHandleSubjects, toBase64, useWindowDimensions } from '@/util';
-import { DatabaseOutlined, DownOutlined, StarOutlined, TagsOutlined } from '@ant-design/icons';
+import { preHandleSubjects, toBase64 } from '@/util';
 import AddIcon from '@mui/icons-material/Add';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import LabelIcon from '@mui/icons-material/Label';
+import StarsIcon from '@mui/icons-material/Stars';
 import {
   Box,
   Button,
@@ -18,27 +20,30 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
   ListSubheader,
+  Menu as MaterialMenu,
+  MenuItem,
+  Paper,
   Typography,
 } from '@mui/material';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import { Dropdown, Layout, Menu } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { FormattedMessage } from 'umi';
-
-import ContextMenu from '../../book_list/components/ContextMenu';
+import { FormattedMessage, useIntl } from 'umi';
 import CollectionList from './components/CollectionList';
-
-const { Sider, Content } = Layout;
 
 enum FilterType {
   All = '未分类',
   Star = '评分',
   Tags = '标签',
 }
+
+type MenuItemType = {
+  label: React.ReactNode;
+  icon: React.ReactElement;
+};
 
 const filterTypeMessages = {
   [FilterType.All]: <FormattedMessage id="pages.books.uncategorized" />,
@@ -53,7 +58,6 @@ type SubHeaerType = {
 
 export default function BookCollections() {
   const [data, setData] = useState<any>([]);
-  const { width, height } = useWindowDimensions();
   // 选择的大的分类
   const [selectedType, setSelectedType] = useState<any>(filterTypeMessages[FilterType.All]);
   // 选择的大的分类下面的列表
@@ -71,6 +75,53 @@ export default function BookCollections() {
   const [formData, setFormData] = useState<any>({});
 
   const [open, setOpen] = useState(false);
+
+  const intl = useIntl();
+
+  const menuItemsForTypeMenu: MenuItemType[] = [
+    {
+      label: intl.formatMessage({ id: 'pages.books.uncategorized' }),
+      icon: <FormatAlignJustifyIcon />,
+    },
+    { label: intl.formatMessage({ id: 'pages.books.rating' }), icon: <StarsIcon /> },
+    { label: intl.formatMessage({ id: 'pages.books.labels' }), icon: <LabelIcon /> },
+  ];
+
+  const [anchorElForTypeMenu, setAnchorElForTypeMen] = useState<null | HTMLElement>(null);
+
+  const [selectedDropDownMenuItem, setSelectedDropDownMenuItem] = useState<MenuItemType>(
+    menuItemsForTypeMenu[0],
+  );
+
+  const handleClickDropDownMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElForTypeMen(event.currentTarget);
+  };
+
+  const handleCloseDropDownMenu = () => {
+    setAnchorElForTypeMen(null);
+  };
+
+  const handleMenuItemClick = (item: MenuItemType) => {
+    setSelectedDropDownMenuItem(item);
+    handleCloseDropDownMenu();
+
+    switch (item.label) {
+      case intl.formatMessage({ id: 'pages.books.uncategorized' }):
+        setSelectedType(filterTypeMessages[FilterType.All]);
+        setSelectedSubType([]);
+
+        setData(allClippingCollections);
+        break;
+      case intl.formatMessage({ id: 'pages.books.rating' }):
+        setSelectedType(filterTypeMessages[FilterType.Star]);
+        setSelectedSubType(Object.keys(classifiedInfo.Star));
+        break;
+      case intl.formatMessage({ id: 'pages.books.labels' }):
+        setSelectedType(filterTypeMessages[FilterType.Tags]);
+        setSelectedSubType(Object.keys(classifiedInfo.Tags));
+        break;
+    }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -174,57 +225,10 @@ export default function BookCollections() {
         fetchClippingCollections();
 
         handleClose();
+        setFormData({})
       },
     );
     return true;
-  };
-
-  const headerDropMenu = () => {
-    return (
-      <Menu style={{ width: 150 }}>
-        <Menu.Item key="all" icon={<DatabaseOutlined />}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              setSelectedType(filterTypeMessages[FilterType.All]);
-              setSelectedSubType([]);
-
-              setData(allClippingCollections);
-            }}
-            style={{ paddingLeft: 13 }}
-          >
-            <FormattedMessage id="pages.books.uncategorized" />
-          </a>
-        </Menu.Item>
-        <Menu.Item key="star" icon={<StarOutlined />}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              setSelectedType(filterTypeMessages[FilterType.Star]);
-              setSelectedSubType(Object.keys(classifiedInfo.Star));
-            }}
-            style={{ paddingLeft: 13 }}
-          >
-            <FormattedMessage id="pages.books.rating" />
-          </a>
-        </Menu.Item>
-        <Menu.Item key="tag" icon={<TagsOutlined />}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              setSelectedType(filterTypeMessages[FilterType.Tags]);
-              setSelectedSubType(Object.keys(classifiedInfo.Tags));
-            }}
-            style={{ paddingLeft: 13 }}
-          >
-            <FormattedMessage id="pages.books.labels" />
-          </a>
-        </Menu.Item>
-      </Menu>
-    );
   };
 
   const filterData = (data: any, selectedKeyword: string) => {
@@ -270,63 +274,86 @@ export default function BookCollections() {
 
   return (
     <>
-      <Layout>
-        <Sider style={{ backgroundColor: 'initial', paddingLeft: 0 }}>
-          <List
-            sx={{
-              bgcolor: 'background.paper',
-              position: 'fixed',
-              overflow: 'auto',
-              height: '100vh',
-              width: 200,
-              marginTop: -1.8,
-              marginLeft: -1.5,
-              '& ul': { padding: 0 },
-            }}
-            subheader={<li />}
-          >
-            <ListSubheader>
-              <Dropdown overlay={headerDropMenu}>
-                <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                  <DatabaseOutlined style={{ paddingRight: 13 }} />
-                  {selectedType}
-                  <DownOutlined style={{ paddingLeft: 13 }} />
-                </a>
-              </Dropdown>
-            </ListSubheader>
-            {selectedSubType.map((item, index) => (
-              <ContextMenu
-                key={index}
-                MenuInfo={[]}
-                Content={
-                  <ListItem
-                    style={{ padding: 0 }}
-                    key={index}
-                    onClick={() => {
-                      filterData(null, item);
-                    }}
+      <div>
+        <div style={{ width: '23%', position: 'relative' }}>
+          <Paper style={{ height: '88vh', overflowY: 'auto' }}>
+            <List>
+              <ListSubheader>
+                <div>
+                  <Button
+                    style={{ width: '80%', fontSize: '80%' }}
+                    variant="contained"
+                    startIcon={selectedDropDownMenuItem.icon}
+                    onClick={handleClickDropDownMenu}
                   >
-                    <ListItemButton
-                      style={{ paddingLeft: 10, paddingRight: 10 }}
-                      selected={item === selectedItemName}
-                    >
-                      <ListItemText primary={`${index + 1}. ${item}`} />
-                    </ListItemButton>
-                  </ListItem>
-                }
-              />
-            ))}
-            <ListItemButton onClick={handleClickOpen}>
-              <ListItemIcon style={{ paddingLeft: 70 }}>
-                <AddIcon />
-              </ListItemIcon>
-            </ListItemButton>
-          </List>
-        </Sider>
-        <Content style={{ marginLeft: -10 }}>
+                    {selectedDropDownMenuItem.label}
+                  </Button>
+                  <MaterialMenu
+                    anchorEl={anchorElForTypeMenu}
+                    open={Boolean(anchorElForTypeMenu)}
+                    onClose={handleCloseDropDownMenu}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    {menuItemsForTypeMenu.map((item, index) => (
+                      <MenuItem
+                        key={index}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleMenuItemClick(item);
+                        }}
+                      >
+                        <ListItemIcon>{item.icon}</ListItemIcon>
+                        <ListItemText primary={item.label} />
+                      </MenuItem>
+                    ))}
+                  </MaterialMenu>
+
+                  <IconButton
+                    style={{ left: 5 }}
+                    color="primary"
+                    aria-label="add to shopping cart"
+                    onClick={handleClickOpen}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </div>
+              </ListSubheader>
+              {selectedSubType.map((item, index) => (
+                <ListItem
+                  style={{ padding: 0 }}
+                  key={index}
+                  onClick={() => {
+                    filterData(null, item);
+                  }}
+                >
+                  <ListItemButton
+                    style={{ paddingLeft: 10, paddingRight: 10 }}
+                    selected={item === selectedItemName}
+                  >
+                    <ListItemText
+                      primary={`${index + 1}. ${item}`}
+                      style={{ wordBreak: 'break-all' }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+        </div>
+        <div
+          style={{
+            width: '75%',
+            position: 'absolute',
+            top: 20,
+            left: '24vw',
+            paddingLeft: 20,
+            maxHeight: '88vh',
+            overflowY: 'auto',
+          }}
+        >
           <CollectionList data={data} fetchClippingCollections={fetchClippingCollections} />
-        </Content>
-      </Layout>
+        </div>
+      </div>
 
       <Dialog
         open={open}

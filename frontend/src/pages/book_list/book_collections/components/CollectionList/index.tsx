@@ -24,6 +24,7 @@ import {
   DialogTitle,
   FormControl,
   IconButton,
+  TablePagination,
   Typography,
 } from '@mui/material';
 import Divider from '@mui/material/Divider';
@@ -82,7 +83,7 @@ const intOpenDialogInfo: OpenDialogType = {
   book_type: null,
 };
 
-export default function BookCardList(props: BookCardListProps) {
+export default function BookCollectionCardList(props: BookCardListProps) {
   const { data, fetchBookCollections } = props;
   const [uuid1, setUUID1] = useState<any>(uuidv4());
   const [uuid2, setUUID2] = useState<any>(uuidv4());
@@ -98,6 +99,21 @@ export default function BookCardList(props: BookCardListProps) {
   const [openForEditCover, setOpenForEditCover] = useState(false);
 
   const intl = useIntl();
+
+  // 每页条目数
+  const [pageNumberSize, setPageNumberSize] = useState(40);
+  const [page, setPage] = useState(0);
+
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setPageNumberSize(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleOpenForEditCover = () => {
     setOpenForEditCover(true);
@@ -248,97 +264,116 @@ export default function BookCardList(props: BookCardListProps) {
     <div>
       <Box sx={{ width: '100%' }}>
         <Masonry style={{ width: '100%' }} columns={4} spacing={3}>
-          {data.map((item: CollectionDataType) => {
-            return (
-              <Card
-                key={item.uuid}
-                hoverable
-                cover={<Cover uuid={item.uuid} />}
-                actions={[
-                  <Menu
-                    onClick={({ key, domEvent }) => {
-                      domEvent.preventDefault();
+          {data
+            .slice(page * pageNumberSize, (page + 1) * pageNumberSize)
+            .map((item: CollectionDataType) => {
+              return (
+                <Card
+                  key={item.uuid}
+                  hoverable
+                  cover={<Cover uuid={item.uuid} />}
+                  actions={[
+                    <Menu
+                      onClick={({ key, domEvent }) => {
+                        domEvent.preventDefault();
 
-                      onClickActionMenu(key, item);
-                    }}
-                    items={actionMenuList}
-                    mode="vertical"
-                    key={'1'}
-                    selectable={false}
-                  ></Menu>,
-                ]}
-              >
-                <Card.Meta
-                  title={
-                    <div
-                      style={{
-                        maxHeight: '30vh',
-                        overflow: 'auto',
-                        marginTop: 5,
-                        textAlign: 'center',
+                        onClickActionMenu(key, item);
                       }}
-                    >
-                      <Typography
-                        variant="h6"
-                        display="block"
+                      items={actionMenuList}
+                      mode="vertical"
+                      key={'1'}
+                      selectable={false}
+                    ></Menu>,
+                  ]}
+                >
+                  <Card.Meta
+                    title={
+                      <div
                         style={{
-                          wordBreak: 'break-all',
-                          whiteSpace: 'break-spaces',
-                          fontSize: 13,
+                          maxHeight: '30vh',
+                          overflow: 'auto',
+                          marginTop: 5,
+                          textAlign: 'center',
                         }}
-                        gutterBottom
                       >
-                        {item.name}
-                      </Typography>
-                    </div>
-                  }
-                  description={
-                    <div
-                      style={{ maxHeight: 150, overflow: 'auto' }}
-                      onClick={() => {
-                        setUUID1(uuidv4());
-                        setCheckCollctionBooks({
-                          open: true,
-                          collection_uuid: item.uuid,
-                        });
-                      }}
-                    >
-                      <Divider style={{ marginBottom: 10 }} />
-                      <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                        <StarIcon style={{ height: 20 }} />
-                        <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                          {item.star}
-                        </Typography>
-                      </Box>
-                      <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                        <FormatListNumberedIcon style={{ height: 20 }} />
-                        <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                          {countChOfStr(item.item_uuids, ';')} 本书
-                        </Typography>
-                      </Box>
-
-                      <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                        <ArchiveIcon style={{ height: 16 }} />
                         <Typography
-                          variant="body2"
-                          style={{ paddingTop: 1.2, paddingLeft: 15, wordBreak: 'break-all' }}
+                          variant="h6"
+                          display="block"
+                          style={{
+                            wordBreak: 'break-all',
+                            whiteSpace: 'break-spaces',
+                            fontSize: 13,
+                          }}
+                          gutterBottom
                         >
-                          {item.tags}
+                          {item.name}
                         </Typography>
-                      </Box>
-                      <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                        <DateRangeIcon style={{ height: 16 }} />
-                        <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                          {item.create_time.split(' ')[0]}
-                        </Typography>
-                      </Box>
-                    </div>
-                  }
-                />
-              </Card>
-            );
-          })}
+                      </div>
+                    }
+                    description={
+                      <div
+                        style={{ maxHeight: 150, overflow: 'auto' }}
+                        onClick={() => {
+                          setUUID1(uuidv4());
+                          setCheckCollctionBooks({
+                            open: true,
+                            collection_uuid: item.uuid,
+                          });
+                        }}
+                      >
+                        <Divider style={{ marginBottom: 10 }} />
+                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                          <StarIcon style={{ height: 20 }} />
+                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                            {item.star}
+                          </Typography>
+                        </Box>
+                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                          <FormatListNumberedIcon style={{ height: 20 }} />
+                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                            {countChOfStr(item.item_uuids, ';')} 本书
+                          </Typography>
+                        </Box>
+
+                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                          <ArchiveIcon style={{ height: 16 }} />
+                          <Typography
+                            variant="body2"
+                            style={{ paddingTop: 1.2, paddingLeft: 15, wordBreak: 'break-all' }}
+                          >
+                            {item.tags}
+                          </Typography>
+                        </Box>
+                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                          <DateRangeIcon style={{ height: 16 }} />
+                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                            {item.create_time.split(' ')[0]}
+                          </Typography>
+                        </Box>
+                      </div>
+                    }
+                  />
+                </Card>
+              );
+            })}
         </Masonry>
+
+        <TablePagination
+          component="div"
+          count={data.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageNumberSize}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage={<FormattedMessage id="pages.items_per_page" />}
+          rowsPerPageOptions={[40, 60, 80]}
+          style={{
+            position: 'fixed',
+            marginRight: 20,
+            bottom: 0,
+            right: 0,
+          }}
+        />
       </Box>
 
       <ChangeInfo
@@ -425,10 +460,6 @@ export default function BookCardList(props: BookCardListProps) {
               }}
             >
               <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
-                <Typography variant="subtitle1" gutterBottom component="div">
-                  <FormattedMessage id="pages.books.book.create_book_collection.cover" />
-                  <span style={{ color: 'red', paddingLeft: 5 }}>*</span>:
-                </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Dropzone
                     onDrop={async (acceptedFiles) => {
@@ -480,6 +511,7 @@ export default function BookCardList(props: BookCardListProps) {
         }}
         collection_uuid={addBooksInfo.collection_uuid}
         book_type={addBooksInfo.book_type}
+        fetchBookCollections={fetchBookCollections}
       />
 
       <CollectionBooks

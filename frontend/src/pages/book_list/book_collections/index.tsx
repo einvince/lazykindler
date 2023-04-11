@@ -33,7 +33,7 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 
-import BookCardList from './components/CollectionList';
+import BookCollectionCardList from './components/CollectionList';
 import { CollectionDataType } from './data';
 
 type MenuItemType = {
@@ -75,8 +75,8 @@ export default function BookCollections() {
   });
   const intl = useIntl();
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const menuItems: MenuItemType[] = [
+  const [anchorElForTypeMenu, setAnchorElForTypeMen] = useState<null | HTMLElement>(null);
+  const menuItemsForTypeMenu: MenuItemType[] = [
     {
       label: intl.formatMessage({ id: 'pages.books.uncategorized' }),
       icon: <FormatAlignJustifyIcon />,
@@ -85,15 +85,15 @@ export default function BookCollections() {
     { label: intl.formatMessage({ id: 'pages.books.labels' }), icon: <LabelIcon /> },
   ];
   const [selectedDropDownMenuItem, setSelectedDropDownMenuItem] = useState<MenuItemType>(
-    menuItems[0],
+    menuItemsForTypeMenu[0],
   );
 
   const handleClickDropDownMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorElForTypeMen(event.currentTarget);
   };
 
   const handleCloseDropDownMenu = () => {
-    setAnchorEl(null);
+    setAnchorElForTypeMen(null);
   };
 
   const handleMenuItemClick = (item: MenuItemType) => {
@@ -295,7 +295,7 @@ export default function BookCollections() {
     <>
       <div>
         <div style={{ width: '23%', position: 'relative' }}>
-          <Paper style={{ height: '88vh' }}>
+          <Paper style={{ height: '88vh', overflowY: 'auto' }}>
             <List>
               <ListSubheader>
                 <div>
@@ -308,12 +308,12 @@ export default function BookCollections() {
                     {selectedDropDownMenuItem.label}
                   </Button>
                   <MaterialMenu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
+                    anchorEl={anchorElForTypeMenu}
+                    open={Boolean(anchorElForTypeMenu)}
                     onClose={handleCloseDropDownMenu}
                     onClick={(e) => e.preventDefault()}
                   >
-                    {menuItems.map((item, index) => (
+                    {menuItemsForTypeMenu.map((item, index) => (
                       <MenuItem
                         key={index}
                         onClick={(e) => {
@@ -370,7 +370,7 @@ export default function BookCollections() {
             overflowY: 'auto',
           }}
         >
-          <BookCardList data={data} fetchBookCollections={fetchBookCollections} />
+          <BookCollectionCardList data={data} fetchBookCollections={fetchBookCollections} />
         </div>
       </div>
 

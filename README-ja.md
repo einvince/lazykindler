@@ -180,9 +180,7 @@ pip3 install -r requirements.txt
 
 ```
 
-2.`chatgpt`機能を使用する必要がある場合は、 `backend/config.ini`で `chatgpt`キーを設定してください。OpenAi公式ウェブサイト上でキーを生成するアドレスは、 `https://platform.openai.com/account/api-keys`.
-
-3.`frontend`ディレクトリで実行してください。
+2.`frontend`ディレクトリで実行してください。
 
 ```
 

@@ -175,9 +175,7 @@ pip3 install -r requirements.txt
 
 ```
 
-2. `chatgpt` 기능을 사용해야하는 경우, OpenAi 공식 웹 사이트의 `https://platform.openai.com/account/api-keys` 주소에서 `chatgpt` 키를 구성하십시오.
-
-3. `frontend` 디렉토리에서 실행하세요.
+2. `frontend` 디렉토리에서 실행하세요.
 
 ```
 

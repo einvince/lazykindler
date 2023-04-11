@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': 'Требуется рейтинг',
   'pages.books.book.create_book_collection.alert.cover': 'Требуется обложка',
 
+  'pages.books.book.action.edit_title': 'Редактировать заголовок',
+
+  'pages.books.book_sorting.author.ascending': 'Авторы - по возрастанию',
+  'pages.books.book_sorting.author.descending': 'Авторы - по убыванию',
+  'pages.books.book_sorting.publisher.ascending': 'Издательство - по возрастанию',
+  'pages.books.book_sorting.publisher.descending': 'Издательство - по убыванию',
+  'pages.books.collection.action.delete_with_clippings':
+    'Удаление коллекции также приведет к удалению книг. Вы уверены, что хотите удалить эту коллекцию?',
+  'pages.books.collection.action.delete_without_clippings':
+    'Удаление коллекции сохранит книги. Вы уверены, что хотите удалить эту коллекцию?',
+
   'pages.books.collection.action': 'Действие',
   'pages.books.collection.action.add_books_to_storage': 'Добавить книги в постоянное хранилище',
   'pages.books.collection.action.add_books_to_tmp_storage': 'Добавить книги во временное хранилище',

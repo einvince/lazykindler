@@ -182,9 +182,7 @@ pip3 install -r requirements.txt
 
 ```
 
-2. Если вы хотите использовать функцию `chatgpt`, настройте ключ `chatgpt` в файле `backend/config.ini`. Адрес для генерации ключа на официальном сайте OpenAi: `https://platform.openai.com/account/api-keys`.
-
-3. Выполните в директории `frontend`
+2. Выполните в директории `frontend`
 
 ```
 

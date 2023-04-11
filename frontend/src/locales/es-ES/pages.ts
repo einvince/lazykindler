@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': 'Calificación Requerida',
   'pages.books.book.create_book_collection.alert.cover': 'Portada Requerida',
 
+  'pages.books.book.action.edit_title': 'Editar título',
+
+  'pages.books.book_sorting.author.ascending': 'Autores - Ascendente',
+  'pages.books.book_sorting.author.descending': 'Autores - Descendente',
+  'pages.books.book_sorting.publisher.ascending': 'Editorial - Ascendente',
+  'pages.books.book_sorting.publisher.descending': 'Editorial - Descendente',
+  'pages.books.collection.action.delete_with_clippings':
+    'Eliminar la colección también eliminará los libros. ¿Estás seguro de que deseas eliminar esta colección?',
+  'pages.books.collection.action.delete_without_clippings':
+    'Eliminar la colección mantendrá los libros. ¿Estás seguro de que deseas eliminar esta colección?',
+
   'pages.books.collection.action': 'Acción',
   'pages.books.collection.action.add_books_to_storage':
     'Agregar Libros a Almacenamiento Permanente',
@@ -51,7 +62,7 @@ export default {
   'pages.books.collection.action.column.size': 'Tamaño',
 
   'pages.books.book.action': 'Acción',
-  'pages.books.book.action.collection': 'Coll',
+  'pages.books.book.action.collection': 'Edit Collection',
   'pages.books.book.action.read': 'Leer',
   'pages.books.book.action.edit_rating': 'Editar calificación',
   'pages.books.book.action.edit_tags': 'Editar etiquetas',

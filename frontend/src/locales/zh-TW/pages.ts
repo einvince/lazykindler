@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': '評分必填',
   'pages.books.book.create_book_collection.alert.cover': '封面必填',
 
+  'pages.books.book.action.edit_title': '編輯標題',
+
+  'pages.books.book_sorting.author.ascending': '作者 - 升序',
+  'pages.books.book_sorting.author.descending': '作者 - 降序',
+  'pages.books.book_sorting.publisher.ascending': '出版商 - 升序',
+  'pages.books.book_sorting.publisher.descending': '出版商 - 降序',
+  'pages.books.collection.action.delete_with_clippings':
+    '刪除收藏將同時刪除書籍，您確定要刪除此收藏嗎？',
+  'pages.books.collection.action.delete_without_clippings':
+    '刪除收藏將保留書籍，您確定要刪除此收藏嗎？',
+
   'pages.books.collection.action': '操作',
   'pages.books.collection.action.add_books_to_storage': '添加書籍到永久存儲',
   'pages.books.collection.action.add_books_to_tmp_storage': '添加書籍到臨時存儲',

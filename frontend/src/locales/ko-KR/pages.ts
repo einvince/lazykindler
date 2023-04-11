@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': '평가가 필요합니다',
   'pages.books.book.create_book_collection.alert.cover': '커버가 필요합니다',
 
+  'pages.books.book.action.edit_title': '제목 수정',
+
+  'pages.books.book_sorting.author.ascending': '저자 - 오름차순',
+  'pages.books.book_sorting.author.descending': '저자 - 내림차순',
+  'pages.books.book_sorting.publisher.ascending': '출판사 - 오름차순',
+  'pages.books.book_sorting.publisher.descending': '출판사 - 내림차순',
+  'pages.books.collection.action.delete_with_clippings':
+    '컬렉션을 삭제하면 도서도 삭제됩니다. 이 컬렉션을 삭제하시겠습니까?',
+  'pages.books.collection.action.delete_without_clippings':
+    '컬렉션을 삭제하면 도서가 남습니다. 이 컬렉션을 삭제하시겠습니까?',
+
   'pages.books.collection.action': '작업',
   'pages.books.collection.action.add_books_to_storage': '책 영구 저장소에 추가',
   'pages.books.collection.action.add_books_to_tmp_storage': '책 임시 저장소에 추가',

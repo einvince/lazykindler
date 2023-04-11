@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': 'Avaliação obrigatória',
   'pages.books.book.create_book_collection.alert.cover': 'Capa obrigatória',
 
+  'pages.books.book.action.edit_title': 'Editar título',
+
+  'pages.books.book_sorting.author.ascending': 'Autores - Crescente',
+  'pages.books.book_sorting.author.descending': 'Autores - Decrescente',
+  'pages.books.book_sorting.publisher.ascending': 'Editora - Crescente',
+  'pages.books.book_sorting.publisher.descending': 'Editora - Decrescente',
+  'pages.books.collection.action.delete_with_clippings':
+    'Excluir a coleção também excluirá os livros. Tem certeza de que deseja excluir esta coleção?',
+  'pages.books.collection.action.delete_without_clippings':
+    'Excluir coleção manterá os livros. Tem certeza de que deseja excluir esta coleção?',
+
   'pages.books.collection.action': 'Ação',
   'pages.books.collection.action.add_books_to_storage':
     'Adicionar livros ao armazenamento permanente',

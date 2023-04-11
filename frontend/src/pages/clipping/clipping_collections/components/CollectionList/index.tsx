@@ -7,10 +7,12 @@ import {
 } from '@/services';
 import { countChOfStr, preHandleSubjects, toBase64 } from '@/util';
 import { SettingOutlined, TagOutlined } from '@ant-design/icons';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import StarIcon from '@mui/icons-material/Star';
+import Masonry from '@mui/lab/Masonry';
 import {
   Box,
   Button,
@@ -21,20 +23,40 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
-  FormHelperText,
+  IconButton,
+  TablePagination,
   Typography,
 } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import { Card, List as AntList, Menu } from 'antd';
+import { Card, Menu } from 'antd';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
+import { FormattedMessage, useIntl } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 
 import ChangeInfo from '../../../../book_list/components/ChangeInfoDialog';
 import Cover from '../../../../book_list/components/Cover';
 import CollectionClippings from '../CollectionClippings';
 
-const { SubMenu } = Menu;
+import type { MenuProps } from 'antd';
+
+type MenuItem = Required<MenuProps>['items'][number];
+
+function getItem(
+  label: React.ReactNode,
+  key?: React.Key | null,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  theme?: 'light' | 'dark',
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    theme,
+  } as MenuItem;
+}
 
 type ClippingListProps = {
   data: any;
@@ -71,6 +93,23 @@ export default function CollectionList(props: ClippingListProps) {
   const [uuidForEditCover, setUUIDForEditCover] = useState<any>();
   const [openForEditCover, setOpenForEditCover] = useState(false);
 
+  const intl = useIntl();
+
+  // 每页条目数
+  const [pageNumberSize, setPageNumberSize] = useState(40);
+  const [page, setPage] = useState(0);
+
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setPageNumberSize(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const handleOpenForEditCover = () => {
     setOpenForEditCover(true);
   };
@@ -79,20 +118,109 @@ export default function CollectionList(props: ClippingListProps) {
     setOpenForEditCover(false);
   };
 
+  const actionMenuList = [
+    getItem(<FormattedMessage id="pages.books.collection.action" />, 'sub4', <SettingOutlined />, [
+      getItem(<FormattedMessage id="pages.clipping.action.open" />, 'open'),
+      getItem(<FormattedMessage id="pages.books.collection.action.edit_title" />, 'edit_title'),
+      getItem(<FormattedMessage id="pages.books.collection.action.edit_rating" />, 'edit_rating'),
+      getItem(<FormattedMessage id="pages.books.collection.action.edit_tags" />, 'edit_tags'),
+      getItem(<FormattedMessage id="pages.books.collection.action.edit_cover" />, 'edit_cover'),
+      getItem(
+        <span style={{ color: 'red' }}>
+          <FormattedMessage id="pages.clipping.action.remove_but_keep_clipping" />
+        </span>,
+        'remove_but_keep_clipping',
+      ),
+      getItem(
+        <span style={{ color: 'red' }}>
+          <FormattedMessage id="pages.clipping.action.remove_and_remove_clipping" />
+        </span>,
+        'remove_and_remove_clipping',
+      ),
+    ]),
+  ];
+
+  const onClickActionMenu = (key: string, item: CollectionDataType) => {
+    switch (key) {
+      case 'open':
+        setUUID1(uuidv4());
+        setCheckCollctionClippings({
+          open: true,
+          collection_uuid: item.uuid,
+        });
+        break;
+      case 'edit_title':
+        setDialogInfo({
+          title: intl.formatMessage({
+            id: 'pages.books.collection.action.edit_title',
+          }),
+          oldValue: item.name,
+          allowEmptyStr: false,
+          handleOK: (newValue: any) => {
+            updateCollection(item.uuid, 'name', newValue).then(() => {
+              fetchClippingCollections();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_rating':
+        setDialogInfo({
+          title: intl.formatMessage({
+            id: 'pages.books.collection.action.edit_rating',
+          }),
+          oldValue: item.star,
+          allowEmptyStr: false,
+          handleOK: (newValue: any) => {
+            updateCollection(item.uuid, 'star', newValue).then(() => {
+              fetchClippingCollections();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_tags':
+        setDialogInfo({
+          title: intl.formatMessage({
+            id: 'pages.books.collection.action.edit_tags',
+          }),
+          oldValue: item.tags,
+          allowEmptyStr: false,
+          handleOK: (newValue: any) => {
+            updateCollection(item.uuid, 'tag', preHandleSubjects(newValue)).then(() => {
+              fetchClippingCollections();
+            });
+          },
+          open: true,
+        });
+        break;
+      case 'edit_cover':
+        handleOpenForEditCover();
+        setUUIDForEditCover(item.uuid);
+        break;
+      case 'remove_but_keep_clipping':
+        handleClickOpenForDeleteColl(item.uuid, 1);
+        break;
+      case 'remove_and_remove_clipping':
+        handleClickOpenForDeleteColl(item.uuid, 2);
+        break;
+    }
+  };
+
   // deleteType
   // 0 初始值
   // 1 删除集合时不删除摘抄
   // 2 删除集合时删除摘抄
-  const handleClickOpen = (uuid: string, deleteType: number) => {
+  const handleClickOpenForDeleteColl = (uuid: string, deleteType: number) => {
     setDeleteClippingInfo({ uuid, deleteType });
     setOpenDeleteClipping(true);
   };
 
-  const handleClose = () => {
+  const handleCloseForDeleteColl = () => {
     setOpenDeleteClipping(false);
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialogForChangeCollInfo = () => {
     setDialogInfo(initialDialogInfo);
   };
 
@@ -113,211 +241,122 @@ export default function CollectionList(props: ClippingListProps) {
 
   return (
     <div>
-      <AntList
-        rowKey="id"
-        grid={{
-          gutter: 20,
-          xs: 1,
-          sm: 1,
-          md: 2,
-          lg: 3,
-          xl: 4,
-          xxl: 5,
-        }}
-        pagination={{
-          position: 'top',
-          defaultPageSize: 40,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 10 },
-        }}
-        dataSource={data}
-        renderItem={(item: CollectionDataType) => (
-          <AntList.Item>
-            <Card
-              hoverable
-              style={{ width: 200 }}
-              cover={<Cover uuid={item.uuid} />}
-              actions={[
-                <Menu mode="vertical" key={1} selectable={false}>
-                  <SubMenu key="sub4" icon={<SettingOutlined />} title="操作">
-                    <Menu.Item
-                      key="1"
-                      onClick={() => {
-                        setUUID1(uuidv4());
-                        setCheckCollctionClippings({
-                          open: true,
-                          collection_uuid: item.uuid,
-                        });
-                      }}
-                    >
-                      查看摘抄
-                    </Menu.Item>
-                    <Menu.Item
-                      key="2"
-                      onClick={() => {
-                        setDialogInfo({
-                          title: '修改名称',
-                          oldValue: item.name,
-                          allowEmptyStr: false,
-                          handleOK: (newValue: any) => {
-                            updateCollection(item.uuid, 'name', newValue).then(() => {
-                              fetchClippingCollections();
-                            });
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      修改名称
-                    </Menu.Item>
-                    <Menu.Item
-                      key="3"
-                      onClick={() => {
-                        setDialogInfo({
-                          title: '修改评分',
-                          oldValue: item.star,
-                          allowEmptyStr: false,
-                          handleOK: (newValue: any) => {
-                            updateCollection(item.uuid, 'star', newValue).then(() => {
-                              fetchClippingCollections();
-                            });
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      修改评分
-                    </Menu.Item>
-                    <Menu.Item
-                      key="4"
-                      onClick={() => {
-                        setDialogInfo({
-                          title: '修改标签',
-                          oldValue: item.tags,
-                          allowEmptyStr: false,
-                          handleOK: (newValue: any) => {
-                            updateCollection(item.uuid, 'tag', preHandleSubjects(newValue)).then(
-                              () => {
-                                fetchClippingCollections();
-                              },
-                            );
-                          },
-                          open: true,
-                        });
-                      }}
-                    >
-                      修改标签
-                    </Menu.Item>
-                    <Menu.Item
-                      key="5"
-                      onClick={() => {
-                        handleOpenForEditCover();
-                        setUUIDForEditCover(item.uuid);
-                      }}
-                    >
-                      修改封面
-                    </Menu.Item>
-                    <Menu.Item
-                      key="6"
-                      onClick={() => {
-                        handleClickOpen(item.uuid, 1);
-                      }}
-                    >
-                      <span style={{ color: 'red' }}>删除 (不删摘抄)</span>
-                    </Menu.Item>
-                    <Menu.Item
-                      key="7"
-                      onClick={() => {
-                        handleClickOpen(item.uuid, 2);
-                      }}
-                    >
-                      <span style={{ color: 'red' }}>删除 (删除摘抄)</span>
-                    </Menu.Item>
-                  </SubMenu>
-                </Menu>,
-              ]}
-              bodyStyle={{
-                paddingTop: 8,
-                paddingLeft: 4,
-                paddingRight: 4,
-                paddingBottom: 8,
-              }}
-            >
-              <Card.Meta
-                title={
-                  <div
-                    style={{
-                      maxHeight: '30vh',
-                      overflow: 'auto',
-                      marginTop: 5,
-                      textAlign: 'center',
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      display="block"
-                      style={{
-                        wordBreak: 'break-all',
-                        whiteSpace: 'break-spaces',
-                        fontSize: 13,
-                      }}
-                      gutterBottom
-                    >
-                      {item.name}
-                    </Typography>
-                  </div>
-                }
-                description={
-                  <div
-                    style={{ maxHeight: 150, overflow: 'auto' }}
-                    onClick={() => {
-                      setUUID1(uuidv4());
-                      setCheckCollctionClippings({
-                        open: true,
-                        collection_uuid: item.uuid,
-                      });
-                    }}
-                  >
-                    <Divider style={{ marginBottom: 10 }} />
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <StarIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.star}
-                      </Typography>
-                    </Box>
+      <Box sx={{ width: '100%' }}>
+        <Masonry style={{ width: '100%' }} columns={4} spacing={3}>
+          {data
+            .slice(page * pageNumberSize, (page + 1) * pageNumberSize)
+            .map((item: CollectionDataType) => {
+              return (
+                <Card
+                  hoverable
+                  key={item.uuid}
+                  cover={<Cover uuid={item.uuid} />}
+                  actions={[
+                    <Menu
+                      onClick={({ key, domEvent }) => {
+                        domEvent.preventDefault();
 
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <FormatListNumberedIcon style={{ height: 20 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {countChOfStr(item.item_uuids, ';')}
-                      </Typography>
-                    </Box>
+                        onClickActionMenu(key, item);
+                      }}
+                      items={actionMenuList}
+                      mode="vertical"
+                      key={'1'}
+                      selectable={false}
+                    ></Menu>,
+                  ]}
+                >
+                  <Card.Meta
+                    title={
+                      <div
+                        style={{
+                          maxHeight: '30vh',
+                          overflow: 'auto',
+                          marginTop: 5,
+                          textAlign: 'center',
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          display="block"
+                          style={{
+                            wordBreak: 'break-all',
+                            whiteSpace: 'break-spaces',
+                            fontSize: 13,
+                          }}
+                          gutterBottom
+                        >
+                          {item.name}
+                        </Typography>
+                      </div>
+                    }
+                    description={
+                      <div
+                        style={{ maxHeight: 150, overflow: 'auto' }}
+                        onClick={() => {
+                          setUUID1(uuidv4());
+                          setCheckCollctionClippings({
+                            open: true,
+                            collection_uuid: item.uuid,
+                          });
+                        }}
+                      >
+                        <Divider style={{ marginBottom: 10 }} />
+                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                          <StarIcon style={{ height: 20 }} />
+                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                            {item.star}
+                          </Typography>
+                        </Box>
 
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <TagOutlined style={{ height: 16, paddingLeft: 4.5 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.tags}
-                      </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                      <DateRangeIcon style={{ height: 16 }} />
-                      <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                        {item.create_time.split(' ')[0]}
-                      </Typography>
-                    </Box>
-                  </div>
-                }
-              />
-            </Card>
-          </AntList.Item>
-        )}
-      />
+                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                          <FormatListNumberedIcon style={{ height: 20 }} />
+                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                            {countChOfStr(item.item_uuids, ';')}
+                          </Typography>
+                        </Box>
+
+                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                          <TagOutlined style={{ height: 16, paddingLeft: 4.5 }} />
+                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                            {item.tags}
+                          </Typography>
+                        </Box>
+                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                          <DateRangeIcon style={{ height: 16 }} />
+                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
+                            {item.create_time.split(' ')[0]}
+                          </Typography>
+                        </Box>
+                      </div>
+                    }
+                  />
+                </Card>
+              );
+            })}
+        </Masonry>
+        <TablePagination
+          component="div"
+          count={data.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageNumberSize}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage={<FormattedMessage id="pages.items_per_page" />}
+          rowsPerPageOptions={[40, 60, 80]}
+          style={{
+            position: 'fixed',
+            marginRight: 20,
+            bottom: 0,
+            right: 0,
+          }}
+        />
+      </Box>
 
       <ChangeInfo
         title={dialogInfo['title']}
         oldValue={dialogInfo['oldValue']}
         allowEmptyStr={dialogInfo['allowEmptyStr']}
-        handleClose={handleCloseDialog}
+        handleClose={handleCloseDialogForChangeCollInfo}
         handleOK={dialogInfo['handleOK']}
         open={dialogInfo['open']}
       />
@@ -325,23 +364,30 @@ export default function CollectionList(props: ClippingListProps) {
       <div>
         <Dialog
           open={openDeleteClipping}
-          onClose={handleClose}
+          onClose={handleCloseForDeleteColl}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          fullWidth
         >
-          <DialogTitle id="alert-dialog-title">警告</DialogTitle>
+          <DialogTitle id="alert-dialog-title">
+            <FormattedMessage id="pages.warning" />
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {deleteClippingInfo.deleteType == 1
-                ? '删除集合将保留摘抄,确定删除该集合吗?'
-                : '删除集合将同时删除关联摘抄,确定删除该集合吗?'}
+              {deleteClippingInfo.deleteType == 1 ? (
+                <FormattedMessage id="pages.books.collection.action.delete_without_clippings" />
+              ) : (
+                <FormattedMessage id="pages.books.collection.action.delete_with_clippings" />
+              )}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>取消</Button>
+            <Button onClick={handleCloseForDeleteColl}>
+              <FormattedMessage id="pages.cancel" />
+            </Button>
             <Button
               onClick={() => {
-                handleClose();
+                handleCloseForDeleteColl();
                 if (deleteClippingInfo.deleteType == 1) {
                   deleteCollectionWithoutBooks(deleteClippingInfo.uuid).then(() => {
                     fetchClippingCollections();
@@ -354,7 +400,7 @@ export default function CollectionList(props: ClippingListProps) {
               }}
               autoFocus
             >
-              确定
+              <FormattedMessage id="pages.ok" />
             </Button>
           </DialogActions>
         </Dialog>
@@ -362,79 +408,77 @@ export default function CollectionList(props: ClippingListProps) {
 
       <Dialog
         open={openForEditCover}
-        onClose={handleClose}
+        onClose={handleCloseForEditCover}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle id="alert-dialog-title">{'修改集合封面'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="pages.books.collection.action.edit_cover.title" />
+        </DialogTitle>
         <DialogContent style={{ margin: '0 auto' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              '& .MuiTextField-root': { width: '25ch' },
-            }}
-          >
-            <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-              <Typography
-                style={{ position: 'relative', paddingTop: 5 }}
-                variant="subtitle1"
-                gutterBottom
-                component="div"
-              >
-                封面:
-              </Typography>
-              <div style={{ position: 'absolute', paddingLeft: 45 }}>
-                <Dropzone
-                  onDrop={async (acceptedFiles) => {
-                    let base64Str = await toBase64(acceptedFiles[0]);
-                    setFormData({ ...formData, cover: base64Str });
-                  }}
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <section>
-                      <div {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        {formData.cover == null ? (
-                          <Button variant="contained">上传</Button>
-                        ) : (
-                          <Chip
-                            label="封面"
-                            onDelete={() => {
-                              setFormData({
-                                ...formData,
-                                cover: null,
-                              });
-                            }}
-                            deleteIcon={<DeleteIcon />}
-                            variant="outlined"
-                          />
-                        )}
-                      </div>
-                    </section>
-                  )}
-                </Dropzone>
-                <FormHelperText id="standard-weight-helper-text">不能为空</FormHelperText>
-              </div>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseForEditCover}>取消</Button>
-          <Button
-            onClick={() => {
+          <form
+            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+
               let ok = handleEditCollCover();
               if (ok) {
                 handleCloseForEditCover();
+
+                fetchClippingCollections();
               }
             }}
-            autoFocus
           >
-            确认
-          </Button>
-        </DialogActions>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                '& .MuiTextField-root': { width: '25ch' },
+              }}
+            >
+              <FormControl sx={{ m: 1, mt: 3, width: '25ch' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Dropzone
+                    onDrop={async (acceptedFiles) => {
+                      let base64Str = await toBase64(acceptedFiles[0]);
+                      setFormData({ ...formData, cover: base64Str });
+                    }}
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <IconButton color="primary" aria-label="upload picture" component="span">
+                            <CloudUploadIcon />
+                          </IconButton>
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                  {formData.cover && (
+                    <Chip
+                      label={
+                        <FormattedMessage id="pages.books.book.create_book_collection.cover" />
+                      }
+                      onDelete={() => {
+                        setFormData({
+                          ...formData,
+                          cover: null,
+                        });
+                      }}
+                      deleteIcon={<DeleteIcon />}
+                      variant="outlined"
+                    />
+                  )}
+                </Box>
+              </FormControl>
+              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, ml: 1 }}>
+                <FormattedMessage id="pages.books.book.create_book_collection.commit" />
+              </Button>
+            </Box>
+          </form>
+        </DialogContent>
       </Dialog>
 
       <CollectionClippings

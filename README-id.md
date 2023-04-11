@@ -184,9 +184,7 @@ pip3 install -r requirements.txt
 
 ```
 
-2. Jika Anda perlu menggunakan fitur `chatgpt`, silakan konfigurasikan kunci `chatgpt` di dalam file `backend/config.ini`. Alamat untuk menghasilkan kunci pada situs web resmi OpenAi adalah `https://platform.openai.com/account/api-keys`.
-
-3. Jalankan di direktori `frontend`
+2. Jalankan di direktori `frontend`
 
 ```
 

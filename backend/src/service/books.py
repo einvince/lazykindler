@@ -109,26 +109,22 @@ def get_books_meta(storeType, sortTypeValue):
     elif sortTypeValue == 2:
         data.sort(key=lambda x: x['size'], reverse=True)
     elif sortTypeValue == 3:
-        data.sort(key=lambda x: x['create_time'], reverse=True)
-    elif sortTypeValue == 4:
         data.sort(key=lambda x: x['create_time'], reverse=False)
+    elif sortTypeValue == 4:
+        data.sort(key=lambda x: x['create_time'], reverse=True)
     elif sortTypeValue == 5:
-        data.sort(key=lambda x: x['star'], reverse=True)
-    elif sortTypeValue == 6:
         data.sort(key=lambda x: x['star'], reverse=False)
+    elif sortTypeValue == 6:
+        data.sort(key=lambda x: x['star'], reverse=True)
     elif sortTypeValue == 7:
-        data.sort(key=get_author, reverse=False)
+        data.sort(key=lambda x: x['author'], reverse=False)
     elif sortTypeValue == 8:
-        data.sort(key=get_publisher, reverse=False)
+        data.sort(key=lambda x: x['author'], reverse=True)
+    elif sortTypeValue == 9:
+        data = sorted(data, key=lambda x: (x['publisher']), reverse=False)
+    elif sortTypeValue == 10:
+        data = sorted(data, key=lambda x: (x['publisher']), reverse=True)
     return jsonify(data)
-
-
-def get_author(book_meta):
-    return book_meta["author"]
-
-
-def get_publisher(book_meta):
-    return book_meta["publisher"]
 
 
 def get_book_cover(uuid):

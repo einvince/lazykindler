@@ -161,9 +161,7 @@ pip3 install -r requirements.txt
 
 ```
 
-2. 如果需要使用 `chatgpt` 功能，請在 `backend/config.ini` 中配置 `chatgpt` 的 key。OpenAi 官網生成key的地址是 `https://platform.openai.com/account/api-keys`.
-
-3. 在 `frontend` 目錄執行
+2. 在 `frontend` 目錄執行
 
 ```
 

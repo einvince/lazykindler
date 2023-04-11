@@ -13,6 +13,7 @@ export default {
   'pages.books.search': '搜索',
   'pages.books.cover': '封面',
   'pages.books.book': '书籍',
+  'pages.books.book.action.edit_title': '编辑标题',
   'pages.books.book_sorting': '书籍排序',
   'pages.books.book_sorting.size.ascending': '大小 - 升序',
   'pages.books.book_sorting.size.descending': '大小 - 降序',
@@ -22,6 +23,15 @@ export default {
   'pages.books.book_sorting.rating.descending': '评分 - 降序',
   'pages.books.book_sorting.author': '作者',
   'pages.books.book_sorting.publisher': '出版社',
+
+  'pages.books.book_sorting.author.ascending': '作者 - 升序',
+  'pages.books.book_sorting.author.descending': '作者 - 降序',
+  'pages.books.book_sorting.publisher.ascending': '出版社 - 升序',
+  'pages.books.book_sorting.publisher.descending': '出版社 - 降序',
+  'pages.books.collection.action.delete_with_clippings':
+    '删除收藏将同时删除书籍，确定要删除此收藏吗？',
+  'pages.books.collection.action.delete_without_clippings':
+    '删除收藏将保留书籍，确定要删除此收藏吗？',
   'pages.books.book.create_book_collection': '创建书籍集合',
   'pages.books.book.create_book_collection.name': '名称',
   'pages.books.book.create_book_collection.description': '描述',

@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': 'Bewertung erforderlich',
   'pages.books.book.create_book_collection.alert.cover': 'Titelbild erforderlich',
 
+  'pages.books.book.action.edit_title': 'Titel bearbeiten',
+
+  'pages.books.book_sorting.author.ascending': 'Autoren - Aufsteigend',
+  'pages.books.book_sorting.author.descending': 'Autoren - Absteigend',
+  'pages.books.book_sorting.publisher.ascending': 'Verlag - Aufsteigend',
+  'pages.books.book_sorting.publisher.descending': 'Verlag - Absteigend',
+  'pages.books.collection.action.delete_with_clippings':
+    'Das Löschen der Sammlung wird auch die Bücher löschen. Sind Sie sicher, dass Sie diese Sammlung löschen möchten?',
+  'pages.books.collection.action.delete_without_clippings':
+    'Das Löschen der Sammlung wird die Bücher behalten. Sind Sie sicher, dass Sie diese Sammlung löschen möchten?',
+
   'pages.books.collection.action': 'Aktion',
   'pages.books.collection.action.add_books_to_storage':
     'Bücher zur permanenten Speicherung hinzufügen',

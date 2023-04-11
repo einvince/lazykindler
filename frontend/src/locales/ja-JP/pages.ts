@@ -34,6 +34,17 @@ export default {
   'pages.books.book.create_book_collection.alert.rating': '評価が必要',
   'pages.books.book.create_book_collection.alert.cover': '表紙が必要',
 
+  'pages.books.book.action.edit_title': 'タイトル編集',
+
+  'pages.books.book_sorting.author.ascending': '著者 - 昇順',
+  'pages.books.book_sorting.author.descending': '著者 - 降順',
+  'pages.books.book_sorting.publisher.ascending': '出版社 - 昇順',
+  'pages.books.book_sorting.publisher.descending': '出版社 - 降順',
+  'pages.books.collection.action.delete_with_clippings':
+    'コレクションを削除すると、書籍も削除されます。本当にこのコレクションを削除してもよろしいですか？',
+  'pages.books.collection.action.delete_without_clippings':
+    'コレクションを削除しても書籍は残ります。本当にこのコレクションを削除してもよろしいですか？',
+
   'pages.books.collection.action': 'アクション',
   'pages.books.collection.action.add_books_to_storage': '本を永久ストレージに追加',
   'pages.books.collection.action.add_books_to_tmp_storage': '本を一時ストレージに追加',

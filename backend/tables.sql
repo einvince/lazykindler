@@ -111,3 +111,10 @@ CREATE TABLE vocab_words_usage (
 	deleted            INTEGER,      -- 是否被删除。1: 删除
 	timestamp          TEXT          -- 创建时间
 );
+
+-- 系统配置
+CREATE TABLE setting (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	key                TEXT,        
+	value              TEXT        
+);

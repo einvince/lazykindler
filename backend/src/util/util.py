@@ -44,9 +44,14 @@ def ls_moon_reader_clippings(dir):
     for item in os.listdir(dir):
         abspath = os.path.join(dir, item)
         if os.path.isdir(abspath):
-            files = files + ls_books(abspath)
-        elif pathlib.Path(abspath).suffix == ".mrexpt":
-            files.append(abspath)
+            for filepath in files:
+                _, file_extension = os.path.splitext(filepath)
+                if file_extension == ".mrexpt":
+                    files.append(filepath)
+        else:
+            _, file_extension = os.path.splitext(abspath)
+            if file_extension == ".mrexpt":
+                files.append(abspath)
     return files
 
 
@@ -115,7 +120,7 @@ def get_md5_from_filename(filepath):
 
 
 def convert_str_to_list(str_data):
-    return [a for a in str_data.split("___") if a != ""]
+    return [a for a in str_data.split(";") if a != ""]
 
 
 # 转换文件格式时，文件名中可能会包含各种特殊字符，

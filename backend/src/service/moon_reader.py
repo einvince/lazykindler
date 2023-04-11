@@ -35,9 +35,6 @@ def import_moon_reader_clipping():
         path_list.append(dir_path)
 
     for file_path in path_list:
-        _, ext = os.path.splitext(file_path)
-        if ext != ".mrexpt":
-            continue
         filepaths = ls_moon_reader_clippings(file_path)
         for filepath in filepaths:
             handle_moon_reader_clipping_file(filepath)

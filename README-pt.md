@@ -179,9 +179,7 @@ pip3 install -r requirements.txt
 
 ```
 
-2. Se você precisar usar o recurso `chatgpt`, configure a chave `chatgpt` em `backend/config.ini`. O endereço para gerar a chave no site oficial do OpenAi é `https://platform.openai.com/account/api-keys`.
-
-3. Execute no diretório `frontend`
+2. Execute no diretório `frontend`
 
 ```
 
