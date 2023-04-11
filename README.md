@@ -99,7 +99,8 @@ The platform will automatically detect whether the `kindle` is connected. When t
 <br />
 It should be noted that the `kindle` processes the user-added highlight notes into a chunk of text without line breaks, even if it is the content of multiple paragraphs. `lazykindler` cleverly recognizes and processes line breaks when importing the `kindle`'s `My Clippings.txt` file, as shown below.
 
-<img src="https://user-images.githubusercontent.com/16133390/210229975-4e7145e7-5d91-4aff-85ff-f5550fd7fe2c.png" width="66%">
+
+<img width="505" alt="Snipaste_2023-04-11_21-45-40" src="https://user-images.githubusercontent.com/16133390/231184639-a14c988e-5460-459e-a0a9-083d2f38cf5d.png" width="66%">
 
 ## 11. Perform secondary highlighting on highlighted notes
 
@@ -107,13 +108,15 @@ Highlighted notes are part of the text or related paragraphs that we highlight a
 <br />
 Using `lazykindler`, you can easily perform secondary highlighting. Just select the relevant text and click `OK` in the automatically popped-up dialog box.
 
-<img src="https://user-images.githubusercontent.com/16133390/210230077-c9a4532b-aafc-4ba2-a163-cd151c98d831.png" width="66%">
+
+<img width="513" alt="Snipaste_2023-04-11_21-46-28" src="https://user-images.githubusercontent.com/16133390/231184733-cf1b26d4-a865-4d63-8e2a-3181372e2685.png" width="66%">
 
 ## 12. Add comments to highlighted notes
 
 You can record some thoughts about the text that resonated with you.
 
-<img width="1379" alt="Xnip2023-02-05_15-19-18" src="https://user-images.githubusercontent.com/16133390/216806787-4b76a541-608d-4e8e-9d8e-2651bf7842ef.png">
+<img width="1344" alt="Snipaste_2023-04-11_21-52-54" src="https://user-images.githubusercontent.com/16133390/231185116-9920d704-21b4-43fd-9058-0fe772ad7888.png">
+
 
 ## 13. Import highlights from Jingdu Tianxia apk
 
@@ -127,8 +130,9 @@ Vocabulary Builder is a feature in Kindle that records words or phrases looked u
 
 Based on importing these vocabularies, the platform provides a good interface for displaying this information, and you can manually create vocabulary and examples, as well as add translations to examples.
 
-<img width="1322" alt="Xnip2023-03-31_23-23-41" src="https://user-images.githubusercontent.com/16133390/229163528-952ee43f-bf31-43a7-b39b-98d637e584da.png">
-<img width="1320" alt="Xnip2023-03-31_23-23-57" src="https://user-images.githubusercontent.com/16133390/229163550-8c321a41-7df4-41af-9bd0-fd765e113a1f.png">
+<img width="1345" alt="Snipaste_2023-04-11_21-47-16" src="https://user-images.githubusercontent.com/16133390/231185398-488b963a-28bf-47b7-a7d4-a5b069ed3fe3.png">
+
+<img width="1279" alt="Snipaste_2023-04-11_21-53-55" src="https://user-images.githubusercontent.com/16133390/231185414-4d6742ba-7f12-4097-b38c-faf9f641e18f.png">
 
 # System Requirements
 
@@ -178,18 +182,10 @@ The platform is designed for individuals and does not have features like login a
 
 Below are screenshots of my local setup after uploading books and configuring collections
 
-<img width="1418" alt="1" src="https://user-images.githubusercontent.com/16133390/216806475-97ee4960-40cc-4649-b414-0687724bb6ad.png">
-<br />
-<img width="1398" alt="Xnip2023-02-05_15-13-49" src="https://user-images.githubusercontent.com/16133390/216806612-dc1baf4f-7ed5-4b3d-ab44-73c7f07c73a7.png">
-<br />
-<img width="1418" alt="2" src="https://user-images.githubusercontent.com/16133390/216806480-def76f45-f8ba-41fc-9512-a448e9fbce32.png">
-<br />
-<img width="1418" alt="3" src="https://user-images.githubusercontent.com/16133390/216806485-caf74fe2-0cef-45f8-9a29-47780e72132d.png">
-<br />
-<img width="1799" alt="Xnip2023-02-14_12-36-20" src="https://user-images.githubusercontent.com/16133390/218640667-ba74048a-3b78-41c6-a772-dc1e56485b56.png">
 
-<br />
-<img width="1801" alt="Xnip2023-02-14_12-36-38" src="https://user-images.githubusercontent.com/16133390/218640680-263195c2-7ac3-4947-b7a5-b70375074e9c.png">
+
+
+
 
 <br />
 
