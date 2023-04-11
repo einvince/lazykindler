@@ -255,7 +255,7 @@ const VocabList = () => {
         </Paper>
       </div>
       {/* 渲染用法 */}
-      <div style={{ width: '61%', paddingLeft: 10, position: 'relative' }}>
+      <div style={{ width: '61%', paddingLeft: 10 }}>
         <UsageList
           usageList={usageList}
           upsertWordAndUsageSuccessNotify={() => {

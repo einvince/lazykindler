@@ -89,9 +89,9 @@ const UsageList = (props: UsageListProps) => {
         <Button>One</Button>
         <Button>Two</Button>
       </ButtonGroup>
-      <Paper style={{ width: '100%', height: '86vh' }}>
+      <Paper style={{ width: '100%', height: '81.8vh' }}>
         <List
-          style={{ height: '86vh', overflow: 'auto' }}
+          style={{ height: '80vh', overflow: 'auto' }}
           subheader={
             <ListSubheader component="h6" sx={{ textAlign: 'center' }}>
               <FormattedMessage id="pages.vocabulary.list.usage_list" />
