@@ -182,9 +182,14 @@ The platform is designed for individuals and does not have features like login a
 
 Below are screenshots of my local setup after uploading books and configuring collections
 
+<img width="1355" alt="Snipaste_2023-04-11_20-18-13" src="https://user-images.githubusercontent.com/16133390/231187018-50f3d92a-1f45-41c1-a1c4-e8b3913491f7.png">
 
+<img width="1321" alt="Snipaste_2023-04-11_21-58-53" src="https://user-images.githubusercontent.com/16133390/231187099-91b9ee3d-a4ff-4e7e-b6ea-f1835cb4e7e6.png">
+<img width="1325" alt="Snipaste_2023-04-11_22-01-24" src="https://user-images.githubusercontent.com/16133390/231187613-041f0709-c8b6-4a96-a563-58ead760da56.png">
 
+<img width="1353" alt="Snipaste_2023-04-11_20-19-59" src="https://user-images.githubusercontent.com/16133390/231187172-9f60516b-f925-482e-99aa-479d4cb37aaf.png">
 
+<img width="1314" alt="Snipaste_2023-04-11_21-46-40" src="https://user-images.githubusercontent.com/16133390/231187198-7878dda1-4a64-4fae-871a-df8886e038db.png">
 
 
 <br />
