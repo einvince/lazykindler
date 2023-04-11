@@ -43,7 +43,7 @@ class ClippingHelper(object):
         if clips is not None and len(clips) > 0:
             return
 
-        clip_content = clip_content.replace(' ', '\n')
+        # clip_content = clip_content.replace(' ', '\n')
 
         db.insert_clipping(generate_uuid(), book_name, author,
                            clip_content, timestamp, md5_str)

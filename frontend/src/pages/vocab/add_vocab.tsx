@@ -140,7 +140,7 @@ const AddVocab = () => {
   return (
     <div style={{ display: 'flex', width: '100%', height: '86vh' }}>
       {/* 渲染书籍列表 */}
-      <div style={{ width: '30%', height: '86vh' }}>
+      <div style={{ width: '20%', height: '86vh' }}>
         <Paper style={{ width: '100%', height: '86vh' }}>
           <List
             style={{ height: '86vh', overflow: 'auto' }}

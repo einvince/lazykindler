@@ -331,7 +331,7 @@ export default function BookCollectionCardList(props: BookCardListProps) {
                         <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
                           <FormatListNumberedIcon style={{ height: 20 }} />
                           <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                            {countChOfStr(item.item_uuids, ';')} 本书
+                            {countChOfStr(item.item_uuids, ';')} <FormattedMessage id="pages.books.books" />
                           </Typography>
                         </Box>
 

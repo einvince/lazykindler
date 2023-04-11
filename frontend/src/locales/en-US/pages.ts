@@ -13,6 +13,7 @@ export default {
   'pages.books.search': 'Search',
   'pages.books.cover': 'Cover',
   'pages.books.book': 'Book',
+  'pages.books.books': 'books',
 
   'pages.books.book_sorting': 'Book Sorting',
   'pages.books.book_sorting.size.ascending': 'Size - Ascending',

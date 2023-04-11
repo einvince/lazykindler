@@ -1,28 +1,24 @@
-import { getVocabBookList, getVocabWordsByBookKeyList, upsertWordAndUsage } from '@/services';
+import { getVocabBookList, getVocabWordsByBookKeyList } from '@/services';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 import {
   Badge,
-  Box,
-  Divider,
-  Grid,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
   ListSubheader,
   Paper,
-  TextField,
   Tooltip,
-  Typography,
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import _ from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
 import Notify from '../../components/Notify';
+import UsageList from './components/UsageList';
 
 const VocabList = () => {
   const intl = useIntl();
@@ -33,17 +29,11 @@ const VocabList = () => {
   const [selectedWordsItem, setSelectedWordsItem] = useState<any[]>([]);
   const [usageList, setUsageList] = useState<any[]>([]);
 
-  const [notificationMessage, setNotificationMessage] = useState('');
   const [notificationColor, setNotificationColor] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   // 要修改的用法条目的相关信息
   const [translatedUsage, setTranslatedUsage] = useState('');
-
-  const [editingIndex, setEditingIndex] = useState(null);
-
-  const handleEditClick = (index: any) => {
-    setEditingIndex(index);
-  };
 
   useEffect(() => {
     getVocabBookList(selectedBooks).then((data) => {
@@ -88,6 +78,11 @@ const VocabList = () => {
     });
 
     return result;
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationMessage('');
+    setNotificationColor('');
   };
 
   const handleBookSelect = (bookKeyList: string[]) => {
@@ -166,57 +161,10 @@ const VocabList = () => {
     return wordItem.usage.length;
   };
 
-  const highlightWordsInUsage = (wordList: string[], usage: string) => {
-    let highlightedUsage = usage;
-
-    wordList.forEach((word) => {
-      const regex = new RegExp(`(${word})`, 'g');
-      highlightedUsage = highlightedUsage.replace(
-        regex,
-        '<span style="background-color: orangered; color: white; padding: 0 4px;">$1</span>',
-      );
-    });
-
-    return highlightedUsage;
-  };
-
-  // 使用 useCallback 和 debounce 创建一个防抖函数
-  const debouncedSetTranslatedUsage = useCallback(
-    _.debounce((value) => setTranslatedUsage(value), 300),
-    [],
-  );
-
-  const handleInputChange = (event: any) => {
-    debouncedSetTranslatedUsage(event.target.value);
-  };
-
-  const humanReadableTimestamp = (timestamp: any) => {
-    timestamp = Number(timestamp);
-    if (timestamp.toString().length == 10) {
-      timestamp = timestamp * 1000;
-    }
-
-    const date = new Date(timestamp); // 将时间戳转换为毫秒
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
-
-  const handleNotificationClose = () => {
-    setNotificationMessage('');
-    setNotificationColor('');
-  };
-
   return (
     <div style={{ display: 'flex', width: '100%', height: '86vh' }}>
       {/* 渲染书籍列表 */}
-      <div style={{ width: '30%', height: '86vh' }}>
+      <div style={{ width: '20%', height: '86vh' }}>
         <Paper style={{ width: '100%', height: '86vh' }}>
           <List
             style={{ height: '86vh', overflow: 'auto' }}
@@ -264,7 +212,7 @@ const VocabList = () => {
         </Paper>
       </div>
       {/* 渲染单词列表 */}
-      <div style={{ width: '20%', height: '86vh', paddingLeft: 10 }}>
+      <div style={{ width: '19%', height: '86vh', paddingLeft: 10 }}>
         <Paper style={{ width: '100%', height: '86vh' }}>
           <List
             style={{ height: '86vh', overflow: 'auto' }}
@@ -307,154 +255,38 @@ const VocabList = () => {
         </Paper>
       </div>
       {/* 渲染用法 */}
-      <div style={{ width: '50%', paddingLeft: 10 }}>
-        <Paper style={{ width: '100%', height: '86vh' }}>
-          <List
-            style={{ height: '86vh', overflow: 'auto' }}
-            subheader={
-              <ListSubheader component="h6" sx={{ textAlign: 'center' }}>
-                <FormattedMessage id="pages.vocabulary.list.usage_list" />
-              </ListSubheader>
-            }
-            component="nav"
-          >
-            {usageList.map((usageItem, index) => (
-              <Box key={index} my={8}>
-                <div key={index}>
-                  <ListItem>
-                    <ListItemText
-                      primary={
-                        <Typography component="span" style={{ color: 'tomato' }}>
-                          <strong>
-                            <FormattedMessage id="pages.vocabulary.usage" />
-                          </strong>
-                          :{' '}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography
-                          style={{ marginLeft: 8 }}
-                          component="span"
-                          dangerouslySetInnerHTML={{
-                            __html: highlightWordsInUsage([usageItem['word']], usageItem.usage),
-                          }}
-                        />
-                      }
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <Grid container alignItems="center">
-                      <Grid item>
-                        <Typography component="span" style={{ color: '#ee8e70' }}>
-                          <strong>
-                            <FormattedMessage id="pages.vocabulary.translate" />
-                          </strong>
-                          :{' '}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs>
-                        {editingIndex === index ? (
-                          <TextField
-                            style={{ marginLeft: 10, width: '95%' }}
-                            defaultValue={usageItem.translated_usage}
-                            onChange={handleInputChange}
-                            onBlur={() => {
-                              setEditingIndex(null);
+      <div style={{ width: '61%', paddingLeft: 10, position: 'relative' }}>
+        <UsageList
+          usageList={usageList}
+          upsertWordAndUsageSuccessNotify={() => {
+            setNotificationColor('#4caf50');
+            setNotificationMessage(
+              intl.formatMessage({
+                id: 'pages.vocabulary.save_translate.success',
+              }),
+            );
 
-                              upsertWordAndUsage(
-                                usageItem.book_key,
-                                usageItem.word,
-                                usageItem.usage,
-                                translatedUsage,
-                              ).then(
-                                () => {
-                                  setNotificationColor('#4caf50');
-                                  setNotificationMessage(
-                                    intl.formatMessage({
-                                      id: 'pages.vocabulary.save_translate.success',
-                                    }),
-                                  );
+            setTranslatedUsage('');
+          }}
+          upsertWordAndUsageFailNotify={() => {
+            setNotificationColor('tomato');
+            setNotificationMessage(
+              intl.formatMessage({
+                id: 'pages.vocabulary.save_translate.fail',
+              }),
+            );
 
-                                  setTranslatedUsage('');
-                                },
-                                () => {
-                                  setNotificationColor('tomato');
-                                  setNotificationMessage(
-                                    intl.formatMessage({
-                                      id: 'pages.vocabulary.save_translate.fail',
-                                    }),
-                                  );
-
-                                  setTranslatedUsage('');
-                                },
-                              );
-                            }}
-                            multiline
-                            fullWidth
-                          />
-                        ) : (
-                          <Typography
-                            style={{
-                              marginLeft: 10,
-                              width: '95%',
-                              cursor: 'text',
-                              color: usageItem.translated_usage ? 'inherit' : '#aaa',
-                            }}
-                            onClick={() => handleEditClick(index)}
-                          >
-                            {usageItem.translated_usage || (
-                              <FormattedMessage id="pages.vocabulary.save_translate.info" />
-                            )}
-                          </Typography>
-                        )}
-                      </Grid>
-                    </Grid>
-                  </ListItem>
-
-                  <ListItem>
-                    <ListItemText
-                      primary={
-                        <Typography component="span" style={{ color: '#cf8f2f' }}>
-                          <strong>
-                            <FormattedMessage id="pages.vocabulary.book_name" />
-                          </strong>
-                          :{' '}
-                        </Typography>
-                      }
-                      secondary={<Typography component="span">{usageItem.book}</Typography>}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary={
-                        <Typography component="span" style={{ color: '#498977' }}>
-                          <strong>
-                            <FormattedMessage id="pages.vocabulary.timestamp" />
-                          </strong>
-                          :{' '}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography style={{ marginLeft: 6 }} component="span">
-                          {humanReadableTimestamp(usageItem.timestamp)}
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                  <Divider />
-                </div>
-              </Box>
-            ))}
-          </List>
-
-          <Notify
-            message={notificationMessage}
-            duration={6000}
-            onClose={handleNotificationClose}
-            color={notificationColor}
-          />
-        </Paper>
+            setTranslatedUsage('');
+          }}
+        />
       </div>
+
+      <Notify
+        message={notificationMessage}
+        duration={6000}
+        onClose={handleNotificationClose}
+        color={notificationColor}
+      />
     </div>
   );
 };
