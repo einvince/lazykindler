@@ -63,19 +63,11 @@ export default [
         icon: 'smile',
         component: './clipping/clippings',
       },
-      { component: './404' },
-    ],
-  },
-  {
-    path: '/book_to_clipping',
-    name: 'book_to_highlights',
-    icon: 'RocketOutlined',
-    routes: [
       {
-        path: '/book_to_clipping/relation_list',
+        path: '/clipping/book_to_relation/relation_list',
         name: 'collection',
         icon: 'smile',
-        component: './book_to_clipping/relation_list',
+        component: './clipping/book_to_clipping/relation_list',
       },
       { component: './404' },
     ],

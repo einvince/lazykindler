@@ -6,7 +6,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi';
-import ReaderDialog from '../../../components/Reader';
+import ReaderDialog from '../../../../components/Reader';
 
 const initialDialogInfoForReadBook = {
   open: false,
