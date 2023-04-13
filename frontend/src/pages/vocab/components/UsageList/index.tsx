@@ -1,5 +1,8 @@
 import { upsertWordAndUsage } from '@/services';
 
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import {
   Box,
   Divider,
@@ -12,8 +15,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
+import Tab from '@mui/material/Tab';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { FormattedMessage, useIntl } from 'umi';
@@ -24,9 +26,21 @@ type UsageListProps = {
   upsertWordAndUsageFailNotify: any;
 };
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
 const UsageList = (props: UsageListProps) => {
   const { usageList, upsertWordAndUsageSuccessNotify, upsertWordAndUsageFailNotify } = props;
   const intl = useIntl();
+
+  const [value, setValue] = useState('1');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   const highlightWordsInUsage = (wordList: string[], usage: string) => {
     let highlightedUsage = usage;
@@ -79,142 +93,187 @@ const UsageList = (props: UsageListProps) => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
-  return (
-    <div>
-      <ButtonGroup
-        variant="contained"
-        aria-label="outlined primary button group"
-        style={{ marginBottom: 5 }}
-      >
-        <Button>One</Button>
-        <Button>Two</Button>
-      </ButtonGroup>
-      <Paper style={{ width: '100%', height: '81.8vh' }}>
-        <List
-          style={{ height: '80vh', overflow: 'auto' }}
-          subheader={
-            <ListSubheader component="h6" sx={{ textAlign: 'center' }}>
-              <FormattedMessage id="pages.vocabulary.list.usage_list" />
-            </ListSubheader>
-          }
-          component="nav"
+  const listView = () => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <Paper
+          style={{ display: 'flex', width: '100%', height: '81.1vh', justifyContent: 'center' }}
         >
-          {usageList.map((usageItem: any, index: number) => (
-            <Box key={index} my={8}>
-              <div key={index}>
-                <ListItem>
-                  <ListItemText
-                    primary={
-                      <Typography component="span" style={{ color: 'tomato' }}>
-                        <strong>
-                          <FormattedMessage id="pages.vocabulary.usage" />
-                        </strong>
-                        :{' '}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography
-                        style={{ marginLeft: 8 }}
-                        component="span"
-                        dangerouslySetInnerHTML={{
-                          __html: highlightWordsInUsage([usageItem['word']], usageItem.usage),
-                        }}
-                      />
-                    }
-                  />
-                </ListItem>
-                <ListItem>
-                  <Grid container alignItems="center">
-                    <Grid item>
-                      <Typography component="span" style={{ color: '#ee8e70' }}>
-                        <strong>
-                          <FormattedMessage id="pages.vocabulary.translate" />
-                        </strong>
-                        :{' '}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      {editingIndex === index ? (
-                        <TextField
-                          style={{ marginLeft: 10, width: '95%' }}
-                          defaultValue={usageItem.translated_usage}
-                          onChange={handleInputChange}
-                          onBlur={() => {
-                            setEditingIndex(null);
-
-                            upsertWordAndUsage(
-                              usageItem.book_key,
-                              usageItem.word,
-                              usageItem.usage,
-                              translatedUsage,
-                            ).then(
-                              () => {
-                                upsertWordAndUsageSuccessNotify();
-                              },
-                              () => {
-                                upsertWordAndUsageFailNotify();
-                              },
-                            );
-                          }}
-                          multiline
-                          fullWidth
-                        />
-                      ) : (
-                        <Typography
-                          style={{
-                            marginLeft: 10,
-                            width: '95%',
-                            cursor: 'text',
-                            color: usageItem.translated_usage ? 'inherit' : '#aaa',
-                          }}
-                          onClick={() => handleEditClick(index)}
-                        >
-                          {usageItem.translated_usage || (
-                            <FormattedMessage id="pages.vocabulary.save_translate.info" />
-                          )}
+          <List
+            style={{ height: '80vh', overflow: 'auto' }}
+            subheader={
+              <ListSubheader component="h6" sx={{ textAlign: 'center' }}>
+                <FormattedMessage id="pages.vocabulary.list.usage_list" />
+              </ListSubheader>
+            }
+            component="nav"
+          >
+            {usageList.map((usageItem: any, index: number) => (
+              <Box key={index} my={8}>
+                <div key={index}>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <Typography component="span" style={{ color: 'tomato' }}>
+                          <strong>
+                            <FormattedMessage id="pages.vocabulary.usage" />
+                          </strong>
+                          :{' '}
                         </Typography>
-                      )}
-                    </Grid>
-                  </Grid>
-                </ListItem>
+                      }
+                      secondary={
+                        <Typography
+                          style={{ marginLeft: 8 }}
+                          component="span"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightWordsInUsage([usageItem['word']], usageItem.usage),
+                          }}
+                        />
+                      }
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <Grid container alignItems="center">
+                      <Grid item>
+                        <Typography component="span" style={{ color: '#ee8e70' }}>
+                          <strong>
+                            <FormattedMessage id="pages.vocabulary.translate" />
+                          </strong>
+                          :{' '}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs>
+                        {editingIndex === index ? (
+                          <TextField
+                            style={{ marginLeft: 10, width: '95%' }}
+                            defaultValue={usageItem.translated_usage}
+                            onChange={handleInputChange}
+                            onBlur={() => {
+                              setEditingIndex(null);
 
-                <ListItem>
-                  <ListItemText
-                    primary={
-                      <Typography component="span" style={{ color: '#cf8f2f' }}>
-                        <strong>
-                          <FormattedMessage id="pages.vocabulary.book_name" />
-                        </strong>
-                        :{' '}
-                      </Typography>
-                    }
-                    secondary={<Typography component="span">{usageItem.book}</Typography>}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={
-                      <Typography component="span" style={{ color: '#498977' }}>
-                        <strong>
-                          <FormattedMessage id="pages.vocabulary.timestamp" />
-                        </strong>
-                        :{' '}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography style={{ marginLeft: 6 }} component="span">
-                        {humanReadableTimestamp(usageItem.timestamp)}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </div>
-            </Box>
-          ))}
-        </List>
-      </Paper>
-    </div>
+                              upsertWordAndUsage(
+                                usageItem.book_key,
+                                usageItem.word,
+                                usageItem.usage,
+                                translatedUsage,
+                              ).then(
+                                () => {
+                                  upsertWordAndUsageSuccessNotify();
+                                },
+                                () => {
+                                  upsertWordAndUsageFailNotify();
+                                },
+                              );
+                            }}
+                            multiline
+                            fullWidth
+                          />
+                        ) : (
+                          <Typography
+                            style={{
+                              marginLeft: 10,
+                              width: '95%',
+                              cursor: 'text',
+                              color: usageItem.translated_usage ? 'inherit' : '#aaa',
+                            }}
+                            onClick={() => handleEditClick(index)}
+                          >
+                            {usageItem.translated_usage || (
+                              <FormattedMessage id="pages.vocabulary.save_translate.info" />
+                            )}
+                          </Typography>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </ListItem>
+
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <Typography component="span" style={{ color: '#cf8f2f' }}>
+                          <strong>
+                            <FormattedMessage id="pages.vocabulary.book_name" />
+                          </strong>
+                          :{' '}
+                        </Typography>
+                      }
+                      secondary={<Typography component="span">{usageItem.book}</Typography>}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <Typography component="span" style={{ color: '#498977' }}>
+                          <strong>
+                            <FormattedMessage id="pages.vocabulary.timestamp" />
+                          </strong>
+                          :{' '}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography style={{ marginLeft: 6 }} component="span">
+                          {humanReadableTimestamp(usageItem.timestamp)}
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                  <Divider />
+                </div>
+              </Box>
+            ))}
+          </List>
+        </Paper>
+      </div>
+    );
+  };
+
+
+  const cardView = () => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <Paper
+          style={{ display: 'flex', width: '100%', height: '81.1vh', justifyContent: 'center' }}
+        >
+        </Paper>
+      </div>
+    );
+  };
+
+
+  return (
+    <Box sx={{ width: '100%', typography: 'body1' }}>
+      <TabContext value={value}>
+        <Box
+          sx={{
+            borderBottom: 1,
+            borderColor: 'divider',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <TabList
+            onChange={handleChange}
+            aria-label="lab API tabs example"
+            style={{ display: 'flex' }}
+          >
+            <Tab
+              label={<FormattedMessage id="pages.vocabulary.usage_list.list_view" />}
+              value="1"
+            />
+            <Tab
+              label={<FormattedMessage id="pages.vocabulary.usage_list.card_view" />}
+              value="2"
+            />
+          </TabList>
+        </Box>
+        <TabPanel value="1" style={{ padding: 0 }}>
+          {listView()}
+        </TabPanel>
+        <TabPanel value="2" style={{ padding: 0 }}>
+          {cardView()}
+        </TabPanel>
+      </TabContext>
+    </Box>
   );
 };
 

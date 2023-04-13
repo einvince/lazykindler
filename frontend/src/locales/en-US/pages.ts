@@ -126,6 +126,8 @@ export default {
   'pages.book_to_highlight.action.save': 'Save',
   'pages.book_to_highlight.action.delete': 'Delete',
 
+  'pages.vocabulary.usage_list.list_view': 'List View',
+  'pages.vocabulary.usage_list.card_view': 'Card View',
   'pages.vocabulary.list': 'Vocabulary List',
   'pages.vocabulary.add': 'Add Vocabulary',
   'pages.vocabulary.select_all': 'Select All',

@@ -34,6 +34,7 @@ import Dropzone from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 
+import '../../../../../components/Css/CollCard.css';
 import ChangeInfo from '../../../../book_list/components/ChangeInfoDialog';
 import Cover from '../../../../book_list/components/Cover';
 import CollectionClippings from '../CollectionClippings';
@@ -247,90 +248,103 @@ export default function CollectionList(props: ClippingListProps) {
             .slice(page * pageNumberSize, (page + 1) * pageNumberSize)
             .map((item: CollectionDataType) => {
               return (
-                <Card
-                  hoverable
-                  key={item.uuid}
-                  cover={<Cover uuid={item.uuid} />}
-                  actions={[
-                    <Menu
-                      onClick={({ key, domEvent }) => {
-                        domEvent.preventDefault();
+                <div className="card-container" key={item.uuid}>
+                  <Card
+                    hoverable
+                    cover={<Cover uuid={item.uuid} />}
+                    actions={[
+                      <Menu
+                        onClick={({ key, domEvent }) => {
+                          domEvent.preventDefault();
 
-                        onClickActionMenu(key, item);
-                      }}
-                      items={actionMenuList}
-                      mode="vertical"
-                      key={'1'}
-                      selectable={false}
-                    ></Menu>,
-                  ]}
-                >
-                  <Card.Meta
-                    title={
-                      <div
-                        style={{
-                          maxHeight: '30vh',
-                          overflow: 'auto',
-                          marginTop: 5,
-                          textAlign: 'center',
+                          onClickActionMenu(key, item);
                         }}
-                      >
-                        <Typography
-                          variant="h6"
-                          display="block"
+                        items={actionMenuList}
+                        mode="vertical"
+                        key={'1'}
+                        selectable={false}
+                      ></Menu>,
+                    ]}
+                  >
+                    <Card.Meta
+                      title={
+                        <div
                           style={{
-                            wordBreak: 'break-all',
-                            whiteSpace: 'break-spaces',
-                            fontSize: 13,
+                            maxHeight: '30vh',
+                            overflow: 'auto',
+                            marginTop: 5,
+                            textAlign: 'center',
                           }}
-                          gutterBottom
                         >
-                          {item.name}
-                        </Typography>
-                      </div>
-                    }
-                    description={
-                      <div
-                        style={{ maxHeight: 150, overflow: 'auto' }}
-                        onClick={() => {
-                          setUUID1(uuidv4());
-                          setCheckCollctionClippings({
-                            open: true,
-                            collection_uuid: item.uuid,
-                          });
-                        }}
-                      >
-                        <Divider style={{ marginBottom: 10 }} />
-                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                          <StarIcon style={{ height: 20 }} />
-                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                            {item.star}
+                          <Typography
+                            variant="h6"
+                            display="block"
+                            style={{
+                              wordBreak: 'break-all',
+                              whiteSpace: 'break-spaces',
+                              fontSize: 13,
+                            }}
+                            gutterBottom
+                          >
+                            {item.name}
                           </Typography>
-                        </Box>
+                        </div>
+                      }
+                      description={
+                        <div
+                          style={{ maxHeight: 150, overflow: 'auto' }}
+                          onClick={() => {
+                            setUUID1(uuidv4());
+                            setCheckCollctionClippings({
+                              open: true,
+                              collection_uuid: item.uuid,
+                            });
+                          }}
+                        >
+                          <Divider style={{ marginBottom: 10 }} />
+                          <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                            <StarIcon style={{ height: 20 }} />
+                            <Typography
+                              variant="body2"
+                              style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                            >
+                              {item.star}
+                            </Typography>
+                          </Box>
 
-                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                          <FormatListNumberedIcon style={{ height: 20 }} />
-                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                            {countChOfStr(item.item_uuids, ';')}
-                          </Typography>
-                        </Box>
+                          <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                            <FormatListNumberedIcon style={{ height: 20 }} />
+                            <Typography
+                              variant="body2"
+                              style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                            >
+                              {countChOfStr(item.item_uuids, ';')}
+                            </Typography>
+                          </Box>
 
-                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                          <TagOutlined style={{ height: 16, paddingLeft: 4.5 }} />
-                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                            {item.tags}
-                          </Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                          <DateRangeIcon style={{ height: 16 }} />
-                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                            {item.create_time.split(' ')[0]}
-                          </Typography>
-                        </Box>
-                      </div>
-                    }
-                  />
-                </Card>
+                          <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                            <TagOutlined style={{ height: 16, paddingLeft: 4.5 }} />
+                            <Typography
+                              variant="body2"
+                              style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                            >
+                              {item.tags}
+                            </Typography>
+                          </Box>
+                          <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                            <DateRangeIcon style={{ height: 16 }} />
+                            <Typography
+                              variant="body2"
+                              style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                            >
+                              {item.create_time.split(' ')[0]}
+                            </Typography>
+                          </Box>
+                        </div>
+                      }
+                    />
+                  </Card>
+                </div>
               );
             })}
         </Masonry>

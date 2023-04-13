@@ -36,6 +36,7 @@ import { FormattedMessage, useIntl } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CollectionDataType } from '@/pages/data';
+import '../../../../../components/Css/CollCard.css';
 import ChangeInfo from '../../../components/ChangeInfoDialog';
 import Cover from '../../../components/Cover';
 import AddBooks from '../AddBooks';
@@ -268,92 +269,103 @@ export default function BookCollectionCardList(props: BookCardListProps) {
             .slice(page * pageNumberSize, (page + 1) * pageNumberSize)
             .map((item: CollectionDataType) => {
               return (
-                <Card
-                  key={item.uuid}
-                  hoverable
-                  cover={<Cover uuid={item.uuid} />}
-                  actions={[
-                    <Menu
-                      onClick={({ key, domEvent }) => {
-                        domEvent.preventDefault();
+                <div className="card-container" key={item.uuid}>
+                  <Card
+                    hoverable
+                    cover={<Cover uuid={item.uuid} />}
+                    actions={[
+                      <Menu
+                        onClick={({ key, domEvent }) => {
+                          domEvent.preventDefault();
 
-                        onClickActionMenu(key, item);
-                      }}
-                      items={actionMenuList}
-                      mode="vertical"
-                      key={'1'}
-                      selectable={false}
-                    ></Menu>,
-                  ]}
-                >
-                  <Card.Meta
-                    title={
-                      <div
-                        style={{
-                          maxHeight: '30vh',
-                          overflow: 'auto',
-                          marginTop: 5,
-                          textAlign: 'center',
+                          onClickActionMenu(key, item);
                         }}
-                      >
-                        <Typography
-                          variant="h6"
-                          display="block"
+                        items={actionMenuList}
+                        mode="vertical"
+                        key={'1'}
+                        selectable={false}
+                      ></Menu>,
+                    ]}
+                  >
+                    <Card.Meta
+                      title={
+                        <div
                           style={{
-                            wordBreak: 'break-all',
-                            whiteSpace: 'break-spaces',
-                            fontSize: 13,
+                            maxHeight: '30vh',
+                            overflow: 'auto',
+                            marginTop: 5,
+                            textAlign: 'center',
                           }}
-                          gutterBottom
                         >
-                          {item.name}
-                        </Typography>
-                      </div>
-                    }
-                    description={
-                      <div
-                        style={{ maxHeight: 150, overflow: 'auto' }}
-                        onClick={() => {
-                          setUUID1(uuidv4());
-                          setCheckCollctionBooks({
-                            open: true,
-                            collection_uuid: item.uuid,
-                          });
-                        }}
-                      >
-                        <Divider style={{ marginBottom: 10 }} />
-                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                          <StarIcon style={{ height: 20 }} />
-                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                            {item.star}
-                          </Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                          <FormatListNumberedIcon style={{ height: 20 }} />
-                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                            {countChOfStr(item.item_uuids, ';')} <FormattedMessage id="pages.books.books" />
-                          </Typography>
-                        </Box>
-
-                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                          <ArchiveIcon style={{ height: 16 }} />
                           <Typography
-                            variant="body2"
-                            style={{ paddingTop: 1.2, paddingLeft: 15, wordBreak: 'break-all' }}
+                            variant="h6"
+                            display="block"
+                            style={{
+                              wordBreak: 'break-all',
+                              whiteSpace: 'break-spaces',
+                              fontSize: 13,
+                            }}
+                            gutterBottom
                           >
-                            {item.tags}
+                            {item.name}
                           </Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                          <DateRangeIcon style={{ height: 16 }} />
-                          <Typography variant="body2" style={{ paddingTop: 1.2, paddingLeft: 15 }}>
-                            {item.create_time.split(' ')[0]}
-                          </Typography>
-                        </Box>
-                      </div>
-                    }
-                  />
-                </Card>
+                        </div>
+                      }
+                      description={
+                        <div
+                          style={{ maxHeight: 150, overflow: 'auto' }}
+                          onClick={() => {
+                            setUUID1(uuidv4());
+                            setCheckCollctionBooks({
+                              open: true,
+                              collection_uuid: item.uuid,
+                            });
+                          }}
+                        >
+                          <Divider style={{ marginBottom: 10 }} />
+                          <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                            <StarIcon style={{ height: 20 }} />
+                            <Typography
+                              variant="body2"
+                              style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                            >
+                              {item.star}
+                            </Typography>
+                          </Box>
+                          <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                            <FormatListNumberedIcon style={{ height: 20 }} />
+                            <Typography
+                              variant="body2"
+                              style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                            >
+                              {countChOfStr(item.item_uuids, ';')}{' '}
+                              <FormattedMessage id="pages.books.books" />
+                            </Typography>
+                          </Box>
+
+                          <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                            <ArchiveIcon style={{ height: 16 }} />
+                            <Typography
+                              variant="body2"
+                              style={{ paddingTop: 1.2, paddingLeft: 15, wordBreak: 'break-all' }}
+                            >
+                              {item.tags}
+                            </Typography>
+                          </Box>
+                          <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                            <DateRangeIcon style={{ height: 16 }} />
+                            <Typography
+                              variant="body2"
+                              style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                            >
+                              {item.create_time.split(' ')[0]}
+                            </Typography>
+                          </Box>
+                        </div>
+                      }
+                    />
+                  </Card>
+                </div>
               );
             })}
         </Masonry>

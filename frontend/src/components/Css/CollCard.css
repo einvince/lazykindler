@@ -1,0 +1,11 @@
+.card-container {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    display: inline-block;
+  }
+  
+  .card-container:hover {
+    transform: translateY(-5mm); /* 上移5毫米 */
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5); /* 阴影效果 */
+  }
+  
+    

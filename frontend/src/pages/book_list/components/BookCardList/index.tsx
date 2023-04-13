@@ -32,6 +32,7 @@ import Dropzone from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 
+import '../../../../components/Css/ItemCard.css';
 import ReaderDialog from '../../../../components/Reader';
 import { BookMetaDataType } from '../../../data';
 import ChangeInfo from '../ChangeInfoDialog';
@@ -285,127 +286,129 @@ export default function BookCardList(props: BookCardListProps) {
                 .slice(page * pageNumberSize, (page + 1) * pageNumberSize)
                 .map((item: BookMetaDataType) => {
                   return (
-                    <Card
-                      hoverable
-                      key={item.md5}
-                      cover={<Cover uuid={item.uuid} />}
-                      actions={[
-                        <Menu
-                          onClick={({ key, domEvent }) => {
-                            domEvent.preventDefault();
+                    <div className="card-container" key={item.uuid}>
+                      <Card
+                        hoverable
+                        key={item.md5}
+                        cover={<Cover uuid={item.uuid} />}
+                        actions={[
+                          <Menu
+                            onClick={({ key, domEvent }) => {
+                              domEvent.preventDefault();
 
-                            onClickActionMenu(key, item);
-                          }}
-                          items={actionMenuList}
-                          mode="vertical"
-                          key={'1'}
-                          selectable={false}
-                        ></Menu>,
-                      ]}
-                      bodyStyle={{
-                        paddingTop: 8,
-                        paddingLeft: 4,
-                        paddingRight: 4,
-                        paddingBottom: 8,
-                      }}
-                    >
-                      <Card.Meta
-                        title={
-                          <div
-                            style={{
-                              maxHeight: '30vh',
-                              overflow: 'auto',
-                              marginTop: 5,
+                              onClickActionMenu(key, item);
                             }}
-                          >
-                            <Typography
-                              variant="h6"
-                              display="block"
+                            items={actionMenuList}
+                            mode="vertical"
+                            key={'1'}
+                            selectable={false}
+                          ></Menu>,
+                        ]}
+                        bodyStyle={{
+                          paddingTop: 8,
+                          paddingLeft: 4,
+                          paddingRight: 4,
+                          paddingBottom: 8,
+                        }}
+                      >
+                        <Card.Meta
+                          title={
+                            <div
                               style={{
-                                wordBreak: 'break-all',
-                                whiteSpace: 'break-spaces',
-                                fontSize: 13,
+                                maxHeight: '30vh',
+                                overflow: 'auto',
+                                marginTop: 5,
                               }}
-                              gutterBottom
                             >
-                              {item.name}
-                            </Typography>
-                          </div>
-                        }
-                        description={
-                          <div
-                            style={{
-                              maxHeight: '40vh',
-                              overflow: 'auto',
-                              marginTop: 10,
-                            }}
-                          >
-                            <Divider style={{ marginBottom: 10 }} />
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <StarIcon style={{ height: 20 }} />
                               <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                                variant="h6"
+                                display="block"
+                                style={{
+                                  wordBreak: 'break-all',
+                                  whiteSpace: 'break-spaces',
+                                  fontSize: 13,
+                                }}
+                                gutterBottom
                               >
-                                {item.star}
+                                {item.name}
                               </Typography>
-                            </Box>
+                            </div>
+                          }
+                          description={
+                            <div
+                              style={{
+                                maxHeight: '40vh',
+                                overflow: 'auto',
+                                marginTop: 10,
+                              }}
+                            >
+                              <Divider style={{ marginBottom: 10 }} />
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <StarIcon style={{ height: 20 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                                >
+                                  {item.star}
+                                </Typography>
+                              </Box>
 
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <StraightenIcon style={{ height: 20 }} />
-                              <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                              >
-                                {humanFileSize(item.size, true)}
-                              </Typography>
-                            </Box>
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <StraightenIcon style={{ height: 20 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                                >
+                                  {humanFileSize(item.size, true)}
+                                </Typography>
+                              </Box>
 
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <ArchiveIcon style={{ height: 16 }} />
-                              <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                              >
-                                {item.coll_names == 'None' || item.coll_names == null
-                                  ? ''
-                                  : item.coll_names}
-                              </Typography>
-                            </Box>
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <ArchiveIcon style={{ height: 16 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                                >
+                                  {item.coll_names == 'None' || item.coll_names == null
+                                    ? ''
+                                    : item.coll_names}
+                                </Typography>
+                              </Box>
 
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <LocalOfferIcon style={{ height: 20 }} />
-                              <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                              >
-                                {item.tags == null ? '' : item.tags}
-                              </Typography>
-                            </Box>
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <LocalOfferIcon style={{ height: 20 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                                >
+                                  {item.tags == null ? '' : item.tags}
+                                </Typography>
+                              </Box>
 
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <AccountCircleIcon style={{ height: 20 }} />
-                              <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                              >
-                                {item.author == null ? '' : item.author}
-                              </Typography>
-                            </Box>
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <AccountCircleIcon style={{ height: 20 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                                >
+                                  {item.author == null ? '' : item.author}
+                                </Typography>
+                              </Box>
 
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <AccountBalanceIcon style={{ height: 20 }} />
-                              <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, paddingLeft: 15 }}
-                              >
-                                {item.publisher == null ? '' : item.publisher}
-                              </Typography>
-                            </Box>
-                          </div>
-                        }
-                      />
-                    </Card>
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <AccountBalanceIcon style={{ height: 20 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, paddingLeft: 15 }}
+                                >
+                                  {item.publisher == null ? '' : item.publisher}
+                                </Typography>
+                              </Box>
+                            </div>
+                          }
+                        />
+                      </Card>
+                    </div>
                   );
                 })}
             </Masonry>

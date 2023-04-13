@@ -165,7 +165,7 @@ const AddVocab = () => {
                   >
                     <ListItemText
                       primary={truncateText(book['title'], 20)}
-                      style={{ paddingRight: 20 }}
+                      style={{ paddingRight: 5 }}
                     />
                     <Badge color="secondary" badgeContent={countWordsInBook(book.key)} showZero>
                       <MenuBookIcon />

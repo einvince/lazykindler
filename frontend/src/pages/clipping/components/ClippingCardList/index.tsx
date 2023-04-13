@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { ClippingDataType } from '@/pages/data';
 import { FormattedMessage, useIntl } from 'umi';
+import '../../../../components/Css/ItemCard.css';
 import ChangeInfo from '../../../book_list/components/ChangeInfoDialog';
 import ChangeClippingColl from './ChangeClippingColl';
 import ClippingDialog from './ClippingDialog';
@@ -197,108 +198,109 @@ const ClippingCardList = (props: ClippingCardListProps) => {
                 .slice(page * pageNumberSize, (page + 1) * pageNumberSize)
                 .map((item: ClippingDataType) => {
                   return (
-                    <Card
-                      key={item.uuid}
-                      className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']}`}
-                      style={{ marginRight: 15, marginBottom: 15 }}
-                      bodyStyle={{ padding: 9 }}
-                      hoverable
-                      actions={[
-                        <Menu
-                          onClick={({ key, domEvent }) => {
-                            domEvent.preventDefault();
+                    <div className="card-container" key={item.uuid}>
+                      <Card
+                        key={item.uuid}
+                        className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']}`}
+                        bodyStyle={{ padding: 9 }}
+                        hoverable
+                        actions={[
+                          <Menu
+                            onClick={({ key, domEvent }) => {
+                              domEvent.preventDefault();
 
-                            onClickActionMenu(key, item);
-                          }}
-                          items={actionMenuList}
-                          mode="vertical"
-                          key={'1'}
-                          selectable={false}
-                        ></Menu>,
-                      ]}
-                    >
-                      <Card.Meta
-                        title={<a>{item.book_name}</a>}
-                        description={
-                          <div>
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <AccountCircleIcon style={{ height: 20 }} />
-                              <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, marginLeft: -18 }}
-                              >
-                                {item.author == null ? '' : item.author}
-                              </Typography>
-                            </Box>
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <MoreTimeIcon style={{ height: 20 }} />
-                              <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, marginLeft: -18 }}
-                              >
-                                {moment.unix(~~item.addDate).format('YYYY-MM-DD HH:mm:ss')}
-                              </Typography>
-                            </Box>
-                            <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
-                              <LocalOfferIcon style={{ height: 20 }} />
-                              <Typography
-                                variant="body2"
-                                style={{ paddingTop: 1.2, marginLeft: -18 }}
-                              >
-                                {item.tags == null ? '' : item.tags}
-                              </Typography>
-                            </Box>
-                          </div>
-                        }
-                      />
-                      <article
-                        className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']} ${hetiStyles['heti-hang']} ${hetiStyles['heti-meta heti-small']} `}
-                        style={{
-                          maxHeight: '40vh',
-                          overflow: 'auto',
-                          marginTop: 8,
-                          fontSize: 15,
-                          whiteSpace: 'pre-wrap',
-                        }}
-                        onClick={() => {
-                          let selectedText = window.getSelection()!.toString();
-                          if (selectedText.length > 0) {
-                            return;
-                          }
-                          setClippingDialogInfo({
-                            uuid: item.uuid,
-                            open: true,
-                            handleClose: () => {
-                              setChangeClippingCollInfo(initialClippingDialogInfo);
-                            },
-                            clippingContent: item.content,
-                            highlights: item.highlights,
-                            book_name: item.book_name,
-                          });
-                        }}
-                        onMouseUp={() => {
-                          let uuid = item.uuid;
-                          let selectedText = window.getSelection()!.toString();
-                          if (selectedText !== '') {
-                            let info = {
-                              open: true,
-                              selectedText: selectedText,
-                              uuid: uuid,
-                            };
-                            setHighlightInfo(info);
-                          }
-                        }}
+                              onClickActionMenu(key, item);
+                            }}
+                            items={actionMenuList}
+                            mode="vertical"
+                            key={'1'}
+                            selectable={false}
+                          ></Menu>,
+                        ]}
                       >
-                        <Highlighter
-                          // style={{ fontSize: 17 }}
-                          highlightStyle={{ color: 'red' }}
-                          searchWords={item.highlights || []}
-                          autoEscape={true}
-                          // textToHighlight={item.content}
-                          textToHighlight={handleClippingContent(item.content)}
+                        <Card.Meta
+                          title={<a>{item.book_name}</a>}
+                          description={
+                            <div>
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <AccountCircleIcon style={{ height: 20 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, marginLeft: -18 }}
+                                >
+                                  {item.author == null ? '' : item.author}
+                                </Typography>
+                              </Box>
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <MoreTimeIcon style={{ height: 20 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, marginLeft: -18 }}
+                                >
+                                  {moment.unix(~~item.addDate).format('YYYY-MM-DD HH:mm:ss')}
+                                </Typography>
+                              </Box>
+                              <Box display="flex" alignItems="center" style={{ marginBottom: 10 }}>
+                                <LocalOfferIcon style={{ height: 20 }} />
+                                <Typography
+                                  variant="body2"
+                                  style={{ paddingTop: 1.2, marginLeft: -18 }}
+                                >
+                                  {item.tags == null ? '' : item.tags}
+                                </Typography>
+                              </Box>
+                            </div>
+                          }
                         />
-                      </article>
-                    </Card>
+                        <article
+                          className={`${hetiStyles.entry} ${hetiStyles['heti--ancient']} ${hetiStyles['heti-hang']} ${hetiStyles['heti-meta heti-small']} `}
+                          style={{
+                            maxHeight: '40vh',
+                            overflow: 'auto',
+                            marginTop: 8,
+                            fontSize: 15,
+                            whiteSpace: 'pre-wrap',
+                          }}
+                          onClick={() => {
+                            let selectedText = window.getSelection()!.toString();
+                            if (selectedText.length > 0) {
+                              return;
+                            }
+                            setClippingDialogInfo({
+                              uuid: item.uuid,
+                              open: true,
+                              handleClose: () => {
+                                setChangeClippingCollInfo(initialClippingDialogInfo);
+                              },
+                              clippingContent: item.content,
+                              highlights: item.highlights,
+                              book_name: item.book_name,
+                            });
+                          }}
+                          onMouseUp={() => {
+                            let uuid = item.uuid;
+                            let selectedText = window.getSelection()!.toString();
+                            if (selectedText !== '') {
+                              let info = {
+                                open: true,
+                                selectedText: selectedText,
+                                uuid: uuid,
+                              };
+                              setHighlightInfo(info);
+                            }
+                          }}
+                        >
+                          <Highlighter
+                            // style={{ fontSize: 17 }}
+                            highlightStyle={{ color: 'red' }}
+                            searchWords={item.highlights || []}
+                            autoEscape={true}
+                            // textToHighlight={item.content}
+                            textToHighlight={handleClippingContent(item.content)}
+                          />
+                        </article>
+                      </Card>
+                    </div>
                   );
                 })}
             </Masonry>
