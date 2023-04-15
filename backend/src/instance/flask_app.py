@@ -32,7 +32,7 @@ def background_task():
         import_moon_reader_clipping()
 
         # 维护书籍和高亮笔记书籍的关系。TODO 后期会把书籍和高亮笔记做关联
-        maintain_relation()
+        # maintain_relation()
 
         # 同步kindle中的生词本到数据库
         sync_vocab_to_lazykindler()
